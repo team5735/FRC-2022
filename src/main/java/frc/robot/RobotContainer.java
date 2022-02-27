@@ -50,7 +50,7 @@ public class RobotContainer {
 
   private void configureSubsystemControllerBindings() {
     new JoystickButton(subsystemController, Button.kRightBumper.value)
-      .whenPressed(new ParallelCommandGroup(new InstantCommand(shooterSubsystem::testBigShooter, shooterSubsystem),new InstantCommand(shooterSubsystem::testSmallShooter, shooterSubsystem)))
+      .whenPressed(new InstantCommand(shooterSubsystem::testShooter, shooterSubsystem))
       .whenReleased(new InstantCommand(shooterSubsystem::stopShooter, shooterSubsystem));
   }
 }
