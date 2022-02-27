@@ -1,5 +1,7 @@
 package frc.robot.constants;
 
+import edu.wpi.first.math.util.Units;
+
 public class RobotConstants {
     public static final int DRIVE_CONTROLLER_PORT = 0;
     public static final int SUBSYSTEM_CONTROLLER_PORT = 1;
@@ -13,4 +15,12 @@ public class RobotConstants {
 
     public static final int HOOD_MOTOR_CURRENT_LIMIT = 2;
     public static final int HOOD_ENCODER_DIO_PORT = 5;
+
+    //Game Field Values
+    public static final double TARGET_HEIGHTFROMGROUND = Units.inchesToMeters(104); //Returns Meters
+
+    //Camera Values
+    public static final double CAMERA_HEIGHTFROMGROUND = Units.inchesToMeters(27); // Returns Meters
+    public static final double CAMERA_ANGLEFROMPARALLEL = Units.degreesToRadians(-50); //Returns Rads
+
 }

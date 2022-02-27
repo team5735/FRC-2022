@@ -8,15 +8,18 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.commands.drivetrain.FieldRelative;
 import frc.robot.commands.intake.IntakeIn;
 import frc.robot.commands.intake.IntakeOut;
 import frc.robot.commands.intake.IntakeStop;
 import frc.robot.commands.shooter.RunBigWheel;
 import frc.robot.commands.shooter.RunSmallWheel;
+import frc.robot.commands.vision.TurnToTarget;
 import frc.robot.constants.RobotConstants;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.subsystems.Vision;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -31,6 +34,8 @@ public class RobotContainer {
   private final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
   private final ShooterSubsystem shooterSubsystem = new ShooterSubsystem();
 
+  public final Vision vision = new Vision();
+
   public static final XboxController driveController = new XboxController(RobotConstants.DRIVE_CONTROLLER_PORT);
   public static final XboxController subsystemController = new XboxController(RobotConstants.SUBSYSTEM_CONTROLLER_PORT);
 
@@ -42,26 +47,44 @@ public class RobotContainer {
   }
 
   private void configureDriveControllerBindings() {
+    // right bumper => intake in
     new JoystickButton(driveController, Button.kRightBumper.value)
       .whenPressed(new IntakeIn(intakeSubsystem))
       .whenReleased(new IntakeStop(intakeSubsystem));
 
+    // left bumper => intake out
     new JoystickButton(driveController, Button.kLeftBumper.value)
       .whenPressed(new IntakeOut(intakeSubsystem))
       .whenReleased(new IntakeStop(intakeSubsystem));
+
+    // A button => set field centric
+    new JoystickButton(driveController, Button.kA.value)
+      .whenPressed(new FieldRelative(swerveDrivetrain, true));
+
+    // B button => set robot centric
+    new JoystickButton(driveController, Button.kA.value)
+      .whenPressed(new FieldRelative(swerveDrivetrain, false));
   }
 
   private void configureSubsystemControllerBindings() {
     double bigWheelSpeed = subsystemController.getLeftTriggerAxis();
     double smallWheelSpeed = subsystemController.getRightTriggerAxis();
 
-    new JoystickButton(subsystemController, Button.kRightBumper.value)
-      .whenPressed(new RunBigWheel(shooterSubsystem, bigWheelSpeed))
-      .whenReleased(new InstantCommand(shooterSubsystem::stopShooter, shooterSubsystem));
+    // new JoystickButton(subsystemController, Button.kRightBumper.value)
+    //   .whenPressed(new RunBigWheel(shooterSubsystem, bigWheelSpeed))
+    //   .whenReleased(new InstantCommand(shooterSubsystem::stopShooter, shooterSubsystem));
 
+    // new JoystickButton(subsystemController, Button.kLeftBumper.value)
+    //   .whenPressed(new RunSmallWheel(shooterSubsystem, smallWheelSpeed))
+    //   .whenReleased(new InstantCommand(shooterSubsystem::stopShooter, shooterSubsystem));
     new JoystickButton(subsystemController, Button.kLeftBumper.value)
-      .whenPressed(new RunSmallWheel(shooterSubsystem, smallWheelSpeed))
-      .whenReleased(new InstantCommand(shooterSubsystem::stopShooter, shooterSubsystem));
+      .whenPressed(new IntakeIn(intakeSubsystem))
+      .whenReleased(new IntakeStop(intakeSubsystem));
+  
+    // A button to aim, bind to cmd TurnToTarget
+    // new JoystickButton(subsystemController, Button.kA.value)
+    //   .whenPressed(new TurnToTarget(vision, swerveDrivetrain))
+    //   .whenReleased(command, interruptible)
   }
 
 }
