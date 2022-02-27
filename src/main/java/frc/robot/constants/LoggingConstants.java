@@ -13,5 +13,6 @@ public class LoggingConstants {
     }
 
     public static final LoggingLevel INTAKE_LEVEL = LoggingLevel.DEBUG;
+    public static final LoggingLevel SHOOTER_LEVEL = LoggingLevel.DEBUG;
     
 }
