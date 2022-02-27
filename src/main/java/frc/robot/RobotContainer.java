@@ -12,6 +12,7 @@ import frc.robot.commands.intake.IntakeIn;
 import frc.robot.commands.intake.IntakeOut;
 import frc.robot.commands.intake.IntakeStop;
 import frc.robot.constants.RobotConstants;
+import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.IntakeSubsystem;
 
 /**
@@ -21,14 +22,18 @@ import frc.robot.subsystems.IntakeSubsystem;
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
+  public static boolean fieldRelative = false;
+  public final Drivetrain swerveDrivetrain = new Drivetrain();
+
   private final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
 
-  private final XboxController driveController = new XboxController(RobotConstants.DRIVE_CONTROLLER_PORT);
+  public static final XboxController driveController = new XboxController(RobotConstants.DRIVE_CONTROLLER_PORT);
+  public static final XboxController subsystemController = new XboxController(RobotConstants.SUBSYSTEM_CONTROLLER_PORT);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the button bindings
-    configureButtonBindings();
+    configureDriveButtonBindings();
   }
 
   /**
@@ -37,7 +42,7 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a {@link
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
-  private void configureButtonBindings() {
+  private void configureDriveButtonBindings() {
     new JoystickButton(driveController, Button.kRightBumper.value)
       .whenPressed(new IntakeIn(intakeSubsystem))
       .whenReleased(new IntakeStop(intakeSubsystem));
@@ -46,4 +51,5 @@ public class RobotContainer {
       .whenPressed(new IntakeOut(intakeSubsystem))
       .whenReleased(new IntakeStop(intakeSubsystem));
   }
+
 }
