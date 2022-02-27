@@ -63,12 +63,12 @@ public class ShooterSubsystem extends SubsystemBase {
     smallShooterMotor.set(ControlMode.PercentOutput, speed);
   }
 
-  public void testBigShooter() {
-    setBigShooter(0.1);
+  public void testBigShooter(double speed) {
+    setBigShooter(speed);
   }
 
-  public void testSmallShooter() {
-    setSmallShooter(0.1);
+  public void testSmallShooter(double speed) {
+    setSmallShooter(speed);
   }
 
   public void stopShooter() {

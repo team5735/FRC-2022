@@ -11,6 +11,8 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.intake.IntakeIn;
 import frc.robot.commands.intake.IntakeOut;
 import frc.robot.commands.intake.IntakeStop;
+import frc.robot.commands.shooter.RunBigWheel;
+import frc.robot.commands.shooter.RunSmallWheel;
 import frc.robot.constants.RobotConstants;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -50,12 +52,15 @@ public class RobotContainer {
   }
 
   private void configureSubsystemControllerBindings() {
+    double bigWheelSpeed = subsystemController.getLeftTriggerAxis();
+    double smallWheelSpeed = subsystemController.getRightTriggerAxis();
+
     new JoystickButton(subsystemController, Button.kRightBumper.value)
-      .whenPressed(new InstantCommand(shooterSubsystem::testBigShooter, shooterSubsystem))
+      .whenPressed(new RunBigWheel(shooterSubsystem, bigWheelSpeed))
       .whenReleased(new InstantCommand(shooterSubsystem::stopShooter, shooterSubsystem));
 
     new JoystickButton(subsystemController, Button.kLeftBumper.value)
-      .whenPressed(new InstantCommand(shooterSubsystem::testSmallShooter, shooterSubsystem))
+      .whenPressed(new RunSmallWheel(shooterSubsystem, smallWheelSpeed))
       .whenReleased(new InstantCommand(shooterSubsystem::stopShooter, shooterSubsystem));
   }
 
