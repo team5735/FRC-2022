@@ -9,21 +9,26 @@ import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.LoggingConstants;
 import frc.robot.constants.RobotConstants;
+import frc.robot.constants.ShooterConstants;
 import frc.robot.constants.LoggingConstants.LoggingLevel;
 
 public class ShooterSubsystem extends SubsystemBase {
   private TalonFX bigShooterMasterMotor, bigShooterFollowerMotor, smallShooterMotor;
   private CANSparkMax feederMotor, hoodMotor;
 
+  private DutyCycleEncoder hoodEncoder;
+
   /** Creates a new ShooterSubsystem. */
   public ShooterSubsystem() {
     bigShooterMasterMotor = new TalonFX(RobotConstants.BIG_SHOOTER_MASTER_MOTOR_ID);
     bigShooterMasterMotor.setInverted(true);
     bigShooterFollowerMotor = new TalonFX(RobotConstants.BIG_SHOOTER_FOLLOWER_MOTOR_ID);
+    bigShooterFollowerMotor.follow(bigShooterMasterMotor);
 
     smallShooterMotor = new TalonFX(RobotConstants.SMALL_SHOOTER_MOTOR_ID);
 
@@ -33,6 +38,9 @@ public class ShooterSubsystem extends SubsystemBase {
     hoodMotor = new CANSparkMax(RobotConstants.HOOD_MOTOR_ID, MotorType.kBrushless);
     hoodMotor.setInverted(true);
     hoodMotor.setSmartCurrentLimit(RobotConstants.HOOD_MOTOR_CURRENT_LIMIT);  // Limit hood motor amp limit to prevent breaking hood
+
+    hoodEncoder = new DutyCycleEncoder(RobotConstants.HOOD_ENCODER_DIO_PORT);
+    hoodEncoder.setPositionOffset(ShooterConstants.HOOD_ENCODER_OFFSET);
   }
 
   @Override
@@ -40,10 +48,11 @@ public class ShooterSubsystem extends SubsystemBase {
     if (LoggingConstants.SHOOTER_LEVEL.ordinal() >= LoggingLevel.DEBUG.ordinal()) {
       SmartDashboard.putNumber("big_shooter_cmd", bigShooterMasterMotor.getMotorOutputPercent());
       SmartDashboard.putNumber("small_shooter_cmd", smallShooterMotor.getMotorOutputPercent());
-
     }
 
-    if (LoggingConstants.SHOOTER_LEVEL.ordinal() >= LoggingLevel.COMPETITION.ordinal()) {}
+    if (LoggingConstants.SHOOTER_LEVEL.ordinal() >= LoggingLevel.COMPETITION.ordinal()) {
+      SmartDashboard.putNumber("hood_angle", hoodEncoder.getAbsolutePosition());
+    }
   }
 
   public void setBigShooter(double speed) {
@@ -55,7 +64,7 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public void testShooter() {
-    setBigShooter(0.05);
+    setBigShooter(0.1);
     setSmallShooter(0.1);
   }
 

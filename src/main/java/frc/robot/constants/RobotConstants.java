@@ -12,4 +12,5 @@ public class RobotConstants {
     public static final int HOOD_MOTOR_ID = 11;
 
     public static final int HOOD_MOTOR_CURRENT_LIMIT = 2;
+    public static final int HOOD_ENCODER_DIO_PORT = 5;
 }
