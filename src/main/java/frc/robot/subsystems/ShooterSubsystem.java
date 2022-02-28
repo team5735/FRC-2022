@@ -10,6 +10,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -23,6 +24,7 @@ public class ShooterSubsystem extends SubsystemBase {
   private CANSparkMax feederMotor, hoodMotor;
 
   private DutyCycleEncoder hoodEncoder;
+  private final DigitalInput beambreak;
 
   /** Creates a new ShooterSubsystem. */
   public ShooterSubsystem() {
@@ -43,6 +45,7 @@ public class ShooterSubsystem extends SubsystemBase {
     hoodMotor.setSoftLimit(SoftLimitDirection.kReverse, -0.2f);
 
     hoodEncoder = new DutyCycleEncoder(RobotConstants.HOOD_ENCODER_DIO_PORT);
+    beambreak = new DigitalInput(RobotConstants.FEEDER_BEAMBREAK_DIGITAL_PORT);
   }
 
   @Override
@@ -74,4 +77,15 @@ public class ShooterSubsystem extends SubsystemBase {
   public double getHoodAngle() {
     return 1-(hoodEncoder.getAbsolutePosition() + ShooterConstants.HOOD_ENCODER_OFFSET);
   }
+
+
+  public boolean hasBall() {
+		if (beambreak.get() == false) {
+            SmartDashboard.putBoolean("beamBreak", false);
+            System.out.println("################ BALL INSIDE FEEDER | BEAM BREAK");
+        }
+
+      return !beambreak.get();
+	}
+
 }
