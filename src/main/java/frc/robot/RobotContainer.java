@@ -17,6 +17,7 @@ import frc.robot.commands.shooter.RunSmallWheel;
 import frc.robot.commands.vision.TurnToTarget;
 import frc.robot.constants.RobotConstants;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.Vision;
@@ -33,6 +34,7 @@ public class RobotContainer {
 
   private final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
   private final ShooterSubsystem shooterSubsystem = new ShooterSubsystem();
+  private final Feeder feeder = new Feeder();
 
   public final Vision vision = new Vision();
 
@@ -79,6 +81,8 @@ public class RobotContainer {
       .whenPressed(new IntakeIn(intakeSubsystem))
       .whenReleased(new IntakeStop(intakeSubsystem));
   
+    feeder.hasBall();
+
     // 'A' button to aim, bind to cmd TurnToTarget
     // new JoystickButton(subsystemController, Button.kA.value)
     //   .whenPressed(new TurnToTarget(vision, swerveDrivetrain))
