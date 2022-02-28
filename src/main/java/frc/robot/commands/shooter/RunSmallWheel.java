@@ -5,15 +5,15 @@
 package frc.robot.commands.shooter;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+
+import frc.robot.RobotContainer;
 import frc.robot.subsystems.ShooterSubsystem;
 
 public class RunSmallWheel extends CommandBase {
   private final ShooterSubsystem subsystem;
-  private double wheelSpeed;
 
-  public RunSmallWheel(ShooterSubsystem subsystem, double speed) {
+  public RunSmallWheel(ShooterSubsystem subsystem) {
     this.subsystem = subsystem;
-    this.wheelSpeed = speed;
 
     addRequirements(subsystem);
   }
@@ -26,12 +26,13 @@ public class RunSmallWheel extends CommandBase {
 
   @Override
   public void execute() {
+    double wheelSpeed = RobotContainer.subsystemController.getRightTriggerAxis();
     subsystem.setSmallShooter(wheelSpeed);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return true;
+    return false;
   }
 }

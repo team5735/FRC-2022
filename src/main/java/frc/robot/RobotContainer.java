@@ -75,10 +75,10 @@ public class RobotContainer {
 
     // left trigger to run small shooter wheel
     new JoystickButton(subsystemController, XboxController.Axis.kLeftTrigger.value)
-      .whileActiveContinuous(new RunSmallWheel(shooterSubsystem, subsystemController.getRightTriggerAxis()));
+      .whileActiveContinuous(new RunSmallWheel(shooterSubsystem));
     // // right trigger to run big shooter wheel
     new JoystickButton(subsystemController, XboxController.Axis.kLeftTrigger.value)
-      .whileActiveContinuous(new RunBigWheel(shooterSubsystem, subsystemController.getLeftTriggerAxis()));
+      .whileActiveContinuous(new RunBigWheel(shooterSubsystem));
 
     // // left bumper to intake in
     new JoystickButton(subsystemController, Button.kLeftBumper.value)
