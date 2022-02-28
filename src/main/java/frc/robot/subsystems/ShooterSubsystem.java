@@ -69,9 +69,14 @@ public class ShooterSubsystem extends SubsystemBase {
   public void stopShooter() {
     setBigShooter(0);
     setSmallShooter(0);
+    hoodMotor.set(0);
+  }
+
+  public void testHood() {
+    hoodMotor.set(0.1);
   }
 
   public double getHoodAngle() {
-    return 1-(hoodEncoder.getAbsolutePosition() + ShooterConstants.HOOD_ENCODER_OFFSET);
+    return 1-((hoodEncoder.getAbsolutePosition() + ShooterConstants.HOOD_ENCODER_OFFSET) % 1);
   }
 }

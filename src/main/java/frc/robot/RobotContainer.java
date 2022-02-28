@@ -67,17 +67,23 @@ public class RobotContainer {
   }
 
   private void configureSubsystemControllerBindings() {
-    // left trigger to run small shooter wheel
-    new JoystickButton(subsystemController, XboxController.Axis.kLeftTrigger.value)
-      .whileActiveContinuous(new RunSmallWheel(shooterSubsystem, subsystemController.getRightTriggerAxis()));
-    // right trigger to run big shooter wheel
-    new JoystickButton(subsystemController, XboxController.Axis.kLeftTrigger.value)
-      .whileActiveContinuous(new RunBigWheel(shooterSubsystem, subsystemController.getLeftTriggerAxis()));
 
-    // left bumper to intake in
-    new JoystickButton(subsystemController, Button.kLeftBumper.value)
-      .whenPressed(new IntakeIn(intakeSubsystem))
-      .whenReleased(new IntakeStop(intakeSubsystem));
+    new JoystickButton(subsystemController, Button.kA.value)
+      .whenPressed(new InstantCommand(shooterSubsystem::testHood, shooterSubsystem))
+      .whenReleased(new InstantCommand(shooterSubsystem::stopShooter, shooterSubsystem));
+
+
+    // left trigger to run small shooter wheel
+    // new JoystickButton(subsystemController, XboxController.Axis.kLeftTrigger.value)
+    //   .whileActiveContinuous(new RunSmallWheel(shooterSubsystem, subsystemController.getRightTriggerAxis()));
+    // // right trigger to run big shooter wheel
+    // new JoystickButton(subsystemController, XboxController.Axis.kLeftTrigger.value)
+    //   .whileActiveContinuous(new RunBigWheel(shooterSubsystem, subsystemController.getLeftTriggerAxis()));
+
+    // // left bumper to intake in
+    // new JoystickButton(subsystemController, Button.kLeftBumper.value)
+    //   .whenPressed(new IntakeIn(intakeSubsystem))
+    //   .whenReleased(new IntakeStop(intakeSubsystem));
   
     // 'A' button to aim, bind to cmd TurnToTarget
     // new JoystickButton(subsystemController, Button.kA.value)
