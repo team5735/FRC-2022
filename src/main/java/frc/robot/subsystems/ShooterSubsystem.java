@@ -10,6 +10,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -39,8 +40,8 @@ public class ShooterSubsystem extends SubsystemBase {
     hoodMotor = new CANSparkMax(RobotConstants.HOOD_MOTOR_ID, MotorType.kBrushless);
     hoodMotor.setInverted(true);
     hoodMotor.setSmartCurrentLimit(RobotConstants.HOOD_MOTOR_CURRENT_LIMIT);  // Limit hood motor amp limit to prevent breaking hood
-    hoodMotor.setSoftLimit(SoftLimitDirection.kForward, 0.2f);
-    hoodMotor.setSoftLimit(SoftLimitDirection.kReverse, -0.2f);
+    hoodMotor.setSoftLimit(SoftLimitDirection.kForward, 0.1f);
+    hoodMotor.setSoftLimit(SoftLimitDirection.kReverse, -0.05f);
 
     hoodEncoder = new DutyCycleEncoder(RobotConstants.HOOD_ENCODER_DIO_PORT);
   }
@@ -66,14 +67,18 @@ public class ShooterSubsystem extends SubsystemBase {
     smallShooterMotor.set(ControlMode.PercentOutput, speed);
   }
 
+  public void setHoodSpeed(double speed) {
+    hoodMotor.set(speed);
+  }
+
   public void stopShooter() {
     setBigShooter(0);
     setSmallShooter(0);
-    hoodMotor.set(0);
+    setHoodSpeed(0);
   }
 
   public void testHood() {
-    hoodMotor.set(0.1);
+    setHoodSpeed(0.1);
   }
 
   public double getHoodAngle() {
