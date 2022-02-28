@@ -84,8 +84,6 @@ public class RobotContainer {
     // new JoystickButton(subsystemController, Button.kLeftBumper.value)
     //   .whenPressed(new IntakeIn(intakeSubsystem))
     //   .whenReleased(new IntakeStop(intakeSubsystem));
-  
-    shooterSubsystem.hasBall();
 
     // 'A' button to aim, bind to cmd TurnToTarget
     // new JoystickButton(subsystemController, Button.kA.value)
