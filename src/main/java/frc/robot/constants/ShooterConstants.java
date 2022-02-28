@@ -6,5 +6,9 @@ package frc.robot.constants;
 
 /** Add your docs here. */
 public class ShooterConstants {
-    public static final double HOOD_ENCODER_OFFSET = 0;
+    // Set this value to the raw hoodEncoder.getAbsolutePosition() when the hood is at the top and bottom.
+    private static final double HOOD_RAW_TOP = 0.659;
+    private static final double HOOD_RAW_BOTTOM = 0.570;
+
+    public static final double HOOD_ENCODER_OFFSET = 1-((HOOD_RAW_BOTTOM + HOOD_RAW_TOP) / 2);
 }
