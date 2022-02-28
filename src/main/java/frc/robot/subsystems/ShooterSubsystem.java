@@ -10,7 +10,6 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -84,4 +83,5 @@ public class ShooterSubsystem extends SubsystemBase {
   public double getHoodAngle() {
     return 1-((hoodEncoder.getAbsolutePosition() + ShooterConstants.HOOD_ENCODER_OFFSET) % 1);
   }
+
 }
