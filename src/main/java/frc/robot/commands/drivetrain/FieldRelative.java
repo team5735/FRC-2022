@@ -26,7 +26,7 @@ public class FieldRelative extends CommandBase{
     // Called every time the scheduler runs while the command is scheduled.
     public void execute() {
         swerveDrive.resetAHRS();
-        fieldRelative = !fieldRelative;
+        //fieldRelative = !fieldRelative;
 
         RobotContainer.fieldRelative = fieldRelative;
         SmartDashboard.putBoolean("fieldRelative", fieldRelative);

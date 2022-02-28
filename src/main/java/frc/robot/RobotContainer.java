@@ -57,31 +57,29 @@ public class RobotContainer {
       .whenPressed(new IntakeOut(intakeSubsystem))
       .whenReleased(new IntakeStop(intakeSubsystem));
 
-    // A button => set field centric
+    // A button => set field centric to true
     new JoystickButton(driveController, Button.kA.value)
       .whenPressed(new FieldRelative(swerveDrivetrain, true));
 
-    // B button => set robot centric
-    new JoystickButton(driveController, Button.kA.value)
+    // B button => set to robot centric
+    new JoystickButton(driveController, Button.kB.value)
       .whenPressed(new FieldRelative(swerveDrivetrain, false));
   }
 
   private void configureSubsystemControllerBindings() {
-    double bigWheelSpeed = subsystemController.getLeftTriggerAxis();
-    double smallWheelSpeed = subsystemController.getRightTriggerAxis();
+    // left trigger to run small shooter wheel
+    new JoystickButton(subsystemController, XboxController.Axis.kLeftTrigger.value)
+      .whileActiveContinuous(new RunSmallWheel(shooterSubsystem, subsystemController.getRightTriggerAxis()));
+    // right trigger to run big shooter wheel
+    new JoystickButton(subsystemController, XboxController.Axis.kLeftTrigger.value)
+      .whileActiveContinuous(new RunBigWheel(shooterSubsystem, subsystemController.getLeftTriggerAxis()));
 
-    // new JoystickButton(subsystemController, Button.kRightBumper.value)
-    //   .whenPressed(new RunBigWheel(shooterSubsystem, bigWheelSpeed))
-    //   .whenReleased(new InstantCommand(shooterSubsystem::stopShooter, shooterSubsystem));
-
-    // new JoystickButton(subsystemController, Button.kLeftBumper.value)
-    //   .whenPressed(new RunSmallWheel(shooterSubsystem, smallWheelSpeed))
-    //   .whenReleased(new InstantCommand(shooterSubsystem::stopShooter, shooterSubsystem));
+    // left bumper to intake in
     new JoystickButton(subsystemController, Button.kLeftBumper.value)
       .whenPressed(new IntakeIn(intakeSubsystem))
       .whenReleased(new IntakeStop(intakeSubsystem));
   
-    // A button to aim, bind to cmd TurnToTarget
+    // 'A' button to aim, bind to cmd TurnToTarget
     // new JoystickButton(subsystemController, Button.kA.value)
     //   .whenPressed(new TurnToTarget(vision, swerveDrivetrain))
     //   .whenReleased(command, interruptible)
