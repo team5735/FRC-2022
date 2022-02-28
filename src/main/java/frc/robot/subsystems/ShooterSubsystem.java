@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
@@ -38,9 +39,10 @@ public class ShooterSubsystem extends SubsystemBase {
     hoodMotor = new CANSparkMax(RobotConstants.HOOD_MOTOR_ID, MotorType.kBrushless);
     hoodMotor.setInverted(true);
     hoodMotor.setSmartCurrentLimit(RobotConstants.HOOD_MOTOR_CURRENT_LIMIT);  // Limit hood motor amp limit to prevent breaking hood
+    hoodMotor.setSoftLimit(SoftLimitDirection.kForward, 0.2f);
+    hoodMotor.setSoftLimit(SoftLimitDirection.kReverse, -0.2f);
 
     hoodEncoder = new DutyCycleEncoder(RobotConstants.HOOD_ENCODER_DIO_PORT);
-    hoodEncoder.setPositionOffset(ShooterConstants.HOOD_ENCODER_OFFSET);
   }
 
   @Override
@@ -51,7 +53,8 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     if (LoggingConstants.SHOOTER_LEVEL.ordinal() >= LoggingLevel.COMPETITION.ordinal()) {
-      SmartDashboard.putNumber("hood_angle", hoodEncoder.getAbsolutePosition());
+      SmartDashboard.putNumber("hood_angle", getHoodAngle());
+      SmartDashboard.putNumber("hood_raw_angle", hoodEncoder.getAbsolutePosition());
     }
   }
 
@@ -63,16 +66,12 @@ public class ShooterSubsystem extends SubsystemBase {
     smallShooterMotor.set(ControlMode.PercentOutput, speed);
   }
 
-  public void testBigShooter(double speed) {
-    setBigShooter(speed);
-  }
-
-  public void testSmallShooter(double speed) {
-    setSmallShooter(speed);
-  }
-
   public void stopShooter() {
     setBigShooter(0);
     setSmallShooter(0);
+  }
+
+  public double getHoodAngle() {
+    return 1-(hoodEncoder.getAbsolutePosition() + ShooterConstants.HOOD_ENCODER_OFFSET);
   }
 }
