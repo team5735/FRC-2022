@@ -39,8 +39,8 @@ public class ShooterSubsystem extends SubsystemBase {
     hoodMotor = new CANSparkMax(RobotConstants.HOOD_MOTOR_ID, MotorType.kBrushless);
     hoodMotor.setInverted(true);
     hoodMotor.setSmartCurrentLimit(RobotConstants.HOOD_MOTOR_CURRENT_LIMIT);  // Limit hood motor amp limit to prevent breaking hood
-    hoodMotor.setSoftLimit(SoftLimitDirection.kForward, 0.1f);
-    hoodMotor.setSoftLimit(SoftLimitDirection.kReverse, -0.05f);
+    hoodMotor.setSoftLimit(SoftLimitDirection.kForward, 0.2f);
+    hoodMotor.setSoftLimit(SoftLimitDirection.kReverse, -0.03f);
 
     hoodEncoder = new DutyCycleEncoder(RobotConstants.HOOD_ENCODER_DIO_PORT);
   }

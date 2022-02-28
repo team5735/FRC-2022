@@ -14,7 +14,7 @@ public class HoodSetAngle extends CommandBase {
   /** Creates a new HoodSetAngle. */
   public HoodSetAngle(ShooterSubsystem subsystem, double setpoint) {
 
-    this.pidController = new PIDController(0.3, 0, 0.5);
+    this.pidController = new PIDController(0.8, 0, 0.005);
     this.pidController.setSetpoint(setpoint);
     this.subsystem = subsystem;
     addRequirements(subsystem);
