@@ -36,13 +36,14 @@ public class Vision {
         double heightDiff = RobotConstants.TARGET_HEIGHTFROMGROUND - RobotConstants.CAMERA_HEIGHTFROMGROUND;
 		double distance = 0;
 
-		while (!foundDistance) {
-			double yAngleToTarget = Units.degreesToRadians(limelight.getdegVerticalToTarget()); // radians
-			distance = heightDiff / Math.tan(RobotConstants.CAMERA_ANGLEFROMPARALLEL + yAngleToTarget); // meters
+		// while (!foundDistance) {
+			// double yAngleToTarget = Units.degreesToRadians(limelight.getdegVerticalToTarget()); // radians
+			double yAngleToTarget = limelight.getdegVerticalToTarget(); // degrees
+			distance = /*heightDiff*/ 6.5 / Math.tan((RobotConstants.CAMERA_ANGLEFROMPARALLEL - yAngleToTarget)*Math.PI/180); // meters now inches
 			if (distance > 1) {
 				foundDistance = true;
 			}
-        }
+        // }
         return distance;
 
     }
