@@ -9,10 +9,10 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.ShooterSubsystem;
 
-public class RunBigWheel extends CommandBase {
+public class StopSmallWheel extends CommandBase {
   private final ShooterSubsystem subsystem;
 
-  public RunBigWheel(ShooterSubsystem subsystem) {
+  public StopSmallWheel(ShooterSubsystem subsystem) {
     this.subsystem = subsystem;
 
     addRequirements(subsystem);
@@ -21,14 +21,7 @@ public class RunBigWheel extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void initialize() {
-    subsystem.setBigShooter(0);
-  }
-
-  @Override
-  public void execute() {
-    double triggerValue = RobotContainer.subsystemController.getLeftTriggerAxis();
-    double wheelSpeed = (triggerValue < 0.05 && triggerValue > -0.05) ? 0.3 : triggerValue;
-    subsystem.setBigShooter(wheelSpeed);
+    subsystem.setSmallShooter(0);
   }
 
   // Returns true when the command should end.

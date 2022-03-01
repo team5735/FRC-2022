@@ -11,4 +11,7 @@ public class ShooterConstants {
     private static final double HOOD_RAW_BOTTOM = 0.570;
 
     public static final double HOOD_ENCODER_OFFSET = 1-((HOOD_RAW_BOTTOM + HOOD_RAW_TOP) / 2);
+
+    public static final double FEEDER_FORWARD_SPEED = 0.4;
+    public static final double FEEDER_REVERSE_SPEED = -0.4;
 }

@@ -26,7 +26,8 @@ public class RunSmallWheel extends CommandBase {
 
   @Override
   public void execute() {
-    double wheelSpeed = RobotContainer.subsystemController.getRightTriggerAxis();
+    double triggerValue = RobotContainer.subsystemController.getRightTriggerAxis();
+    double wheelSpeed = (triggerValue < 0.05 && triggerValue > -0.05) ? 0.3 : triggerValue;
     subsystem.setSmallShooter(wheelSpeed);
   }
 

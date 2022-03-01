@@ -76,6 +76,18 @@ public class ShooterSubsystem extends SubsystemBase {
     setHoodSpeed(0);
   }
 
+  public void feederForward() {
+    feederMotor.set(ShooterConstants.FEEDER_FORWARD_SPEED);
+  }
+
+  public void feederReverse() {
+    feederMotor.set(ShooterConstants.FEEDER_REVERSE_SPEED);
+  }
+
+  public void feederStop() {
+    feederMotor.set(0);
+  }
+
   public void testHood() {
     setHoodSpeed(0.1);
   }

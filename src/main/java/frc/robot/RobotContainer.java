@@ -4,19 +4,25 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.drivetrain.FieldRelative;
 import frc.robot.commands.intake.IntakeIn;
 import frc.robot.commands.intake.IntakeOut;
 import frc.robot.commands.intake.IntakeStop;
+import frc.robot.commands.shooter.FeederForward;
+import frc.robot.commands.shooter.FeederStop;
 import frc.robot.commands.shooter.HoodSetAngle;
 import frc.robot.commands.shooter.RunBigWheel;
 import frc.robot.commands.shooter.RunSmallWheel;
-import frc.robot.commands.vision.TurnToTarget;
+import frc.robot.commands.shooter.ShootBall;
+import frc.robot.commands.shooter.StopBigWheel;
+import frc.robot.commands.shooter.StopShooter;
+import frc.robot.commands.shooter.StopSmallWheel;
 import frc.robot.constants.RobotConstants;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -83,6 +89,9 @@ public class RobotContainer {
     new JoystickButton(subsystemController, Button.kX.value)
       .whenPressed(new InstantCommand(shooterSubsystem::stopShooter, shooterSubsystem));
 
+    new JoystickButton(subsystemController, Button.kRightBumper.value)
+      .whenPressed(new ShootBall(shooterSubsystem))
+      .whenReleased(new StopShooter(shooterSubsystem));
     // // left trigger to run small shooter wheel
     // new JoystickButton(subsystemController, XboxController.Axis.kLeftTrigger.value)
     //   .whileActiveContinuous(new RunSmallWheel(shooterSubsystem, subsystemController.getRightTriggerAxis()));
