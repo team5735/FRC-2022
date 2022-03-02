@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.drivetrain.FieldRelative;
@@ -46,6 +47,8 @@ public class RobotContainer {
 
   public static final XboxController driveController = new XboxController(RobotConstants.DRIVE_CONTROLLER_PORT);
   public static final XboxController subsystemController = new XboxController(RobotConstants.SUBSYSTEM_CONTROLLER_PORT);
+
+  public boolean isHoodUp = false;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -92,6 +95,7 @@ public class RobotContainer {
     new JoystickButton(subsystemController, Button.kRightBumper.value)
       .whenPressed(new ShootBall(shooterSubsystem))
       .whenReleased(new StopShooter(shooterSubsystem));
+
     // // left trigger to run small shooter wheel
     // new JoystickButton(subsystemController, XboxController.Axis.kLeftTrigger.value)
     //   .whileActiveContinuous(new RunSmallWheel(shooterSubsystem, subsystemController.getRightTriggerAxis()));

@@ -4,6 +4,8 @@
 
 package frc.robot.commands.shooter;
 
+import javax.sound.midi.Soundbank;
+
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 import frc.robot.RobotContainer;
@@ -28,10 +30,10 @@ public class ShootBall extends CommandBase {
   @Override
   public void execute() {
     double leftTriggerValue = RobotContainer.subsystemController.getLeftTriggerAxis();
-    double bigWheelSpeed = (leftTriggerValue < 0.05 && leftTriggerValue > -0.05) ? 0.3 : leftTriggerValue;
+    double bigWheelSpeed = (leftTriggerValue < 0.05 && leftTriggerValue > -0.05) ? 0.6 : leftTriggerValue;
     subsystem.setBigShooter(bigWheelSpeed);
     double rightTriggerValue = RobotContainer.subsystemController.getRightTriggerAxis();
-    double smallWheelSpeed = (rightTriggerValue < 0.05 && rightTriggerValue > -0.05) ? 0.3 : rightTriggerValue;
+    double smallWheelSpeed = (rightTriggerValue < 0.05 && rightTriggerValue > -0.05) ? 0.6 : rightTriggerValue;
     subsystem.setBigShooter(smallWheelSpeed);
     subsystem.feederForward();
   }
