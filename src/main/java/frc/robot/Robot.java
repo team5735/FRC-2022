@@ -4,10 +4,8 @@
 
 package frc.robot;
 
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.subsystems.Vision;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -18,8 +16,6 @@ import frc.robot.subsystems.Vision;
 public class Robot extends TimedRobot {
   private RobotContainer m_robotContainer;
 
-  private Vision vision;
-
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -29,7 +25,6 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
-    this.vision = new Vision();
   }
 
   /**
@@ -65,9 +60,6 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
-    // System.out.println("Print something");
-    System.out.println("Distance = " + vision.getDistanceFromTarget());
-    System.out.println("Angle + " + vision.getYAngleToTarget());
   }
 
   @Override
@@ -77,4 +69,5 @@ public class Robot extends TimedRobot {
 
   @Override
   public void testPeriodic() {}
+
 }
