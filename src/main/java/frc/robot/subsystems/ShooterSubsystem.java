@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
@@ -12,6 +13,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.PIDSubsystem;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.LoggingConstants;
 import frc.robot.constants.RobotConstants;
@@ -28,10 +30,20 @@ public class ShooterSubsystem extends SubsystemBase {
   public ShooterSubsystem() {
     bigShooterMasterMotor = new TalonFX(RobotConstants.BIG_SHOOTER_MASTER_MOTOR_ID);
     bigShooterMasterMotor.setInverted(true);
+    bigShooterMasterMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
+    bigShooterMasterMotor.config_kP(0, ShooterConstants.BIG_WHEEL_KP);
+    bigShooterMasterMotor.config_kI(0, ShooterConstants.BIG_WHEEL_KI);
+    bigShooterMasterMotor.config_kD(0, ShooterConstants.BIG_WHEEL_KD);
+    bigShooterMasterMotor.config_kF(0, ShooterConstants.BIG_WHEEL_KF);
     bigShooterFollowerMotor = new TalonFX(RobotConstants.BIG_SHOOTER_FOLLOWER_MOTOR_ID);
     bigShooterFollowerMotor.follow(bigShooterMasterMotor);
 
     smallShooterMotor = new TalonFX(RobotConstants.SMALL_SHOOTER_MOTOR_ID);
+    smallShooterMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
+    smallShooterMotor.config_kP(0, ShooterConstants.SMALL_WHEEL_KP);
+    smallShooterMotor.config_kI(0, ShooterConstants.SMALL_WHEEL_KI);
+    smallShooterMotor.config_kD(0, ShooterConstants.SMALL_WHEEL_KD);
+    smallShooterMotor.config_kF(0, ShooterConstants.BIG_WHEEL_KF);
 
     feederMotor = new CANSparkMax(RobotConstants.FEEDER_MOTOR_ID, MotorType.kBrushless);
     feederMotor.setInverted(true);
@@ -59,11 +71,11 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public void setBigShooter(double speed) {
-    bigShooterMasterMotor.set(ControlMode.PercentOutput, speed);
+    bigShooterMasterMotor.set(ControlMode.Velocity, speed);
   }
 
   public void setSmallShooter(double speed) {
-    smallShooterMotor.set(ControlMode.PercentOutput, speed);
+    smallShooterMotor.set(ControlMode.Velocity, speed);
   }
 
   public void setHoodSpeed(double speed) {
@@ -95,5 +107,6 @@ public class ShooterSubsystem extends SubsystemBase {
   public double getHoodAngle() {
     return 1-((hoodEncoder.getAbsolutePosition() + ShooterConstants.HOOD_ENCODER_OFFSET) % 1);
   }
+
 
 }

@@ -14,4 +14,13 @@ public class ShooterConstants {
 
     public static final double FEEDER_FORWARD_SPEED = 0.4;
     public static final double FEEDER_REVERSE_SPEED = -0.4;
+
+    public static final double BIG_WHEEL_KP = 0.5;
+    public static final double BIG_WHEEL_KI = 0;
+    public static final double BIG_WHEEL_KD = 0.05;
+    public static final double BIG_WHEEL_KF = 1;
+    public static final double SMALL_WHEEL_KP = 0.5;
+    public static final double SMALL_WHEEL_KI = 0;
+    public static final double SMALL_WHEEL_KD = 0.05;
+    public static final double SMALL_WHEEL_KF = 1;
 }
