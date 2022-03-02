@@ -65,8 +65,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
-    System.out.println("Print something");
-    System.out.println("Distance = " + Units.metersToFeet(vision.getDistanceFromTarget()));
+    // System.out.println("Print something");
+    System.out.println("Distance = " + vision.getDistanceFromTarget());
     System.out.println("Angle + " + vision.getYAngleToTarget());
   }
 

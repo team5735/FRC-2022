@@ -31,7 +31,7 @@ public class Vision {
             enableTracking();
         }
 
-        boolean foundDistance = false;
+        // boolean foundDistance = false;
 
         double heightDiff = RobotConstants.TARGET_HEIGHTFROMGROUND - RobotConstants.CAMERA_HEIGHTFROMGROUND;
 		double distance = 0;
@@ -39,10 +39,10 @@ public class Vision {
 		// while (!foundDistance) {
 			// double yAngleToTarget = Units.degreesToRadians(limelight.getdegVerticalToTarget()); // radians
 			double yAngleToTarget = limelight.getdegVerticalToTarget(); // degrees
-			distance = /*heightDiff*/ 6.5 / Math.tan((RobotConstants.CAMERA_ANGLEFROMPARALLEL - yAngleToTarget)*Math.PI/180); // meters now inches
-			if (distance > 1) {
-				foundDistance = true;
-			}
+			distance = heightDiff / Math.tan((RobotConstants.CAMERA_ANGLEFROMPARALLEL + yAngleToTarget)*Math.PI/180.0); // meters now inches
+			// if (distance > 1) {
+			// 	foundDistance = true;
+			// }
         // }
         return distance;
 

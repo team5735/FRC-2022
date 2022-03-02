@@ -21,13 +21,13 @@ public class RobotConstants {
 
     //Game Field Values
     // public static final double TARGET_HEIGHTFROMGROUND = Units.inchesToMeters(/*Test Val*/ 31.5); // Original: 104 in //Returns Meters
-    public static final double TARGET_HEIGHTFROMGROUND = /*Test Val*/ 31.5;
+    public static final double TARGET_HEIGHTFROMGROUND = /*Test Val*/ 104;
 
     //Camera Values
     // public static final double CAMERA_HEIGHTFROMGROUND = Units.inchesToMeters(/*Test Val*/ 25); //Original: 27 in // Returns Meters
-    public static final double CAMERA_HEIGHTFROMGROUND = /*Test Val*/ 25;
+    public static final double CAMERA_HEIGHTFROMGROUND = /*Test Val*/ 26;
 
     // public static final double CAMERA_ANGLEFROMPARALLEL = Units.degreesToRadians(/*Test Val*/ 17); // Original: 50 deg //Returns Rads
-    public static final double CAMERA_ANGLEFROMPARALLEL = /*Test Val*/ 17; // Original: 50 deg //Returns Rads
+    public static final double CAMERA_ANGLEFROMPARALLEL = /*Test Val*/ 44; // Original: 50 deg //Returns Rads
 
 }
