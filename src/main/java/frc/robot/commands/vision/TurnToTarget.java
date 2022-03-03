@@ -17,7 +17,7 @@ public class TurnToTarget extends CommandBase {
         this.drivetrain = drivetrain;
         
         addRequirements((Subsystem) drivetrain);
-        // addRequirements(vision);
+        addRequirements((Subsystem) vision);
     }
 
     // Called when the command is initially scheduled.
@@ -34,20 +34,20 @@ public class TurnToTarget extends CommandBase {
         double tx = NetworkTableInstance.getDefault().getTable("limelight").getEntry("<tx>").getDouble(0);
 
         // Make sure Vision Tracking is Always Running
-        if(!vision.isTrackingEnabled()) vision.enableTracking();
+        if (!vision.isTrackingEnabled())
+            vision.enableTracking();
+
         // ADD DEGREE ERROR?
         // SPIN UNTIL HAS VALID TARGET
         // HOW TO MAKE ROBOT SPIN
         // HAS VALID TARGET SAME AS FETCHING tv
-
-        if(vision.hasValidTarget()) {
+        if (vision.isTargetFound()) {
             // drivetrain.drive
-            drivetrain.drive(0,0,5, false);
-        }
-        else {
-            if(tx > 1.0) {
+            drivetrain.drive(0, 0, 5, false);
+        } else {
+            if (tx > 1.0) {
                 steering_adjust = Kp * tx;
-                drivetrain.drive(0,0,steering_adjust, false);
+                drivetrain.drive(0, 0, steering_adjust, false);
             }
         }
         // Also want to spin more until the target is closer to the center
@@ -57,7 +57,7 @@ public class TurnToTarget extends CommandBase {
 	@Override
 	public void end(boolean interrupted) {
         System.out.println("TURN TARGET COMMAND | END");
-		SmartDashboard.putNumber("DISTANCE", vision.getDistanceFromTarget());
+		SmartDashboard.putNumber("DISTANCE", vision.getDistanceFromTargetInInches());
 	}
 	
 	// Returns true when the command should end.

@@ -1,16 +1,15 @@
 package frc.robot.subsystems;
 
-import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.lib.limelight.LimeLight;
 import frc.robot.constants.RobotConstants;
 
-public class Vision {
+public class Vision extends SubsystemBase {
 
     private LimeLight limelight;
     private boolean trackingMode = false;
-	private boolean hasValidTarget = false;
 
     public Vision() {
         limelight = new LimeLight();
@@ -19,36 +18,33 @@ public class Vision {
         //Disable Tracking
     }
 
+	@Override
     public void periodic() {
-        hasValidTarget = isTargetFound(); //set it to the isTargetFound
+		SmartDashboard.putBoolean("vision_enabled", isTrackingEnabled());
+		SmartDashboard.putBoolean("vision_targetFound", isTargetFound());
+		SmartDashboard.putNumber("vision_distance", getDistanceFromTargetInInches());
+		SmartDashboard.putNumber("vision_angle", getYAngleToTarget());
     }
 
-    public double getDistanceFromTarget() {
-    
-        if(!isTrackingEnabled()) {
+    public double getDistanceFromTargetInInches() {
+        if (!isTrackingEnabled()) {
             enableTracking();
         }
-
-        boolean foundDistance = false;
 
         double heightDiff = RobotConstants.TARGET_HEIGHTFROMGROUND - RobotConstants.CAMERA_HEIGHTFROMGROUND;
 		double distance = 0;
 
-		while (!foundDistance) {
-			double yAngleToTarget = Units.degreesToRadians(limelight.getdegVerticalToTarget()); // radians
-			distance = heightDiff / Math.tan(RobotConstants.CAMERA_ANGLEFROMPARALLEL + yAngleToTarget); // meters
-			if (distance > 1) {
-				foundDistance = true;
-			}
-        }
-        return distance;
+		if (isTargetFound()) {
+			double yAngleToTarget = limelight.getdegVerticalToTarget(); // degrees
+			distance = heightDiff / Math.tan((RobotConstants.CAMERA_ANGLEFROMPARALLEL + yAngleToTarget)*Math.PI/180.0); // meters now inches
+		}
 
+		return distance;
     }
 
 	public double getYAngleToTarget() {
 		return limelight.getdegVerticalToTarget();
 	}
-
 
     public void enableTracking() {
 		System.out.println("ENABLED TRACKING");
@@ -70,11 +66,6 @@ public class Vision {
 
 	public boolean isTargetFound() {
 		return NetworkTableInstance.getDefault().getTable("limelight").getEntry("tv").getDouble(0.0) > 0;
-	}
-
-	public boolean hasValidTarget() {
-		SmartDashboard.putBoolean("Has Target", hasValidTarget);
-		return hasValidTarget;
 	}
 
 	public LimeLight getLimelight() {

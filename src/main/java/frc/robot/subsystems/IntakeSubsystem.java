@@ -34,6 +34,8 @@ public class IntakeSubsystem extends SubsystemBase {
       SmartDashboard.putNumber("intake_speed", intakeMotor.getEncoder().getVelocity());
     }
 
+    SmartDashboard.putBoolean("intake_beamBreak", hasBall());
+
     if (LoggingConstants.INTAKE_LEVEL.ordinal() >= LoggingLevel.COMPETITION.ordinal()) {}
   }
   
@@ -50,8 +52,7 @@ public class IntakeSubsystem extends SubsystemBase {
   }
 
   public boolean hasBall() {
-		if (beambreak.get() == false) {
-      SmartDashboard.putBoolean("beamBreak", false);
+	  if (beambreak.get() == false) {
       System.out.println("################ BALL INSIDE FEEDER | BEAM BREAK");
     }
 
