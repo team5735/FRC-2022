@@ -5,22 +5,22 @@
 package frc.robot.commands.shooter;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.shooter.HoodSubsystem;
+import frc.robot.subsystems.shooter.ShooterWheelsSubsystem;
 
-public class HoodSetAngle extends CommandBase {
+public class RunShooterWheels extends CommandBase {
+  private ShooterWheelsSubsystem subsystem;
+  private double speed;
 
-  private HoodSubsystem subsystem;
-  private double angle;
-  /** Creates a new HoodSetAngle. */
-  public HoodSetAngle(HoodSubsystem subsystem, double angle) {
+  public RunShooterWheels(ShooterWheelsSubsystem subsystem, double speed) {
     this.subsystem = subsystem;
+    this.speed = speed;
     addRequirements(subsystem);
-    this.angle = angle;
   }
 
+  // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    subsystem.setAngle(angle);
+    subsystem.set(speed);
   }
 
   // Returns true when the command should end.

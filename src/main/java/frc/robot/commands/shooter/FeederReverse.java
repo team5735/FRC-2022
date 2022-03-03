@@ -5,22 +5,20 @@
 package frc.robot.commands.shooter;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.shooter.HoodSubsystem;
+import frc.robot.subsystems.shooter.FeederSubsystem;
 
-public class HoodSetAngle extends CommandBase {
+public class FeederReverse extends CommandBase {
+  private final FeederSubsystem subsystem;
 
-  private HoodSubsystem subsystem;
-  private double angle;
-  /** Creates a new HoodSetAngle. */
-  public HoodSetAngle(HoodSubsystem subsystem, double angle) {
+  public FeederReverse(FeederSubsystem subsystem) {
     this.subsystem = subsystem;
     addRequirements(subsystem);
-    this.angle = angle;
   }
 
+  // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void initialize() {
-    subsystem.setAngle(angle);
+    subsystem.feederReverse();
   }
 
   // Returns true when the command should end.

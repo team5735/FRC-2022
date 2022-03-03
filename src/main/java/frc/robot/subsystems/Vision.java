@@ -1,10 +1,10 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.lib.limelight.LimeLight;
-import frc.robot.constants.RobotConstants;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.lib.limelight.LimeLight;
+import frc.robot.constants.RobotConstants;
 
 public class Vision extends SubsystemBase {
 

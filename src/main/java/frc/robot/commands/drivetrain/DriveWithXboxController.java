@@ -49,7 +49,7 @@ public class DriveWithXboxController extends CommandBase {
         // positive value when we pull to the left (remember, CCW is positive in
         // mathematics). Xbox controllers return positive values when you pull to
         // the right by default.
-        final var rot = m_rotLimiter.calculate(RobotContainer.driveController.getRightTriggerAxis() - RobotContainer.driveController.getLeftTriggerAxis()) * frc.robot.subsystems.Drivetrain.kMaxAngularSpeed;
+        final var rot = m_rotLimiter.calculate(RobotContainer.driveController.getLeftTriggerAxis() - RobotContainer.driveController.getRightTriggerAxis()) * frc.robot.subsystems.Drivetrain.kMaxAngularSpeed;
         SmartDashboard.putNumber("xSpeed", xSpeed);
         SmartDashboard.putNumber("ySpeed", ySpeed);
         SmartDashboard.putNumber("rot", rot);
