@@ -2,32 +2,23 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.subsystems;
+package frc.robot.subsystems.shooter;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMax.SoftLimitDirection;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.PIDSubsystem;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.LoggingConstants;
 import frc.robot.constants.RobotConstants;
 import frc.robot.constants.ShooterConstants;
 import frc.robot.constants.LoggingConstants.LoggingLevel;
 
-public class ShooterSubsystem extends SubsystemBase {
+public class ShooterWheelsSubsystem extends SubsystemBase {
   private TalonFX bigShooterMasterMotor, bigShooterFollowerMotor, smallShooterMotor;
-  private CANSparkMax feederMotor, hoodMotor;
-
-  private DutyCycleEncoder hoodEncoder;
-
-  /** Creates a new ShooterSubsystem. */
-  public ShooterSubsystem() {
+  
+  public ShooterWheelsSubsystem() {
     bigShooterMasterMotor = new TalonFX(RobotConstants.BIG_SHOOTER_MASTER_MOTOR_ID);
     bigShooterMasterMotor.setInverted(true);
     bigShooterMasterMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
@@ -44,17 +35,6 @@ public class ShooterSubsystem extends SubsystemBase {
     smallShooterMotor.config_kI(0, ShooterConstants.SMALL_WHEEL_KI);
     smallShooterMotor.config_kD(0, ShooterConstants.SMALL_WHEEL_KD);
     smallShooterMotor.config_kF(0, ShooterConstants.BIG_WHEEL_KF);
-
-    feederMotor = new CANSparkMax(RobotConstants.FEEDER_MOTOR_ID, MotorType.kBrushless);
-    feederMotor.setInverted(true);
-
-    hoodMotor = new CANSparkMax(RobotConstants.HOOD_MOTOR_ID, MotorType.kBrushless);
-    hoodMotor.setInverted(true);
-    hoodMotor.setSmartCurrentLimit(RobotConstants.HOOD_MOTOR_CURRENT_LIMIT);  // Limit hood motor amp limit to prevent breaking hood
-    hoodMotor.setSoftLimit(SoftLimitDirection.kForward, 0.2f);
-    hoodMotor.setSoftLimit(SoftLimitDirection.kReverse, -0.03f);
-
-    hoodEncoder = new DutyCycleEncoder(RobotConstants.HOOD_ENCODER_DIO_PORT);
   }
 
   @Override
@@ -62,12 +42,11 @@ public class ShooterSubsystem extends SubsystemBase {
     if (LoggingConstants.SHOOTER_LEVEL.ordinal() >= LoggingLevel.DEBUG.ordinal()) {
       SmartDashboard.putNumber("big_shooter_cmd", bigShooterMasterMotor.getMotorOutputPercent());
       SmartDashboard.putNumber("small_shooter_cmd", smallShooterMotor.getMotorOutputPercent());
+      SmartDashboard.putNumber("big_shooter_vel", bigShooterMasterMotor.getSelectedSensorVelocity());
+      SmartDashboard.putNumber("small_shooter_vel", smallShooterMotor.getSelectedSensorVelocity());
     }
 
-    if (LoggingConstants.SHOOTER_LEVEL.ordinal() >= LoggingLevel.COMPETITION.ordinal()) {
-      SmartDashboard.putNumber("hood_angle", getHoodAngle());
-      SmartDashboard.putNumber("hood_raw_angle", hoodEncoder.getAbsolutePosition());
-    }
+    if (LoggingConstants.SHOOTER_LEVEL.ordinal() >= LoggingLevel.COMPETITION.ordinal()) {}
   }
 
   public void setBigShooter(double speed) {
@@ -78,35 +57,35 @@ public class ShooterSubsystem extends SubsystemBase {
     smallShooterMotor.set(ControlMode.Velocity, speed);
   }
 
-  public void setHoodSpeed(double speed) {
-    hoodMotor.set(speed);
+  public void set(double speed) {
+    setBigShooter(speed);
+    setSmallShooter(speed * ShooterConstants.SMALL_BIG_SPEED_RATIO);
+  }
+
+  public void setBigShooterPercent(double percent) {
+    bigShooterMasterMotor.set(ControlMode.PercentOutput, percent);
+  }
+
+  public void setSmallShooterPercent(double percent) {
+    smallShooterMotor.set(ControlMode.PercentOutput, percent);
+  }
+
+  public void setPercent(double percent) {
+    setBigShooterPercent(percent);
+    setSmallShooterPercent(percent);
+  }
+
+  public void testPercent() {
+    setPercent(0.5);
   }
 
   public void stopShooter() {
     setBigShooter(0);
     setSmallShooter(0);
-    setHoodSpeed(0);
   }
 
-  public void feederForward() {
-    feederMotor.set(ShooterConstants.FEEDER_FORWARD_SPEED);
+  public boolean atSpeed() {
+    return bigShooterMasterMotor.getClosedLoopError() < ShooterConstants.BIG_ERROR_TOLERANCE &&
+      smallShooterMotor.getClosedLoopError() < ShooterConstants.SMALL_ERROR_TOLERANCE;
   }
-
-  public void feederReverse() {
-    feederMotor.set(ShooterConstants.FEEDER_REVERSE_SPEED);
-  }
-
-  public void feederStop() {
-    feederMotor.set(0);
-  }
-
-  public void testHood() {
-    setHoodSpeed(0.1);
-  }
-
-  public double getHoodAngle() {
-    return 1-((hoodEncoder.getAbsolutePosition() + ShooterConstants.HOOD_ENCODER_OFFSET) % 1);
-  }
-
-
 }

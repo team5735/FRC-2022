@@ -4,39 +4,23 @@
 
 package frc.robot.commands.shooter;
 
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.subsystems.shooter.HoodSubsystem;
 
 public class HoodSetAngle extends CommandBase {
-  private final ShooterSubsystem subsystem;
-  private final PIDController pidController;
-  /** Creates a new HoodSetAngle. */
-  public HoodSetAngle(ShooterSubsystem subsystem, double setpoint) {
 
-    this.pidController = new PIDController(0.8, 0, 0.005);
-    this.pidController.setSetpoint(setpoint);
+  private HoodSubsystem subsystem;
+  private double angle;
+  /** Creates a new HoodSetAngle. */
+  public HoodSetAngle(HoodSubsystem subsystem, double angle) {
     this.subsystem = subsystem;
     addRequirements(subsystem);
+    this.angle = angle;
   }
 
-  // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    pidController.reset();
-  }
-
-  // Called every time the scheduler runs while the command is scheduled.
-  @Override
-  public void execute() {
-    double speed = pidController.calculate(subsystem.getHoodAngle());
-    subsystem.setHoodSpeed(speed);
-  }
-
-  // Called once the command ends or is interrupted.
-  @Override
-  public void end(boolean interrupted) {
-    //subsystem.setHoodSpeed(0);
+    subsystem.setAngle(angle);
   }
 
   // Returns true when the command should end.

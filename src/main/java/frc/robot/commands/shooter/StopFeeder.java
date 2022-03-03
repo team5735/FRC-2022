@@ -5,18 +5,17 @@
 package frc.robot.commands.shooter;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.IntakeSubsystem;
-import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.subsystems.shooter.FeederSubsystem;
 
-public class FeederStop extends CommandBase {
-  private final ShooterSubsystem subsystem;
+public class StopFeeder extends CommandBase {
+  private final FeederSubsystem subsystem;
 
-  public FeederStop(ShooterSubsystem subsystem) {
+  public StopFeeder(FeederSubsystem subsystem) {
     this.subsystem = subsystem;
     addRequirements(subsystem);
   }
 
-  // Called when the command is initially scheduled.
+  // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void initialize() {
     subsystem.feederStop();
@@ -25,6 +24,6 @@ public class FeederStop extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return true;
+    return false;
   }
 }

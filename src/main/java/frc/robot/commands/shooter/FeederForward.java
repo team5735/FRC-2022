@@ -5,12 +5,12 @@
 package frc.robot.commands.shooter;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.subsystems.shooter.FeederSubsystem;
 
 public class FeederForward extends CommandBase {
-  private final ShooterSubsystem subsystem;
+  private final FeederSubsystem subsystem;
 
-  public FeederForward(ShooterSubsystem subsystem) {
+  public FeederForward(FeederSubsystem subsystem) {
     this.subsystem = subsystem;
     addRequirements(subsystem);
   }
@@ -19,12 +19,11 @@ public class FeederForward extends CommandBase {
   @Override
   public void initialize() {
     subsystem.feederForward();
-
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return true;
+    return false;
   }
 }

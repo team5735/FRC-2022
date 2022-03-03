@@ -5,22 +5,22 @@
 package frc.robot.commands.shooter;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.shooter.ShooterWheelsSubsystem;
 
-import frc.robot.subsystems.ShooterSubsystem;
+public class RunShooterWheels extends CommandBase {
+  private ShooterWheelsSubsystem subsystem;
+  private double speed;
 
-public class StopBigWheel extends CommandBase {
-  private final ShooterSubsystem subsystem;
-
-  public StopBigWheel(ShooterSubsystem subsystem) {
+  public RunShooterWheels(ShooterWheelsSubsystem subsystem, double speed) {
     this.subsystem = subsystem;
-
+    this.speed = speed;
     addRequirements(subsystem);
   }
 
-  // Called every time the scheduler runs while the command is scheduled.
+  // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    subsystem.setBigShooter(0);
+    subsystem.set(speed);
   }
 
   // Returns true when the command should end.

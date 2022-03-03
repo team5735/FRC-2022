@@ -4,43 +4,39 @@
 
 package frc.robot.commands.shooter;
 
-import javax.sound.midi.Soundbank;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
+import frc.robot.subsystems.shooter.FeederSubsystem;
+import frc.robot.subsystems.shooter.HoodSubsystem;
+import frc.robot.subsystems.shooter.ShooterWheelsSubsystem;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
-
-import frc.robot.RobotContainer;
-import frc.robot.subsystems.ShooterSubsystem;
-
-public class ShootBall extends CommandBase {
-  private final ShooterSubsystem subsystem;
-
-  public ShootBall(ShooterSubsystem subsystem) {
-    this.subsystem = subsystem;
-
-    addRequirements(subsystem);
-  }
-
-  // Called every time the scheduler runs while the command is scheduled.
-  @Override
-  public void initialize() {
-    subsystem.setBigShooter(0);
-    subsystem.setSmallShooter(0);
-  }
-
-  @Override
-  public void execute() {
-    double leftTriggerValue = RobotContainer.subsystemController.getLeftTriggerAxis();
-    double bigWheelSpeed = (leftTriggerValue < 0.05 && leftTriggerValue > -0.05) ? 0.6 : leftTriggerValue;
-    subsystem.setBigShooter(bigWheelSpeed);
-    double rightTriggerValue = RobotContainer.subsystemController.getRightTriggerAxis();
-    double smallWheelSpeed = (rightTriggerValue < 0.05 && rightTriggerValue > -0.05) ? 0.6 : rightTriggerValue;
-    subsystem.setBigShooter(smallWheelSpeed);
-    subsystem.feederForward();
-  }
-
-  // Returns true when the command should end.
-  @Override
-  public boolean isFinished() {
-    return false;
+// NOTE:  Consider using this command inline, rather than writing a subclass.  For more
+// information, see:
+// https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
+public class ShootBall extends SequentialCommandGroup {
+  /** Creates a new ShootBall. */
+  public ShootBall(double speed, double angle, ShooterWheelsSubsystem shooterWheelsSubsystem, HoodSubsystem hoodSubsystem, FeederSubsystem feederSubsystem) {
+    // Add your commands in the addCommands() call, e.g.
+    // addCommands(new FooCommand(), new BarCommand());
+    addCommands(
+      new ParallelDeadlineGroup(
+        new SequentialCommandGroup(
+          new WaitUntilCommand(() -> (shooterWheelsSubsystem.atSpeed() && hoodSubsystem.atSetpoint())),
+          new ParallelDeadlineGroup(
+            new WaitCommand(1),
+            new FeederForward(feederSubsystem)
+          )
+        ),
+        new RunShooterWheels(shooterWheelsSubsystem, speed),
+        new HoodSetAngle(hoodSubsystem, angle)
+      ),
+      new ParallelCommandGroup(
+        new StopFeeder(feederSubsystem),
+        new StopShooterWheels(shooterWheelsSubsystem)
+      )
+    );
   }
 }
