@@ -4,6 +4,7 @@
 
 package frc.robot.commands.shooter;
 
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -22,11 +23,15 @@ public class ShootBall extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
+      new ParallelCommandGroup(
+        new InstantCommand(() -> shooterWheelsSubsystem.set(speed), shooterWheelsSubsystem),
+        new InstantCommand(() -> hoodSubsystem.setSetpoint(angle), hoodSubsystem)
+      ),
       new ParallelDeadlineGroup(
         new SequentialCommandGroup(
           new WaitUntilCommand(() -> (shooterWheelsSubsystem.atSpeed() && hoodSubsystem.atSetpoint())),
           new ParallelDeadlineGroup(
-            new WaitCommand(1),
+            new WaitCommand(5),
             new FeederForward(feederSubsystem)
           )
         ),

@@ -93,7 +93,7 @@ public class RobotContainer {
         .whenPressed(new ShootBall(5000, 0.45, shooterWheelsSubsystem, hoodSubsystem, feederSubsystem));
 
     new JoystickButton(subsystemController, Button.kA.value)
-        .whenPressed(new InstantCommand(shooterWheelsSubsystem::testPercent, shooterWheelsSubsystem))
+        .whenPressed(new InstantCommand(()->shooterWheelsSubsystem.set(5000), shooterWheelsSubsystem))
         .whenReleased(new InstantCommand(shooterWheelsSubsystem::stopShooter, shooterWheelsSubsystem));
 
     // // left trigger to run small shooter wheel

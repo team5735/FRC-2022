@@ -75,9 +75,9 @@ public class ShooterWheelsSubsystem extends SubsystemBase {
     setSmallShooterPercent(percent);
   }
 
-  public void testPercent() {
-    setPercent(0.5);
-  }
+  // public void testPercent() {
+  //   setPercent(0.5);
+  // }
 
   public void stopShooter() {
     setBigShooter(0);
