@@ -1,0 +1,20 @@
+0. Initialize Drawing Window (JFrame + JPanel)
+
+1. Ask User for File
+    Start Program
+    Ask user for File location (in Swing)
+    JFile Chooser
+
+2. Open File
+    Open given text file (hopefully a text file)
+
+3. Read each line of the file
+
+4. For each line of the file draw the data
+
+Data file format:
+timestamp x-position y-postion angle (in degrees)
+Comment lines that will be ignored need to start with the # character
+
+Note:
+Estimate position returns timestamp

@@ -46,95 +46,18 @@ import frc.robot.subsystems.shooter.ShooterWheelsSubsystem;
  * the robot (including
  * subsystems, commands, and button mappings) should be declared here.
  */
-public class RobotContainer {
-  public static boolean fieldRelative = false;
-  public final Drivetrain swerveDrivetrain = new Drivetrain();
-
-  public final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
-  public final ShooterWheelsSubsystem shooterWheelsSubsystem = new ShooterWheelsSubsystem();
-  public final HoodSubsystem hoodSubsystem = new HoodSubsystem();
-  public final FeederSubsystem feederSubsystem = new FeederSubsystem();
-
-  public final Vision vision = new Vision();
-
-  public static final XboxController driveController = new XboxController(RobotConstants.DRIVE_CONTROLLER_PORT);
-  public static final XboxController subsystemController = new XboxController(RobotConstants.SUBSYSTEM_CONTROLLER_PORT);
-
-  public boolean isHoodUp = false;
-
-  // Autonomous path generation related
-  public static SendableChooser<String> autoPathChooser = new SendableChooser<>();
-  public ArrayList<DataPoint> testAuto;
+public class AutoPlotRobotContainer extends RobotContainer {
+  public static boolean isPlotting = false;
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
-  public RobotContainer() {
-    readPaths();
-    setupPathChooser();
+  public AutoPlotRobotContainer() {
+    super();
 
     // Configure the button bindings
     configureDriveControllerBindings();
     configureSubsystemControllerBindings();
-  }
-
-  public void readPaths() {
-    testAuto = readAutoFile("/U/testAuto2.txt");
-  }
-
-  public ArrayList<DataPoint> readAutoFile(String filePath) {
-
-    ArrayList<DataPoint> dataPathPoints = new ArrayList<>();
-    File file = new File(filePath);
-
-    try {
-        Scanner myReader = new Scanner(file);
-
-        while (myReader.hasNextLine()) {
-            String data = myReader.nextLine();
-            //List<String> dataPoint = Arrays.asList(data.split(","));
-            String[] dataPointStr = data.split(",");
-            long timeStamp = Long.parseLong(dataPointStr[0]);
-            double xPos = Double.parseDouble(dataPointStr[1]);
-            double yPos = Double.parseDouble(dataPointStr[2]);
-            double angle = Double.parseDouble(dataPointStr[3]);
-            double actRot = Double.parseDouble(dataPointStr[4]);
-            double xS = Double.parseDouble(dataPointStr[5]);
-            double yS = Double.parseDouble(dataPointStr[6]);
-
-            DataPoint dataPoint = new DataPoint(timeStamp, xPos, yPos, angle, actRot, xS, yS);
-            dataPathPoints.add(dataPoint);
-        }
-
-        myReader.close();
-    } catch (FileNotFoundException e) {
-        System.out.println("An error occurred.");
-        e.printStackTrace();
-    }
-
-    return dataPathPoints;
-}
-
-public void setupPathChooser() {
-    String[] autoNames = {"testAuto2"};
-
-    for (String pathName : autoNames) {
-      autoPathChooser.addOption(pathName, pathName);
-    }
-
-    SmartDashboard.putData("Auto Path", autoPathChooser);
-  }
-
-  public Command getAutonomousCommand() {
-
-    String autoPath = autoPathChooser.getSelected();
-
-    if (autoPath.equals("testAuto2")) {
-      return new AutoDriveCommand(testAuto, swerveDrivetrain, fieldRelative);
-    }
-    else {
-      return new SequentialCommandGroup(new Command[] {});
-    }
   }
 
   private void configureDriveControllerBindings() {
@@ -156,6 +79,9 @@ public void setupPathChooser() {
     new JoystickButton(driveController, Button.kB.value)
         .whenPressed(new FieldRelative(swerveDrivetrain, false));
 
+    // Y button => toggle path plotting
+    new JoystickButton(driveController, Button.kY.value)
+        .whenPressed(new PlotPathCommand(swerveDrivetrain));
   }
 
   private void configureSubsystemControllerBindings() {

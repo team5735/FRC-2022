@@ -15,8 +15,8 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
  * the package after creating this project, you must also update the build.gradle file in the
  * project.
  */
-public class Robot extends TimedRobot {
-  private RobotContainer m_robotContainer;
+public class AutoPlotRobot extends TimedRobot {
+  private AutoPlotRobotContainer m_robotContainer;
   private Command m_autonomousCommand;
 
   /**
@@ -27,7 +27,7 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
-    m_robotContainer = new RobotContainer();
+    m_robotContainer = new AutoPlotRobotContainer();
   
     CameraServer.startAutomaticCapture();
   }
@@ -58,9 +58,9 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
-    if (m_autonomousCommand != null) {
-      m_autonomousCommand.schedule();
-    }
+		if (m_autonomousCommand != null) {
+			m_autonomousCommand.schedule();
+		}
   }
 
   @Override
@@ -69,8 +69,8 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopInit() {
     if (m_autonomousCommand != null) {
-      m_autonomousCommand.cancel();
-    }
+			m_autonomousCommand.cancel();
+		}
   }
 
   @Override
