@@ -27,8 +27,7 @@ public class ShootBall extends SequentialCommandGroup {
   private Vision vision = new Vision();
   /** Creates a new ShootBall. */
   public ShootBall(double speed, double angle, ShooterWheelsSubsystem shooterWheelsSubsystem, HoodSubsystem hoodSubsystem, FeederSubsystem feederSubsystem) {
-    // double distance = vision.getDistanceFromTargetInInches();
-    double distance =120;
+    double distance = vision.getDistanceFromTargetInInches();
     SpeedAngle speedAngle = TargetMapper.getSpeedAngleByDistance(distance);
     if (LoggingConstants.SHOOTER_LEVEL.ordinal() >= LoggingLevel.DEBUG.ordinal()) {
       SmartDashboard.putNumber("Vision Distance", distance);

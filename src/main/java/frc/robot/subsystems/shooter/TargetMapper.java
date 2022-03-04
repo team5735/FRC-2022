@@ -4,40 +4,35 @@ import java.util.Map;
 
 public class TargetMapper {
     public static final Map<Integer, SpeedAngle> targetMapping = Map.ofEntries(
-        Map.entry(0,new SpeedAngle(5000, 0)),
-        Map.entry(40,new SpeedAngle(5000, 0)),
-        Map.entry(50,new SpeedAngle(5000, 0)),
-        Map.entry(60,new SpeedAngle(5000, 5)),
-        Map.entry(70,new SpeedAngle(5000, 5)),
-        Map.entry(80,new SpeedAngle(5000, 10)),
-        Map.entry(90,new SpeedAngle(7500, 10)),
-        Map.entry(100,new SpeedAngle(7500, 15)),
-        Map.entry(110,new SpeedAngle(7500, 15)),
-        Map.entry(120,new SpeedAngle(7500, 20)),
-        Map.entry(130,new SpeedAngle(7500, 20)),
-        Map.entry(140,new SpeedAngle(7500, 25)),
-        Map.entry(150,new SpeedAngle(10000, 25)),
-        Map.entry(160,new SpeedAngle(10000, 30)),
-        Map.entry(170,new SpeedAngle(10000, 30)),
-        Map.entry(180,new SpeedAngle(10000, 30)),
-        Map.entry(190,new SpeedAngle(10000, 40)),
-        Map.entry(200,new SpeedAngle(10000, 45)),
-        Map.entry(210,new SpeedAngle(10000, 50)),
-        Map.entry(220,new SpeedAngle(10000, 55)),
-        Map.entry(230,new SpeedAngle(10000, 60)),
-        Map.entry(240,new SpeedAngle(15000, 65)),
-        Map.entry(250,new SpeedAngle(15000, 70)),
-        Map.entry(260,new SpeedAngle(15000, 75)),
-        Map.entry(270,new SpeedAngle(15000, 75)),
-        Map.entry(280,new SpeedAngle(15000, 75))
+        Map.entry(3,new SpeedAngle(7500, 0)),
+        Map.entry(4,new SpeedAngle(7600, 0.05)),
+        Map.entry(5,new SpeedAngle(7700, 0.1)),
+        Map.entry(6,new SpeedAngle(7800, 0.15)),
+        Map.entry(7,new SpeedAngle(7900, 0.2)),
+        Map.entry(8,new SpeedAngle(8000, 0.25)),
+        Map.entry(9,new SpeedAngle(8100, 0.3)),
+        Map.entry(10,new SpeedAngle(8200, 0.35)),
+        Map.entry(11,new SpeedAngle(8300, 0.4)),
+        Map.entry(12,new SpeedAngle(8400, 0.45)),
+        Map.entry(13,new SpeedAngle(9000, 0.45)),
+        Map.entry(14,new SpeedAngle(9500, 0.45)),
+        Map.entry(15,new SpeedAngle(10000, 0.5)),
+        Map.entry(16,new SpeedAngle(10500, 0.55)),
+        Map.entry(17,new SpeedAngle(11000, 0.6)),
+        Map.entry(18,new SpeedAngle(12000, 0.6)),
+        Map.entry(19,new SpeedAngle(13000, 0.6)),
+        Map.entry(20,new SpeedAngle(13500, 0.6)),
+        Map.entry(21,new SpeedAngle(14000, 0.6)),
+        Map.entry(22,new SpeedAngle(14500, 0.70)),
+        Map.entry(23,new SpeedAngle(15000, 0.75)),
+        Map.entry(24,new SpeedAngle(15500, 0.75))
     );
 
     public static SpeedAngle getSpeedAngleByDistance(double distance){
-        if (distance< 40)
-            return targetMapping.get(0);
-        if (distance > 280)
-            return targetMapping.get(280);
-        System.out.println("###########" + Math.round(distance/10)*10);
-        return targetMapping.get((int)(Math.round(distance/10)*10));
+        if (distance< 36)
+            return targetMapping.get(3);
+        if (distance > 288)
+            return targetMapping.get(24);
+        return targetMapping.get((int)Math.round(distance/12));
     }
 }
