@@ -65,6 +65,7 @@ public class RobotContainer {
   // Autonomous path generation related
   public static SendableChooser<String> autoPathChooser = new SendableChooser<>();
   public ArrayList<DataPoint> testAuto;
+  public static boolean isPlotting = false;
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -156,6 +157,9 @@ public void setupPathChooser() {
     new JoystickButton(driveController, Button.kB.value)
         .whenPressed(new FieldRelative(swerveDrivetrain, false));
 
+    // Y button => toggle autonomous path plotting
+    new JoystickButton(driveController, Button.kY.value)
+      .whenPressed(new PlotPathCommand(swerveDrivetrain));
   }
 
   private void configureSubsystemControllerBindings() {

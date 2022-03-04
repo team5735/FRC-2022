@@ -13,7 +13,7 @@ import java.util.Scanner;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Subsystem;
-import frc.robot.AutoPlotRobotContainer;
+import frc.robot.RobotContainer;
 import frc.robot.subsystems.Drivetrain;
 
 public class PlotPathCommand extends CommandBase {
@@ -26,11 +26,11 @@ public class PlotPathCommand extends CommandBase {
         this.swerveDrive = swerveDrive;
 
         // toogle plotting
-        if (!AutoPlotRobotContainer.isPlotting) {
-            AutoPlotRobotContainer.isPlotting = true;
+        if (!RobotContainer.isPlotting) {
+            RobotContainer.isPlotting = true;
             fileCreator();
         } else {
-            AutoPlotRobotContainer.isPlotting = false;
+            RobotContainer.isPlotting = false;
         }
 
         addRequirements((Subsystem) swerveDrive);
@@ -44,7 +44,7 @@ public class PlotPathCommand extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        if (AutoPlotRobotContainer.isPlotting) {
+        if (RobotContainer.isPlotting) {
             drivingPlotter();
         }
     }
@@ -57,7 +57,7 @@ public class PlotPathCommand extends CommandBase {
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        return (!AutoPlotRobotContainer.isPlotting);
+        return (!RobotContainer.isPlotting);
     }
 
     private void fileCreator() {
