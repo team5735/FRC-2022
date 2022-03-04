@@ -5,17 +5,18 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.XboxController.Axis;
 import edu.wpi.first.wpilibj.XboxController.Button;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.drivetrain.FieldRelative;
 import frc.robot.commands.intake.IntakeIn;
 import frc.robot.commands.intake.IntakeOut;
 import frc.robot.commands.intake.IntakeStop;
-import frc.robot.commands.shooter.ShootBall;
+import frc.robot.commands.shooter.FeederForward;
+import frc.robot.commands.shooter.FeederStop;
 import frc.robot.commands.shooter.HoodSetAngle;
-import frc.robot.commands.vision.TurnToTarget;
+import frc.robot.commands.shooter.ShootBall;
 import frc.robot.constants.RobotConstants;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -93,12 +94,22 @@ public class RobotContainer {
     // .whenPressed(new HoodSetAngle(shooterSubsystem, 0.15));
 
     new JoystickButton(subsystemController, Button.kRightBumper.value)
-        .whenPressed(new ShootBall(5000, 0.45, shooterWheelsSubsystem, hoodSubsystem, feederSubsystem));
+      .whileActiveOnce(new ShootBall(5000, 0.45, shooterWheelsSubsystem, hoodSubsystem, feederSubsystem));
 
     new JoystickButton(subsystemController, Button.kA.value)
-        .whenPressed(new InstantCommand(()->shooterWheelsSubsystem.set(5000), shooterWheelsSubsystem))
+        .whenPressed(new InstantCommand(()->shooterWheelsSubsystem.set(10000), shooterWheelsSubsystem))
         .whenReleased(new InstantCommand(shooterWheelsSubsystem::stopShooter, shooterWheelsSubsystem));
 
+    new JoystickButton(subsystemController, Button.kY.value)
+        .whenPressed(new FeederForward(feederSubsystem))
+        .whenReleased(new FeederStop(feederSubsystem));
+
+    new JoystickButton(subsystemController, Button.kB.value)
+      .whenPressed(new HoodSetAngle(hoodSubsystem, 0.75));
+
+    new JoystickButton(subsystemController, Axis.kLeftTrigger.value)
+        .whenPressed(new InstantCommand(()->shooterWheelsSubsystem.set(Axis.kLeftTrigger.value*15000), shooterWheelsSubsystem))
+        .whenReleased(new InstantCommand(shooterWheelsSubsystem::stopShooter, shooterWheelsSubsystem));
     // // // left bumper to intake in
     // new JoystickButton(subsystemController, Button.kLeftBumper.value)
     // .whenPressed(new IntakeIn(intakeSubsystem))
