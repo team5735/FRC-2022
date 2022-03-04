@@ -25,9 +25,9 @@ public class RobotConstants {
 
     //Camera Values
     // public static final double CAMERA_HEIGHTFROMGROUND = Units.inchesToMeters(/*Test Val*/ 25); //Original: 27 in // Returns Meters
-    public static final double CAMERA_HEIGHTFROMGROUND = /*Test Val*/ 26;
+    public static final double CAMERA_HEIGHTFROMGROUND = /*Test Val*/ 32.5;
 
     // public static final double CAMERA_ANGLEFROMPARALLEL = Units.degreesToRadians(/*Test Val*/ 17); // Original: 50 deg //Returns Rads
-    public static final double CAMERA_ANGLEFROMPARALLEL = /*Test Val*/ 44; // Original: 50 deg //Returns Rads
+    public static final double CAMERA_ANGLEFROMPARALLEL = /*Test Val*/ 36; // Original: 50 deg //Returns Rads
 
 }
