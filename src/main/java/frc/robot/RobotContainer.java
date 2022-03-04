@@ -97,7 +97,10 @@ public class RobotContainer {
       .whileActiveOnce(new ShootBall(5000, 0.45, shooterWheelsSubsystem, hoodSubsystem, feederSubsystem));
 
     new JoystickButton(subsystemController, Button.kA.value)
-        .whenPressed(new InstantCommand(()->shooterWheelsSubsystem.set(10000), shooterWheelsSubsystem))
+        .whenPressed(new InstantCommand(()->shooterWheelsSubsystem.set(15000), shooterWheelsSubsystem))
+        .whenReleased(new InstantCommand(shooterWheelsSubsystem::stopShooter, shooterWheelsSubsystem));
+    new JoystickButton(subsystemController, Button.kX.value)
+        .whenPressed(new InstantCommand(()->shooterWheelsSubsystem.set(17000), shooterWheelsSubsystem))
         .whenReleased(new InstantCommand(shooterWheelsSubsystem::stopShooter, shooterWheelsSubsystem));
 
     new JoystickButton(subsystemController, Button.kY.value)
@@ -108,7 +111,7 @@ public class RobotContainer {
       .whenPressed(new HoodSetAngle(hoodSubsystem, 0.75));
 
     new JoystickButton(subsystemController, Axis.kLeftTrigger.value)
-        .whenPressed(new InstantCommand(()->shooterWheelsSubsystem.set(Axis.kLeftTrigger.value*15000), shooterWheelsSubsystem))
+        .whenPressed(new InstantCommand(()->shooterWheelsSubsystem.set(subsystemController.getLeftTriggerAxis()), shooterWheelsSubsystem))
         .whenReleased(new InstantCommand(shooterWheelsSubsystem::stopShooter, shooterWheelsSubsystem));
     // // // left bumper to intake in
     // new JoystickButton(subsystemController, Button.kLeftBumper.value)
