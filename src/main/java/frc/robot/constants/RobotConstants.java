@@ -16,14 +16,20 @@ public class RobotConstants {
     public static final int HOOD_MOTOR_CURRENT_LIMIT = 2;
     public static final int HOOD_ENCODER_DIO_PORT = 5;
 
+    public static final int WINCH_MOTOR_ID = -1; //TODO change to actual ID
+
     // digital input ports
     public static final int FEEDER_BEAMBREAK_DIGITAL_PORT = 6;
 
     //Game Field Values
-    public static final double TARGET_HEIGHTFROMGROUND = Units.inchesToMeters(104); //Returns Meters
+    // public static final double TARGET_HEIGHTFROMGROUND = Units.inchesToMeters(/*Test Val*/ 31.5); // Original: 104 in //Returns Meters
+    public static final double TARGET_HEIGHTFROMGROUND = /*Test Val*/ 104;
 
     //Camera Values
-    public static final double CAMERA_HEIGHTFROMGROUND = Units.inchesToMeters(27); // Returns Meters
-    public static final double CAMERA_ANGLEFROMPARALLEL = Units.degreesToRadians(-50); //Returns Rads
+    // public static final double CAMERA_HEIGHTFROMGROUND = Units.inchesToMeters(/*Test Val*/ 25); //Original: 27 in // Returns Meters
+    public static final double CAMERA_HEIGHTFROMGROUND = /*Test Val*/ 32.5;
+
+    // public static final double CAMERA_ANGLEFROMPARALLEL = Units.degreesToRadians(/*Test Val*/ 17); // Original: 50 deg //Returns Rads
+    public static final double CAMERA_ANGLEFROMPARALLEL = /*Test Val*/ 36; // Original: 50 deg //Returns Rads
 
 }

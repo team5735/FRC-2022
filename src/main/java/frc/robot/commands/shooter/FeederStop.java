@@ -5,27 +5,25 @@
 package frc.robot.commands.shooter;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.shooter.HoodSubsystem;
+import frc.robot.subsystems.shooter.FeederSubsystem;
 
-public class HoodSetAngle extends CommandBase {
+public class FeederStop extends CommandBase {
+  private final FeederSubsystem subsystem;
 
-  private HoodSubsystem subsystem;
-  private double angle;
-  /** Creates a new HoodSetAngle. */
-  public HoodSetAngle(HoodSubsystem subsystem, double angle) {
+  public FeederStop(FeederSubsystem subsystem) {
     this.subsystem = subsystem;
     addRequirements(subsystem);
-    this.angle = angle;
   }
 
+  // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    subsystem.setAngle(angle);
+    subsystem.feederStop();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return true;
   }
 }

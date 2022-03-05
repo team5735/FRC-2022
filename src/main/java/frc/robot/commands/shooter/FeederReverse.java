@@ -5,29 +5,20 @@
 package frc.robot.commands.shooter;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.shooter.FeederSubsystem;
 
-import frc.robot.RobotContainer;
-import frc.robot.subsystems.ShooterSubsystem;
+public class FeederReverse extends CommandBase {
+  private final FeederSubsystem subsystem;
 
-public class RunBigWheel extends CommandBase {
-  private final ShooterSubsystem subsystem;
-
-  public RunBigWheel(ShooterSubsystem subsystem) {
+  public FeederReverse(FeederSubsystem subsystem) {
     this.subsystem = subsystem;
-
     addRequirements(subsystem);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void initialize() {
-    subsystem.setBigShooter(0);
-  }
-
-  @Override
-  public void execute() {
-    double wheelSpeed = RobotContainer.subsystemController.getLeftTriggerAxis();
-    subsystem.setBigShooter(wheelSpeed);
+    subsystem.feederReverse();
   }
 
   // Returns true when the command should end.
