@@ -1,7 +1,5 @@
 package frc.robot.constants;
 
-import edu.wpi.first.math.util.Units;
-
 public class RobotConstants {
     public static final int DRIVE_CONTROLLER_PORT = 0;
     public static final int SUBSYSTEM_CONTROLLER_PORT = 1;

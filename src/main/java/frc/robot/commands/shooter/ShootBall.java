@@ -5,7 +5,6 @@
 package frc.robot.commands.shooter;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -17,43 +16,50 @@ import frc.robot.subsystems.Vision;
 import frc.robot.subsystems.shooter.FeederSubsystem;
 import frc.robot.subsystems.shooter.HoodSubsystem;
 import frc.robot.subsystems.shooter.ShooterWheelsSubsystem;
-import frc.robot.subsystems.shooter.TargetMapper;
 import frc.robot.subsystems.shooter.SpeedAngle;
+import frc.robot.subsystems.shooter.TargetMapper;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class ShootBall extends SequentialCommandGroup {
-  private Vision vision = new Vision();
+  ShooterWheelsSubsystem shooterWheelsSubsystem;
+  HoodSubsystem hoodSubsystem;
+  FeederSubsystem feederSubsystem;
+  Vision visionSubSystem;
   /** Creates a new ShootBall. */
-  public ShootBall(double speed, double angle, ShooterWheelsSubsystem shooterWheelsSubsystem, HoodSubsystem hoodSubsystem, FeederSubsystem feederSubsystem) {
-    double distance = vision.getDistanceFromTargetInInches();
-    SpeedAngle speedAngle = TargetMapper.getSpeedAngleByDistance(distance);
-    if (LoggingConstants.SHOOTER_LEVEL.ordinal() >= LoggingLevel.DEBUG.ordinal()) {
-      SmartDashboard.putNumber("Vision Distance", distance);
-      SmartDashboard.putNumber("Target Speed", speedAngle.getSpeed());
-      SmartDashboard.putNumber("Target Angle", speedAngle.getAngle());
-    }
+  public ShootBall(ShooterWheelsSubsystem shooterWheelsSubsystem, HoodSubsystem hoodSubsystem, FeederSubsystem feederSubsystem, Vision vision) {
+    this.feederSubsystem =feederSubsystem;
+    this.shooterWheelsSubsystem = shooterWheelsSubsystem;
+    this.hoodSubsystem = hoodSubsystem;
+    this.visionSubSystem = vision;
     addCommands(
-      new ParallelCommandGroup(
-        new InstantCommand(() -> shooterWheelsSubsystem.set(speedAngle.getSpeed()), shooterWheelsSubsystem),
-        new InstantCommand(() -> hoodSubsystem.setSetpoint(speedAngle.getAngle()), hoodSubsystem)
-      ),
       new ParallelDeadlineGroup(
-        new SequentialCommandGroup(
           new WaitUntilCommand(() -> (shooterWheelsSubsystem.atSpeed() && hoodSubsystem.atSetpoint())),
           new ParallelDeadlineGroup(
-            new WaitCommand(5),
+            new WaitCommand(3),
             new FeederForward(feederSubsystem)
           )
         ),
-        new RunShooterWheels(shooterWheelsSubsystem, speed),
-        new HoodSetAngle(hoodSubsystem, angle)
-      ),
       new ParallelCommandGroup(
         new StopFeeder(feederSubsystem),
         new StopShooterWheels(shooterWheelsSubsystem)
       )
     );
   }
+
+  @Override
+  public void initialize() {
+    super.initialize();
+    double distance = visionSubSystem.getDistanceFromTargetInInches();
+    SpeedAngle speedAngle = TargetMapper.getSpeedAngleByDistance(distance);
+    if (LoggingConstants.SHOOTER_LEVEL.ordinal() >= LoggingLevel.DEBUG.ordinal()) {
+      SmartDashboard.putNumber("Vision Distance", distance);
+      SmartDashboard.putNumber("Target Speed", speedAngle.getSpeed());
+      SmartDashboard.putNumber("Target Angle", speedAngle.getAngle());
+      shooterWheelsSubsystem.set(speedAngle.getSpeed());
+      hoodSubsystem.setSetpoint(speedAngle.getAngle());
+    }
+  }
+
 }

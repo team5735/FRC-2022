@@ -33,7 +33,7 @@ public class ColorSensor extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
 
-    System.out.println("color sensor running");
+    // System.out.println("color sensor running");
      /**
      * The method GetColor() returns a normalized color value from the sensor and can be
      * useful if outputting the color to an RGB LED or similar. To

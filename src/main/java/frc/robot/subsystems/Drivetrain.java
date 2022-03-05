@@ -59,10 +59,10 @@ public class Drivetrain extends SubsystemBase{
   private final DutyCycleEncoder absoluteEncoderM4 = new DutyCycleEncoder(4);
   
 
-  private final SwerveModule m_frontLeft = new SwerveModule(driveMotorM1, turningMotorM1, swervePIDConfigM1, absoluteEncoderM1, 0.236, 1);
-  private final SwerveModule m_frontRight = new SwerveModule(driveMotorM2, turningMotorM2, swervePIDConfigM2, absoluteEncoderM2, 0.347, 2);
-  private final SwerveModule m_backLeft = new SwerveModule(driveMotorM3, turningMotorM3, swervePIDConfigM3, absoluteEncoderM3, -1.202, 3);
-  private final SwerveModule m_backRight = new SwerveModule(driveMotorM4, turningMotorM4, swervePIDConfigM4, absoluteEncoderM4, 0.306, 4);
+  private final SwerveModule m_frontLeft = new SwerveModule(driveMotorM1, turningMotorM1, swervePIDConfigM1, absoluteEncoderM1, 0.215, 1);
+  private final SwerveModule m_frontRight = new SwerveModule(driveMotorM2, turningMotorM2, swervePIDConfigM2, absoluteEncoderM2, 0.366, 2);
+  private final SwerveModule m_backLeft = new SwerveModule(driveMotorM3, turningMotorM3, swervePIDConfigM3, absoluteEncoderM3, 0.769, 3);
+  private final SwerveModule m_backRight = new SwerveModule(driveMotorM4, turningMotorM4, swervePIDConfigM4, absoluteEncoderM4, 0.300, 4);
   
 
   // private final SwerveModule m_frontLeft = new SwerveModule(driveMotorM1, turningMotorM1, swervePIDConfigM1, absoluteEncoderM1, -0.280, 1);

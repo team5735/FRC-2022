@@ -4,11 +4,6 @@
 
 package frc.robot.constants;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import frc.robot.subsystems.shooter.SpeedAngle;
-
 /** Add your docs here. */
 public class ShooterConstants {
     // Set this value to the raw hoodEncoder.getAbsolutePosition() when the hood is at the top and bottom.
@@ -24,10 +19,10 @@ public class ShooterConstants {
     public static final double BIG_WHEEL_KI = 0;
     public static final double BIG_WHEEL_KD = 0;
     public static final double BIG_WHEEL_KF = 0.05;
-    public static final double SMALL_WHEEL_KP = 0.2;
+    public static final double SMALL_WHEEL_KP = 0.1;
     public static final double SMALL_WHEEL_KI = 0;
     public static final double SMALL_WHEEL_KD = 0;
-    public static final double SMALL_WHEEL_KF = 0.05;
+    public static final double SMALL_WHEEL_KF = 0.01;
 
     public static final double SMALL_BIG_SPEED_RATIO = 1.5; // Drives small wheel at speed * ratio
 

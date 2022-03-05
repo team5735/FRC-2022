@@ -177,13 +177,11 @@ public void setupPathChooser() {
     // .whenPressed(new HoodSetAngle(shooterSubsystem, 0.15));
 
     new JoystickButton(subsystemController, Button.kRightBumper.value)
-      .whileActiveOnce(new ShootBall(5000, 0.45, shooterWheelsSubsystem, hoodSubsystem, feederSubsystem));
+      .whileActiveOnce(new ShootBall(shooterWheelsSubsystem, hoodSubsystem, feederSubsystem, vision));
 
+    //for PID tuning      
     new JoystickButton(subsystemController, Button.kA.value)
-        .whenPressed(new InstantCommand(()->shooterWheelsSubsystem.set(15000), shooterWheelsSubsystem))
-        .whenReleased(new InstantCommand(shooterWheelsSubsystem::stopShooter, shooterWheelsSubsystem));
-    new JoystickButton(subsystemController, Button.kX.value)
-        .whenPressed(new InstantCommand(()->shooterWheelsSubsystem.set(17000), shooterWheelsSubsystem))
+        .whenPressed(new InstantCommand(()->shooterWheelsSubsystem.set(11500), shooterWheelsSubsystem))
         .whenReleased(new InstantCommand(shooterWheelsSubsystem::stopShooter, shooterWheelsSubsystem));
 
     new JoystickButton(subsystemController, Button.kY.value)
