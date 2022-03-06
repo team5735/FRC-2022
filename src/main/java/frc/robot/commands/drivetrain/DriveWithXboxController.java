@@ -25,7 +25,7 @@ public class DriveWithXboxController extends CommandBase {
         fieldRelative = RobotContainer.fieldRelative;
 
         // needs fine tuning but this is to replace the constant used for the deadband
-        deadbandConstant = 0.17;
+        deadbandConstant = 0.05;
 
         addRequirements((Subsystem) swerveDrive);
     }

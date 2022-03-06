@@ -32,7 +32,7 @@ import edu.wpi.first.wpilibj.SPI;
 /** Represents a swerve drive style drivetrain. */
 public class Drivetrain extends SubsystemBase{
   public static final double kMaxSpeed = 1.5; // 3 meters per second
-  public static final double kMaxAngularSpeed = Math.PI*1.5; // 1/2 rotation per second
+  public static final double kMaxAngularSpeed = Math.PI*0.75; // 1/2 rotation per second
 
   private final Translation2d m_frontLeftLocation = new Translation2d(-0.381, 0.381);
   private final Translation2d m_frontRightLocation = new Translation2d(-0.381, -0.381);
@@ -59,10 +59,10 @@ public class Drivetrain extends SubsystemBase{
   private final DutyCycleEncoder absoluteEncoderM4 = new DutyCycleEncoder(4);
   
 
-  private final SwerveModule m_frontLeft = new SwerveModule(driveMotorM1, turningMotorM1, swervePIDConfigM1, absoluteEncoderM1, 0.215, 1);
-  private final SwerveModule m_frontRight = new SwerveModule(driveMotorM2, turningMotorM2, swervePIDConfigM2, absoluteEncoderM2, 0.366, 2);
-  private final SwerveModule m_backLeft = new SwerveModule(driveMotorM3, turningMotorM3, swervePIDConfigM3, absoluteEncoderM3, 0.769, 3);
-  private final SwerveModule m_backRight = new SwerveModule(driveMotorM4, turningMotorM4, swervePIDConfigM4, absoluteEncoderM4, 0.300, 4);
+  private final SwerveModule m_frontLeft = new SwerveModule(driveMotorM1, turningMotorM1, swervePIDConfigM1, absoluteEncoderM1, 0.678, 1);
+  private final SwerveModule m_frontRight = new SwerveModule(driveMotorM2, turningMotorM2, swervePIDConfigM2, absoluteEncoderM2, 0.388, 2);
+  private final SwerveModule m_backLeft = new SwerveModule(driveMotorM3, turningMotorM3, swervePIDConfigM3, absoluteEncoderM3, 0.111, 3);
+  private final SwerveModule m_backRight = new SwerveModule(driveMotorM4, turningMotorM4, swervePIDConfigM4, absoluteEncoderM4, 0.305, 4);
   
 
   // private final SwerveModule m_frontLeft = new SwerveModule(driveMotorM1, turningMotorM1, swervePIDConfigM1, absoluteEncoderM1, -0.280, 1);
