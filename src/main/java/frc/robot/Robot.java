@@ -60,6 +60,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
+
+    System.out.println("Starting auto");
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     if (m_autonomousCommand != null) {
@@ -72,7 +74,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousExit() {
-    AutoDriveCommand.commandFinished = true;
+    System.out.println("Exiting Auto");
+    //AutoDriveCommand.commandFinished = true;
   }
 
   @Override

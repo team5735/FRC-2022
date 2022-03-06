@@ -44,12 +44,14 @@ public class SwerveModule {
     this.driveMotor.config_kI(0, pidConfig.getDriveMotorPID().getKi());
     this.driveMotor.config_kD(0, pidConfig.getDriveMotorPID().getKd());
     this.driveMotor.config_kF(0, pidConfig.getDriveMotorPID().getKf());
+    this.driveMotor.selectProfileSlot(0, 0);
     this.turningMotor.config_kP(0, pidConfig.getTurningMotorPID().getKp());
     this.turningMotor.config_kI(0, pidConfig.getTurningMotorPID().getKi());
     this.turningMotor.config_kD(0, pidConfig.getTurningMotorPID().getKd());
     this.turningMotor.config_kF(0, pidConfig.getTurningMotorPID().getKf());
-    this.turningMotor.configMotionAcceleration(25000);
-    this.turningMotor.configMotionCruiseVelocity(12500);
+    this.turningMotor.selectProfileSlot(0, 0);
+    this.turningMotor.configMotionAcceleration(60000); // 25000
+    this.turningMotor.configMotionCruiseVelocity(45000); // 12500
   }
 
   // Unit conversion methods
