@@ -13,7 +13,7 @@ public class AutoDriveCommand extends CommandBase {
     private ArrayList<DataPoint> currentPath;
     private Drivetrain swerveDrive;
     private boolean fieldRelative;
-    private boolean commandFinished = false;
+    public static boolean commandFinished = false;
 
     public AutoDriveCommand(ArrayList<DataPoint> currentPath, Drivetrain swerveDrive, boolean fieldRelative) {
         this.currentPath = currentPath;
