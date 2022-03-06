@@ -1,16 +1,16 @@
 package frc.robot.commands.vision;
 
-import edu.wpi.first.wpilibj2.command.Subsystem;
-import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Vision;
+import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Vision;
 
 public class TurnToTarget extends CommandBase {
 
     private final Drivetrain drivetrain;
     private final Vision vision;
+    private boolean isFinished = false;
     
     public TurnToTarget(Vision vision, Drivetrain drivetrain) {
         this.vision = vision;
@@ -30,8 +30,8 @@ public class TurnToTarget extends CommandBase {
 	@Override
 	public void execute() {
         double steering_adjust;
-        double Kp = -0.1;  // Proportional control constant
-        double tx = NetworkTableInstance.getDefault().getTable("limelight").getEntry("<tx>").getDouble(0);
+        double Kp = -0.4;  // Proportional control constant
+        double tx = vision.getTX();
 
         // Make sure Vision Tracking is Always Running
         if (!vision.isTrackingEnabled())
@@ -41,14 +41,14 @@ public class TurnToTarget extends CommandBase {
         // SPIN UNTIL HAS VALID TARGET
         // HOW TO MAKE ROBOT SPIN
         // HAS VALID TARGET SAME AS FETCHING tv
-        if (vision.isTargetFound()) {
+        if (!vision.isTargetFound()) {
             // drivetrain.drive
             drivetrain.drive(0, 0, 5, false);
+        } else if (tx > 1.0 || tx < -1.0) {
+            steering_adjust = Kp * tx;
+            drivetrain.drive(0, 0, steering_adjust, false);
         } else {
-            if (tx > 1.0) {
-                steering_adjust = Kp * tx;
-                drivetrain.drive(0, 0, steering_adjust, false);
-            }
+            isFinished = true;
         }
         // Also want to spin more until the target is closer to the center
 	}
@@ -63,7 +63,7 @@ public class TurnToTarget extends CommandBase {
 	// Returns true when the command should end.
 	@Override
 	public boolean isFinished() {
-        return vision.isTargetFound();
+        return isFinished;
 	}
 }
 
