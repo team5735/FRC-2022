@@ -25,10 +25,10 @@ public class Vision extends SubsystemBase {
 		double distance = getDistanceFromTargetInInches();
 		SpeedAngle temp = TargetMapper.getSpeedAngleByDistance(distance);
 
-		// SmartDashboard.putBoolean("vision_enabled", isTrackingEnabled());
-		// SmartDashboard.putBoolean("vision_targetFound", isTargetFound());
-		// SmartDashboard.putNumber("vision_angle", getYAngleToTarget());
-		// SmartDashboard.putNumber("vision_distance", distance);
+		SmartDashboard.putBoolean("vision_enabled", isTrackingEnabled());
+		SmartDashboard.putBoolean("vision_targetFound", isTargetFound());
+		SmartDashboard.putNumber("vision_angle", getYAngleToTarget());
+		SmartDashboard.putNumber("vision_distance", distance);
 
 		SmartDashboard.putNumber("hood_angle", temp.getAngle());
 		SmartDashboard.putNumber("shooter_speed", temp.getSpeed());

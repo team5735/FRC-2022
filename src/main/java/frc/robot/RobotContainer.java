@@ -222,7 +222,7 @@ public void setupPathChooser() {
         .whenReleased(new IntakeStop(intakeSubsystem));
 
     // 'X' button to aim, bind to cmd TurnToTarget
-    new JoystickButton(subsystemController, Button.kA.value)
+    new JoystickButton(subsystemController, Button.kX.value)
         .whenPressed(new TurnToTarget(vision, swerveDrivetrain));
   }
 
