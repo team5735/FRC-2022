@@ -105,4 +105,8 @@ public class AutoDriveCommand extends CommandBase {
         return commandFinished;
     }
 
+    public void endedCommand() {
+        commandFinished = true;
+    }
+
 }

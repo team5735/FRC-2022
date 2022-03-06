@@ -4,8 +4,13 @@
 
 package frc.robot;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -66,6 +71,10 @@ public class RobotContainer {
   public static SendableChooser<String> autoPathChooser = new SendableChooser<>();
   public ArrayList<DataPoint> testAuto;
   public static boolean isPlotting = false;
+
+  private Long startTime;
+  private String fileTime;
+  private DateTimeFormatter filenameFormatter;
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -157,9 +166,17 @@ public void setupPathChooser() {
     new JoystickButton(driveController, Button.kB.value)
         .whenPressed(new FieldRelative(swerveDrivetrain, false));
 
-    // Y button => toggle autonomous path plotting
-    new JoystickButton(driveController, Button.kY.value)
-      .whenPressed(new PlotPathCommand(swerveDrivetrain));
+    //Y button => toggle autonomous path plotting
+    // new JoystickButton(driveController, Button.kY.value)
+    //   .whenPressed(new PlotPathCommand(swerveDrivetrain, isPlotting));
+
+  }
+
+  public void configureAutoButton() {
+    if(driveController.getYButtonPressed()){
+      isPlotting = !isPlotting;
+      fileCreator();
+    }
   }
 
   private void configureSubsystemControllerBindings() {
@@ -204,5 +221,61 @@ public void setupPathChooser() {
     // .whenPressed(new TurnToTarget(vision, swerveDrivetrain))
     // .whenReleased(command, interruptible)
   }
+
+  private void fileCreator() {
+
+    filenameFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy-HH-mm-ss");
+
+    //Starts and Stops plotting
+      if(isPlotting) {
+        try {
+          fileTime = filenameFormatter.format(LocalDateTime.now());
+          File myObj = new File("/U/" + fileTime + ".txt");
+          startTime = System.currentTimeMillis();
+          if (myObj.createNewFile()) {
+            System.out.println("File created: " + myObj.getName());
+          } else {
+            System.out.println("File already exists.");
+          }
+        
+        } catch (IOException e) {
+          System.out.println("An error occurred.");
+          e.printStackTrace();
+        }
+        SmartDashboard.putBoolean("Is Plotting", true);
+      }
+      else{
+        System.out.println("Stops plotting");
+        SmartDashboard.putBoolean("Is Plotting", false);
+      }
+    }
+    public void drivingPlotter() {
+      if(isPlotting) {
+        Long time = System.currentTimeMillis() - startTime;
+        double robotX = swerveDrivetrain.poseEstimator().getEstimatedPosition().getX();
+        double robotY = swerveDrivetrain.poseEstimator().getEstimatedPosition().getY();
+        double rotation = swerveDrivetrain.poseEstimator().getEstimatedPosition().getRotation().getDegrees();
+        double actualRotation = swerveDrivetrain.getRot();
+        double xSpeed = swerveDrivetrain.getXSpeed();
+        double ySpeed = swerveDrivetrain.getYSpeed();
+    
+        String pathCordString = time + "," + robotX + "," + robotY + "," + rotation + "," + actualRotation + "," + xSpeed + "," + ySpeed;
+    
+        try {
+          FileWriter myWriter = new FileWriter("/U/" + fileTime + ".txt", true);
+          BufferedWriter bw = new BufferedWriter(myWriter);
+          bw.write(pathCordString);
+          bw.newLine();
+          bw.close();
+    
+          System.out.println("Successfully wrote to the file.");
+        } catch (IOException e) {
+          System.out.println("An error occurred.");
+          e.printStackTrace();
+        }
+
+        swerveDrivetrain.updateOdometry();
+      }
+    }
 
 }

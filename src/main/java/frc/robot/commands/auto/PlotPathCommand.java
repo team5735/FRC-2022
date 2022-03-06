@@ -22,16 +22,11 @@ public class PlotPathCommand extends CommandBase {
     private DateTimeFormatter filenameFormatter;
     public Drivetrain swerveDrive;
 
-    public PlotPathCommand (Drivetrain swerveDrive) {
-        this.swerveDrive = swerveDrive;
+    private boolean isPlotting;
 
-        // toogle plotting
-        if (!RobotContainer.isPlotting) {
-            RobotContainer.isPlotting = true;
-            fileCreator();
-        } else {
-            RobotContainer.isPlotting = false;
-        }
+    public PlotPathCommand (Drivetrain swerveDrive, boolean isPlotting) {
+        this.swerveDrive = swerveDrive;
+        this.isPlotting = isPlotting;
 
         addRequirements((Subsystem) swerveDrive);
     }
@@ -39,14 +34,13 @@ public class PlotPathCommand extends CommandBase {
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
+        fileCreator();
     }
 
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        if (RobotContainer.isPlotting) {
-            drivingPlotter();
-        }
+        drivingPlotter();
     }
 
     // Called once the command ends or is interrupted.
@@ -57,7 +51,7 @@ public class PlotPathCommand extends CommandBase {
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        return (!RobotContainer.isPlotting);
+        return false;
     }
 
     private void fileCreator() {
