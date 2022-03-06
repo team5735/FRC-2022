@@ -32,6 +32,8 @@ import frc.robot.commands.intake.IntakeStop;
 import frc.robot.commands.shooter.FeederForward;
 import frc.robot.commands.shooter.FeederStop;
 import frc.robot.commands.shooter.HoodSetAngle;
+import frc.robot.commands.shooter.HoodStop;
+import frc.robot.commands.shooter.HoodTrackTarget;
 import frc.robot.commands.shooter.ShootBall;
 import frc.robot.constants.RobotConstants;
 import frc.robot.subsystems.Drivetrain;
@@ -194,7 +196,8 @@ public void setupPathChooser() {
     // .whenPressed(new HoodSetAngle(shooterSubsystem, 0.15));
 
     new JoystickButton(subsystemController, Button.kRightBumper.value)
-      .whileActiveOnce(new ShootBall(shooterWheelsSubsystem, hoodSubsystem, feederSubsystem, vision));
+      .whenPressed(new HoodTrackTarget(hoodSubsystem))
+      .whenReleased(new HoodStop(hoodSubsystem));
 
     //for PID tuning      
     new JoystickButton(subsystemController, Button.kA.value)

@@ -34,7 +34,7 @@ public class IntakeSubsystem extends SubsystemBase {
       SmartDashboard.putNumber("intake_speed", intakeMotor.getEncoder().getVelocity());
     }
 
-    SmartDashboard.putBoolean("intake_beamBreak", hasBall());
+    // SmartDashboard.putBoolean("intake_beamBreak", hasBall());
 
     if (LoggingConstants.INTAKE_LEVEL.ordinal() >= LoggingLevel.COMPETITION.ordinal()) {}
   }

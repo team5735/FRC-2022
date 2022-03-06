@@ -46,17 +46,20 @@ public class HoodSubsystem extends PIDSubsystem {
     return 1-((hoodEncoder.getAbsolutePosition() + ShooterConstants.HOOD_ENCODER_OFFSET) % 1);
   }
 
-  public boolean atSetpoint() {
+  public boolean atAngle() {
     return m_controller.atSetpoint();
   }
 
+  public void setAngle(double angle) {
+    setSetpoint(Math.min(Math.max(0, angle), 1));   // 0 < Angle < 1; TODO calculate for actual min and max
+  }
+
+  public void startHood() {
+    enable();
+  }
+  
   public void stopHood() {
     disable();
     hoodMotor.set(0);
-  }
-
-  public void setAngle(double angle) {
-    setSetpoint(Math.max(Math.min(1, angle), 0));   // 0 < Angle < 1; TODO calculate for actual min and max
-    enable();
   }
 }

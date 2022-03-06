@@ -25,12 +25,12 @@ public class FeederSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    if (LoggingConstants.SHOOTER_LEVEL.ordinal() >= LoggingLevel.DEBUG.ordinal()) {
+    if (LoggingConstants.FEEDER_LEVEL.ordinal() >= LoggingLevel.DEBUG.ordinal()) {
       SmartDashboard.putNumber("feeder_cmd", feederMotor.getAppliedOutput());
       SmartDashboard.putNumber("feeder_current", feederMotor.getOutputCurrent());
     }
 
-    if (LoggingConstants.SHOOTER_LEVEL.ordinal() >= LoggingLevel.COMPETITION.ordinal()) {
+    if (LoggingConstants.FEEDER_LEVEL.ordinal() >= LoggingLevel.COMPETITION.ordinal()) {
       SmartDashboard.putNumber("feeder_dir", feederMotor.getAppliedOutput() == 0 ? (0) : (feederMotor.getAppliedOutput() < 0 ? -1 : 1));
     }
   }

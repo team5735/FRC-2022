@@ -42,12 +42,25 @@ public class TargetMapper {
             return targetMapping.get(3);
         if (distance > 288)
             return targetMapping.get(24);
-        SpeedAngle speedAngle = targetMapping.get((int)Math.round(distance/12));
+
+        SpeedAngle floorSpeedAngle = targetMapping.get((int)Math.floor(distance/12));
+        SpeedAngle ceilSpeedAngle = targetMapping.get((int)Math.floor((distance+12)/12));
+
+        double ratio = (distance - Math.floor(distance/12) * 12) / 12;
+
+        SpeedAngle speedAngle = new SpeedAngle(
+            (int) (floorSpeedAngle.getSpeed() + (ceilSpeedAngle.getSpeed() - floorSpeedAngle.getSpeed()) * ratio),
+            floorSpeedAngle.getAngle() + (ceilSpeedAngle.getAngle() - floorSpeedAngle.getAngle()) * ratio
+        );
+
         if (LoggingConstants.SHOOTER_LEVEL.ordinal() >= LoggingLevel.DEBUG.ordinal()) {
             SmartDashboard.putNumber("round Feet", (int)Math.round(distance/12));
             SmartDashboard.putNumber("Output Speed", speedAngle.getSpeed());
             SmartDashboard.putNumber("Output Angle", speedAngle.getAngle());
           }
         return speedAngle;
+    }
+
+    public class getSpeedAngleByDistance {
     }
 }

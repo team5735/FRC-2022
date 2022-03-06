@@ -5,6 +5,8 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.lib.limelight.LimeLight;
 import frc.robot.constants.RobotConstants;
+import frc.robot.subsystems.shooter.SpeedAngle;
+import frc.robot.subsystems.shooter.TargetMapper;
 
 public class Vision extends SubsystemBase {
 
@@ -20,10 +22,16 @@ public class Vision extends SubsystemBase {
 
 	@Override
     public void periodic() {
-		SmartDashboard.putBoolean("vision_enabled", isTrackingEnabled());
-		SmartDashboard.putBoolean("vision_targetFound", isTargetFound());
-		SmartDashboard.putNumber("vision_distance", getDistanceFromTargetInInches());
-		SmartDashboard.putNumber("vision_angle", getYAngleToTarget());
+		double distance = getDistanceFromTargetInInches();
+		SpeedAngle temp = TargetMapper.getSpeedAngleByDistance(distance);
+
+		// SmartDashboard.putBoolean("vision_enabled", isTrackingEnabled());
+		// SmartDashboard.putBoolean("vision_targetFound", isTargetFound());
+		// SmartDashboard.putNumber("vision_angle", getYAngleToTarget());
+		// SmartDashboard.putNumber("vision_distance", distance);
+
+		SmartDashboard.putNumber("hood_angle", temp.getAngle());
+		SmartDashboard.putNumber("shooter_speed", temp.getSpeed());
     }
 
     public double getDistanceFromTargetInInches() {

@@ -5,27 +5,25 @@
 package frc.robot.commands.shooter;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.shooter.ShooterWheelsSubsystem;
+import frc.robot.subsystems.shooter.HoodSubsystem;
 
-public class RunShooterWheels extends CommandBase {
-  private ShooterWheelsSubsystem subsystem;
-  private double speed;
-
-  public RunShooterWheels(ShooterWheelsSubsystem subsystem, double speed) {
+public class HoodStop extends CommandBase {
+  private HoodSubsystem subsystem;
+  /** Creates a new HoodStop. */
+  public HoodStop(HoodSubsystem subsystem) {
     this.subsystem = subsystem;
-    this.speed = speed;
     addRequirements(subsystem);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    subsystem.set(speed);
+    subsystem.stopHood();
   }
-
+  
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return true;
   }
 }
