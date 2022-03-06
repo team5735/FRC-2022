@@ -28,10 +28,10 @@ public class Vision extends SubsystemBase {
 		// SmartDashboard.putBoolean("vision_enabled", isTrackingEnabled());
 		// SmartDashboard.putBoolean("vision_targetFound", isTargetFound());
 		// SmartDashboard.putNumber("vision_angle", getYAngleToTarget());
-		// SmartDashboard.putNumber("vision_distance", distance);
+		SmartDashboard.putNumber("vision_distance", distance);
 
-		SmartDashboard.putNumber("hood_angle", temp.getAngle());
-		SmartDashboard.putNumber("shooter_speed", temp.getSpeed());
+		SmartDashboard.putNumber("vision_hood_angle", temp.getAngle());
+		SmartDashboard.putNumber("vision_shooter_speed", temp.getSpeed());
     }
 
     public double getDistanceFromTargetInInches() {

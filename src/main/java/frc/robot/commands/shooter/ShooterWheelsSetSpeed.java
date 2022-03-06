@@ -4,23 +4,30 @@
 
 package frc.robot.commands.shooter;
 
+import java.util.function.Supplier;
+
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.shooter.ShooterWheelsSubsystem;
 
 public class ShooterWheelsSetSpeed extends CommandBase {
   private ShooterWheelsSubsystem subsystem;
-  private double speed;
+  private Supplier<Double> speedGetter;
 
-  public ShooterWheelsSetSpeed(ShooterWheelsSubsystem subsystem, double speed) {
-    this.subsystem = subsystem;
-    this.speed = speed;
+  public ShooterWheelsSetSpeed(ShooterWheelsSubsystem subsystem, Supplier<Double> speedGetter) {
     addRequirements(subsystem);
+    this.subsystem = subsystem;
+    this.speedGetter = speedGetter;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    subsystem.set(speed);
+    subsystem.set(speedGetter.get());
+  }
+
+  @Override
+  public void execute() {
+    subsystem.set(speedGetter.get());
   }
 
   // Returns true when the command should end.

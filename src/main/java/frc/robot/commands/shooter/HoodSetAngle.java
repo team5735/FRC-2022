@@ -4,24 +4,31 @@
 
 package frc.robot.commands.shooter;
 
+import java.util.function.Supplier;
+
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.shooter.HoodSubsystem;
 
 public class HoodSetAngle extends CommandBase {
 
   private HoodSubsystem subsystem;
-  private double angle;
+  private Supplier<Double> angleGetter;
   /** Creates a new HoodSetAngle. */
-  public HoodSetAngle(HoodSubsystem subsystem, double angle) {
+  public HoodSetAngle(HoodSubsystem subsystem, Supplier<Double> angleGetter) {
     addRequirements(subsystem);
     this.subsystem = subsystem;
-    this.angle = angle;
+    this.angleGetter = angleGetter;
   }
 
   @Override
   public void initialize() {
-    subsystem.setAngle(angle);
+    subsystem.setAngle(angleGetter.get());
     subsystem.startHood();
+  }
+
+  @Override
+  public void execute() {
+    subsystem.setAngle(angleGetter.get());
   }
 
   // Returns true when the command should end.

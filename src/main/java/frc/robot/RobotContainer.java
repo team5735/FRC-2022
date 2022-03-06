@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.auto.AutoDriveCommand;
@@ -33,8 +34,8 @@ import frc.robot.commands.shooter.FeederForward;
 import frc.robot.commands.shooter.FeederStop;
 import frc.robot.commands.shooter.HoodSetAngle;
 import frc.robot.commands.shooter.HoodStop;
-import frc.robot.commands.shooter.HoodTrackTarget;
-import frc.robot.commands.shooter.ShootBall;
+import frc.robot.commands.shooter.ShooterWheelsSetSpeed;
+import frc.robot.commands.shooter.ShooterWheelsStop;
 import frc.robot.constants.RobotConstants;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -84,6 +85,9 @@ public class RobotContainer {
   public RobotContainer() {
     readPaths();
     setupPathChooser();
+
+    SmartDashboard.putNumber("manual_hood_angle", 0.1);
+    SmartDashboard.putNumber("manual_shooter_speed", 0);
 
     // Configure the button bindings
     configureDriveControllerBindings();
@@ -196,8 +200,24 @@ public void setupPathChooser() {
     // .whenPressed(new HoodSetAngle(shooterSubsystem, 0.15));
 
     new JoystickButton(subsystemController, Button.kRightBumper.value)
-      .whenPressed(new HoodTrackTarget(hoodSubsystem))
-      .whenReleased(new HoodStop(hoodSubsystem));
+      .whenPressed(new ParallelCommandGroup(
+        new HoodSetAngle(hoodSubsystem, () -> (SmartDashboard.getNumber("vision_hood_angle", 0.1))),
+        new ShooterWheelsSetSpeed(shooterWheelsSubsystem, () -> (SmartDashboard.getNumber("vision_shooter_speed", 0)))
+      ))
+      .whenReleased(new ParallelCommandGroup(
+        new HoodStop(hoodSubsystem),
+        new ShooterWheelsStop(shooterWheelsSubsystem)
+      ));
+
+    new JoystickButton(subsystemController, Button.kLeftBumper.value)
+      .whenPressed(new ParallelCommandGroup(
+        new HoodSetAngle(hoodSubsystem, () -> (SmartDashboard.getNumber("manual_hood_angle", 0.1))),
+        new ShooterWheelsSetSpeed(shooterWheelsSubsystem, () -> (SmartDashboard.getNumber("vision_shooter_speed", 0)))
+      ))
+      .whenReleased(new ParallelCommandGroup(
+        new HoodStop(hoodSubsystem),
+        new ShooterWheelsStop(shooterWheelsSubsystem)
+      ));
 
     //for PID tuning      
     new JoystickButton(subsystemController, Button.kA.value)
@@ -209,7 +229,7 @@ public void setupPathChooser() {
         .whenReleased(new FeederStop(feederSubsystem));
 
     new JoystickButton(subsystemController, Button.kB.value)
-      .whenPressed(new HoodSetAngle(hoodSubsystem, 0.75));
+      .whenPressed(new HoodSetAngle(hoodSubsystem, () -> (0.75)));
 
     new JoystickButton(subsystemController, Axis.kLeftTrigger.value)
         .whenPressed(new InstantCommand(()->shooterWheelsSubsystem.set(subsystemController.getLeftTriggerAxis()), shooterWheelsSubsystem))

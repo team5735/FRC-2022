@@ -9,11 +9,13 @@ import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
-
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.PIDSubsystem;
+import frc.robot.constants.LoggingConstants;
 import frc.robot.constants.RobotConstants;
 import frc.robot.constants.ShooterConstants;
+import frc.robot.constants.LoggingConstants.LoggingLevel;
 
 public class HoodSubsystem extends PIDSubsystem {
 
@@ -37,6 +39,16 @@ public class HoodSubsystem extends PIDSubsystem {
   }
 
   @Override
+  public void periodic() {
+    super.periodic();
+    if (LoggingConstants.SHOOTER_LEVEL.ordinal() >= LoggingLevel.DEBUG.ordinal()) {
+      SmartDashboard.putNumber("hood_angle", getMeasurement());
+    }
+
+    if (LoggingConstants.SHOOTER_LEVEL.ordinal() >= LoggingLevel.COMPETITION.ordinal()) {}
+  }
+
+  @Override
   public void useOutput(double output, double setpoint) {
     hoodMotor.set(output);    // TODO Might need to change to voltage for different battery voltages
   }
@@ -51,7 +63,7 @@ public class HoodSubsystem extends PIDSubsystem {
   }
 
   public void setAngle(double angle) {
-    setSetpoint(Math.min(Math.max(0, angle), 1));   // 0 < Angle < 1; TODO calculate for actual min and max
+    setSetpoint(Math.min(Math.max(0.05, angle), 0.95));   // 0 < Angle < 1; TODO calculate for actual min and max
   }
 
   public void startHood() {

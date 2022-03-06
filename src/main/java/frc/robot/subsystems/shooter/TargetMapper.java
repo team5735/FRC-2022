@@ -17,7 +17,7 @@ public class TargetMapper {
         Map.entry(8,new SpeedAngle(9500, 0.25)),
         Map.entry(9,new SpeedAngle(9600, 0.3)),
         Map.entry(10,new SpeedAngle(9700, 0.35)),
-        Map.entry(11,new SpeedAngle(9800, 0.4)),
+        Map.entry(11,new SpeedAngle(10200, 0.2)),
         Map.entry(12,new SpeedAngle(9900, 0.45)),
         Map.entry(13,new SpeedAngle(10000, 0.45)),
         Map.entry(14,new SpeedAngle(10100, 0.45)),
@@ -38,10 +38,12 @@ public class TargetMapper {
             SmartDashboard.putNumber("Input Distance", distance);
           }
 
-        if (distance< 36)
+        if (distance < 36)
             return targetMapping.get(3);
         if (distance > 288)
             return targetMapping.get(24);
+
+        double speed = 2216.3134 * Math.pow(distance, 0.3127);
 
         SpeedAngle floorSpeedAngle = targetMapping.get((int)Math.floor(distance/12));
         SpeedAngle ceilSpeedAngle = targetMapping.get((int)Math.floor((distance+12)/12));
@@ -49,18 +51,10 @@ public class TargetMapper {
         double ratio = (distance - Math.floor(distance/12) * 12) / 12;
 
         SpeedAngle speedAngle = new SpeedAngle(
-            (int) (floorSpeedAngle.getSpeed() + (ceilSpeedAngle.getSpeed() - floorSpeedAngle.getSpeed()) * ratio),
+            (int) Math.min(Math.max(speed, 8500), 13000),
             floorSpeedAngle.getAngle() + (ceilSpeedAngle.getAngle() - floorSpeedAngle.getAngle()) * ratio
         );
 
-        if (LoggingConstants.SHOOTER_LEVEL.ordinal() >= LoggingLevel.DEBUG.ordinal()) {
-            SmartDashboard.putNumber("round Feet", (int)Math.round(distance/12));
-            SmartDashboard.putNumber("Output Speed", speedAngle.getSpeed());
-            SmartDashboard.putNumber("Output Angle", speedAngle.getAngle());
-          }
         return speedAngle;
-    }
-
-    public class getSpeedAngleByDistance {
     }
 }
