@@ -35,6 +35,7 @@ import frc.robot.commands.shooter.HoodSetAngle;
 import frc.robot.commands.shooter.HoodStop;
 import frc.robot.commands.shooter.HoodTrackTarget;
 import frc.robot.commands.shooter.ShootBall;
+import frc.robot.commands.vision.TurnToTarget;
 import frc.robot.constants.RobotConstants;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -214,15 +215,15 @@ public void setupPathChooser() {
     new JoystickButton(subsystemController, Axis.kLeftTrigger.value)
         .whenPressed(new InstantCommand(()->shooterWheelsSubsystem.set(subsystemController.getLeftTriggerAxis()), shooterWheelsSubsystem))
         .whenReleased(new InstantCommand(shooterWheelsSubsystem::stopShooter, shooterWheelsSubsystem));
-    // // // left bumper to intake in
-    // new JoystickButton(subsystemController, Button.kLeftBumper.value)
-    // .whenPressed(new IntakeIn(intakeSubsystem))
-    // .whenReleased(new IntakeStop(intakeSubsystem));
 
-    // 'A' button to aim, bind to cmd TurnToTarget
-    // new JoystickButton(subsystemController, Button.kA.value)
-    // .whenPressed(new TurnToTarget(vision, swerveDrivetrain))
-    // .whenReleased(command, interruptible)
+    // left bumper to intake in
+    new JoystickButton(subsystemController, Button.kLeftBumper.value)
+        .whenPressed(new IntakeIn(intakeSubsystem))
+        .whenReleased(new IntakeStop(intakeSubsystem));
+
+    // 'X' button to aim, bind to cmd TurnToTarget
+    new JoystickButton(subsystemController, Button.kA.value)
+        .whenPressed(new TurnToTarget(vision, swerveDrivetrain));
   }
 
   private void fileCreator() {

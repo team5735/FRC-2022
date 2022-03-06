@@ -57,13 +57,13 @@ public class TurnToTarget extends CommandBase {
 	@Override
 	public void end(boolean interrupted) {
         System.out.println("TURN TARGET COMMAND | END");
-		SmartDashboard.putNumber("DISTANCE", vision.getDistanceFromTargetInInches());
+        SmartDashboard.putNumber("DISTANCE", vision.getDistanceFromTargetInInches());
 	}
 	
 	// Returns true when the command should end.
 	@Override
 	public boolean isFinished() {
-		return true;
+        return vision.isTargetFound();
 	}
 }
 
