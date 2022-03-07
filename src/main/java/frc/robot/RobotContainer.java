@@ -156,7 +156,17 @@ public void setupPathChooser() {
     String autoPath = autoPathChooser.getSelected();
 
     if (autoPath.equals("testAuto2")) {
-      return new AutoDriveCommand(testAuto, swerveDrivetrain, fieldRelative);
+
+      return new SequentialCommandGroup(new ParallelCommandGroup(
+        new IntakeIn(intakeSubsystem), new AutoDriveCommand(testAuto, swerveDrivetrain, fieldRelative)), 
+        new ParallelCommandGroup(
+          new HoodSetAngle(hoodSubsystem, () -> (SmartDashboard.getNumber("vision_hood_angle", 0.1))),
+          new ShooterWheelsSetSpeed(shooterWheelsSubsystem, () -> (SmartDashboard.getNumber("vision_shooter_speed", 0))), 
+          new FeederForward(feederSubsystem)) 
+          );
+
+
+      //return new AutoDriveCommand(testAuto, swerveDrivetrain, fieldRelative);
     }
     else {
       return new SequentialCommandGroup(new Command[] {});

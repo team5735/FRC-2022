@@ -48,46 +48,6 @@ public class AutoDriveCommand extends CommandBase {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-
-                // double xDistance = currentPath.get(i).x - currentPath.get(i - 1).x;
-                // double yDistance = currentPath.get(i).y - currentPath.get(i - 1).y;
-                // double time = (double)(currentPath.get(i).timeStamp - currentPath.get(i - 1).timeStamp);
-                // double xSpeed = xDistance / time * 100;
-                // double ySpeed = yDistance / time * 100;
-                // double rotSpeed = (currentPath.get(i).degrees - currentPath.get(i-1).degrees)/time;
-
-                // // boolean xGreater = false;
-                // // boolean yGreater = false;
-
-                // // if(currentPath.get(i).x > currentPath.get(i - 1).x) {
-                // //     xGreater = true;
-                // // }
-                // // if(currentPath.get(i).y > currentPath.get(i - 1).y) {
-                // //     yGreater = true;
-                // // }
-
-                // double distanceThreshold = 0.1;
-
-                // boolean xSpeedStop = false;
-                // boolean ySpeedStop = false;
-
-                // while(!xSpeedStop || !ySpeedStop) {
-                //     // System.out.print("deltaX: " + Math.abs(swerveDrive.poseEstimator().getEstimatedPosition().getX() - currentPath.get(i).x));
-                //     // System.out.println("deltaY: " + Math.abs(swerveDrive.poseEstimator().getEstimatedPosition().getY() - currentPath.get(i).y));
-                //     System.out.println("i: " + i + "  xSpeed: " + xSpeed + ",  ySpeed: " + ySpeed);
-                //     swerveDrive.drive(xSpeed, ySpeed, 0.0, fieldRelative);
-                //     swerveDrive.updateOdometry();
-                //     if(Math.abs(swerveDrive.poseEstimator().getEstimatedPosition().getX() - currentPath.get(i).x) < distanceThreshold) {
-                //         xSpeedStop = true;
-                //         xSpeed = 0.0;
-                //     }
-                //     if(Math.abs(swerveDrive.poseEstimator().getEstimatedPosition().getY() - currentPath.get(i).y) < distanceThreshold) {
-                //         ySpeedStop = true;
-                //         ySpeed = 0.0;
-                //     }
-                // }
-                
-                //swerveDrive.drive(xS, yS, 0.0, fieldRelative);
             }
         }
 
