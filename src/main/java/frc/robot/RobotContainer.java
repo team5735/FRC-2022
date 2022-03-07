@@ -25,6 +25,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.auto.AutoDriveCommand;
 import frc.robot.commands.auto.PlotPathCommand;
@@ -142,7 +143,7 @@ public class RobotContainer {
 }
 
 public void setupPathChooser() {
-    String[] autoNames = {"testAuto2"};
+    String[] autoNames = {"testAuto2", "JustAuto"};
 
     for (String pathName : autoNames) {
       autoPathChooser.addOption(pathName, pathName);
@@ -158,16 +159,20 @@ public void setupPathChooser() {
     if (autoPath.equals("testAuto2")) {
 
       return new SequentialCommandGroup(new ParallelCommandGroup(
-        new IntakeIn(intakeSubsystem), new AutoDriveCommand(testAuto, swerveDrivetrain, fieldRelative)), 
+        new AutoDriveCommand(testAuto, swerveDrivetrain, fieldRelative), new IntakeIn(intakeSubsystem)), 
         new ParallelCommandGroup(
           new HoodSetAngle(hoodSubsystem, () -> (SmartDashboard.getNumber("vision_hood_angle", 0.1))),
           new ShooterWheelsSetSpeed(shooterWheelsSubsystem, () -> (SmartDashboard.getNumber("vision_shooter_speed", 0))), 
-          new FeederForward(feederSubsystem)) 
+          new SequentialCommandGroup(new WaitCommand(5), new FeederForward(feederSubsystem)))
           );
-
 
       //return new AutoDriveCommand(testAuto, swerveDrivetrain, fieldRelative);
     }
+
+    else if (autoPath.equals("JustAuto")) {
+      return new AutoDriveCommand(testAuto, swerveDrivetrain, fieldRelative);
+    }
+
     else {
       return new SequentialCommandGroup(new Command[] {});
     }
