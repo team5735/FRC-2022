@@ -77,6 +77,9 @@ public class RobotContainer {
   // Autonomous path generation related
   public static SendableChooser<String> autoPathChooser = new SendableChooser<>();
   public ArrayList<DataPoint> testAuto;
+  public ArrayList<DataPoint> rotAuto;
+
+
   public static boolean isPlotting = false;
 
   private Long startTime;
@@ -107,6 +110,7 @@ public class RobotContainer {
 
   public void readPaths() {
     testAuto = readAutoFile("/U/testAuto2.txt");
+    rotAuto = readAutoFile("/U/rotAuto.txt");
   }
 
   public ArrayList<DataPoint> readAutoFile(String filePath) {
@@ -143,7 +147,7 @@ public class RobotContainer {
 }
 
 public void setupPathChooser() {
-    String[] autoNames = {"testAuto2", "JustAuto"};
+    String[] autoNames = {"testAuto2", "JustAuto", "RotAuto"};
 
     for (String pathName : autoNames) {
       autoPathChooser.addOption(pathName, pathName);
@@ -172,6 +176,10 @@ public void setupPathChooser() {
     else if (autoPath.equals("JustAuto")) {
       return new AutoDriveCommand(testAuto, swerveDrivetrain, fieldRelative);
     }
+    else if (autoPath.equals("RotAuto")) {
+      return new AutoDriveCommand(rotAuto, swerveDrivetrain, fieldRelative);
+    }
+
 
     else {
       return new SequentialCommandGroup(new Command[] {});
