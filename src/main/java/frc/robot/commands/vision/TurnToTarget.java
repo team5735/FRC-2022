@@ -21,18 +21,19 @@ public class TurnToTarget extends CommandBase {
     }
 
     // Called when the command is initially scheduled.
-	@Override
-	public void initialize() {
-		vision.enableTracking();
-	}
+    @Override
+    public void initialize() {
+        isFinished = false;
+        //System.out.println("Set turn to target isFinished to false");
+    }
 	
 	// Called every time the scheduler runs while the command is scheduled.
 	@Override
 	public void execute() {
         double steering_adjust;
         double Kp = -0.4;  // Proportional control constant
-        double tx = vision.getTX();
-
+        isFinished = false;
+ 
         // Make sure Vision Tracking is Always Running
         if (!vision.isTrackingEnabled())
             vision.enableTracking();
@@ -41,29 +42,33 @@ public class TurnToTarget extends CommandBase {
         // SPIN UNTIL HAS VALID TARGET
         // HOW TO MAKE ROBOT SPIN
         // HAS VALID TARGET SAME AS FETCHING tv
+        double tx = vision.getTX();
         if (!vision.isTargetFound()) {
             // drivetrain.drive
             drivetrain.drive(0, 0, 5, false);
         } else if (tx > 1.0 || tx < -1.0) {
+            // Also want to spin more until the target is closer to the center
             steering_adjust = Kp * tx;
             drivetrain.drive(0, 0, steering_adjust, false);
         } else {
             isFinished = true;
         }
-        // Also want to spin more until the target is closer to the center
 	}
 	
-	// Called once the command ends or is interrupted.
-	@Override
-	public void end(boolean interrupted) {
-        System.out.println("TURN TARGET COMMAND | END");
-        SmartDashboard.putNumber("DISTANCE", vision.getDistanceFromTargetInInches());
+    // Called once the command ends or is interrupted.
+    @Override
+    public void end(boolean interrupted) {
+        System.out.println("TURN TARGET COMMAND | END: " + interrupted);
 	}
-	
-	// Returns true when the command should end.
-	@Override
-	public boolean isFinished() {
-        return isFinished;
+
+    // Returns true when the command should end.
+    @Override
+    public boolean isFinished() {
+        if (!vision.isTargetFound() )
+            isFinished = false;
+
+        SmartDashboard.putBoolean("turn_isFinished", isFinished);
+        return (isFinished);
 	}
 }
 
