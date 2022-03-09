@@ -10,65 +10,66 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.RobotContainer;
 import frc.robot.constants.ClimberConstants;
 import frc.robot.constants.LoggingConstants;
 import frc.robot.constants.RobotConstants;
 import frc.robot.constants.LoggingConstants.LoggingLevel;
 
 public class ClimberSubsystem extends SubsystemBase {
-  private CANSparkMax winchMotor;
+  private CANSparkMax leftWinchMotor;
+  private CANSparkMax rightWinchMotor;
+
   private final double DEADBAND = 0.05;
-  private final double startPosition = winchMotor.getEncoder().getPosition();
+  private final double startPosition = leftWinchMotor.getEncoder().getPosition();
   private int mode;
 
-  //I don't know if this controller setup works, but it should be okay for the moment
-  private XboxController controller = new XboxController(0);
-
-
   public ClimberSubsystem() {
-    winchMotor = new CANSparkMax(RobotConstants.WINCH_MOTOR_ID, MotorType.kBrushless);
+    leftWinchMotor = new CANSparkMax(RobotConstants.LEFT_WINCH_MOTOR_ID, MotorType.kBrushless);
+    rightWinchMotor = new CANSparkMax(RobotConstants.RIGHT_WINCH_MOTRO_ID, MotorType.kBrushless);
+
     mode = 0;
   }
 
   @Override
   public void periodic() {
-    if (LoggingConstants.CLIMBER_LEVEL.ordinal() >= LoggingLevel.DEBUG.ordinal()) {
-      SmartDashboard.putNumber("winch_cmd", winchMotor.getAppliedOutput());
-      SmartDashboard.putNumber("winch_current", winchMotor.getOutputCurrent());
-    }
-
     // Controller Mode
+    // mode 0 is manual control
     if (mode == 0) {
-        double output = deadband(controller.getLeftY()); 
-        winchMotor.set(output);
+        double output = deadband(RobotContainer.subsystemController.getLeftY()); 
+        leftWinchMotor.set(output);
         // System.out.println(output);
-
     }
+    // 1/2 is a test value;
+    // mode 1 is auto up
     if (mode == 1) {
-        if (winchMotor.getEncoder().getPosition() <= startPosition) {
-            winchMotor.set(-1);
+        if (leftWinchMotor.getEncoder().getPosition() <= startPosition + 477.834) {
+          leftWinchMotor.set(0.5);
         }
     }
+    // mode 2 is auto down
     if (mode == 2) {
-        if (winchMotor.getEncoder().getPosition() >= startPosition -477.834) {
-            winchMotor.set(1);
+        if (leftWinchMotor.getEncoder().getPosition() >= startPosition) {
+          leftWinchMotor.set(-0.5);
         }
     }
 
-    SmartDashboard.putNumber("cmd", winchMotor.getAppliedOutput());
-    SmartDashboard.putNumber("intake_current", winchMotor.getOutputCurrent());
-    SmartDashboard.putNumber("intake_speed", winchMotor.getEncoder().getVelocity());
-    // System.out.println(winchMotor.getEncoder().getCountsPerRevolution());
-    // System.out.println(winchMotor.getEncoder().getPosition());
-    
+    if (LoggingConstants.CLIMBER_LEVEL.ordinal() >= LoggingLevel.DEBUG.ordinal()) {
+      SmartDashboard.putNumber("climber_cmd", leftWinchMotor.getAppliedOutput());
+      SmartDashboard.putNumber("climber_current", leftWinchMotor.getOutputCurrent());
+      SmartDashboard.putNumber("climber_speed", leftWinchMotor.getEncoder().getVelocity());
+      // System.out.println(leftWinchMotor.getEncoder().getCountsPerRevolution());
+      // System.out.println(leftWinchMotor.getEncoder().getPosition());
+    }
     //Inital Position: -19.024
     //Final Position: -496.858
     //Difference: 477.834 Ticks
 
     if (LoggingConstants.CLIMBER_LEVEL.ordinal() >= LoggingLevel.COMPETITION.ordinal()) {}
   }
+
   public double deadband(double value) {
-    if(Math.abs(value) < DEADBAND) {
+    if (Math.abs(value) < DEADBAND) {
       return 0;
     } else {
       return value;
@@ -83,7 +84,7 @@ public class ClimberSubsystem extends SubsystemBase {
   }
   
   public void set(double speed) {
-    winchMotor.set(speed);
+    leftWinchMotor.set(speed);
   }
 
   public void up() {
