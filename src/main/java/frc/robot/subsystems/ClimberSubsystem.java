@@ -18,6 +18,8 @@ import frc.robot.constants.LoggingConstants.LoggingLevel;
 public class ClimberSubsystem extends SubsystemBase {
   private CANSparkMax winchMotor;
   private final double DEADBAND = 0.05;
+  private final double startPosition = winchMotor.getEncoder().getPosition();
+  private int mode;
 
   //I don't know if this controller setup works, but it should be okay for the moment
   private XboxController controller = new XboxController(0);
@@ -25,6 +27,7 @@ public class ClimberSubsystem extends SubsystemBase {
 
   public ClimberSubsystem() {
     winchMotor = new CANSparkMax(RobotConstants.WINCH_MOTOR_ID, MotorType.kBrushless);
+    mode = 0;
   }
 
   @Override
@@ -33,24 +36,34 @@ public class ClimberSubsystem extends SubsystemBase {
       SmartDashboard.putNumber("winch_cmd", winchMotor.getAppliedOutput());
       SmartDashboard.putNumber("winch_current", winchMotor.getOutputCurrent());
     }
-    double output = deadband(controller.getLeftY()); 
-          winchMotor.set(output);
-    // winchMotor.set(output);
-    // System.out.println(output);
-    // if (winchMotor.getEncoder().getPosition() >= -496.858) {
-    //   winchMotor.set(-0.5);
-    // }
-    // else {
-    //   winchMotor.set(0);
-    // }
+
+    // Controller Mode
+    if (mode == 0) {
+        double output = deadband(controller.getLeftY()); 
+        winchMotor.set(output);
+        // System.out.println(output);
+
+    }
+    if (mode == 1) {
+        if (winchMotor.getEncoder().getPosition() <= startPosition) {
+            winchMotor.set(-1);
+        }
+    }
+    if (mode == 2) {
+        if (winchMotor.getEncoder().getPosition() >= startPosition -477.834) {
+            winchMotor.set(1);
+        }
+    }
+
     SmartDashboard.putNumber("cmd", winchMotor.getAppliedOutput());
     SmartDashboard.putNumber("intake_current", winchMotor.getOutputCurrent());
     SmartDashboard.putNumber("intake_speed", winchMotor.getEncoder().getVelocity());
     // System.out.println(winchMotor.getEncoder().getCountsPerRevolution());
-    System.out.println(winchMotor.getEncoder().getPosition());
+    // System.out.println(winchMotor.getEncoder().getPosition());
+    
     //Inital Position: -19.024
     //Final Position: -496.858
-    //Distance:
+    //Difference: 477.834 Ticks
 
     if (LoggingConstants.CLIMBER_LEVEL.ordinal() >= LoggingLevel.COMPETITION.ordinal()) {}
   }
@@ -59,6 +72,13 @@ public class ClimberSubsystem extends SubsystemBase {
       return 0;
     } else {
       return value;
+    }
+  }
+
+  public void changeMode() {
+    mode ++;
+    if (mode > 2) {
+      mode = 0;
     }
   }
   
