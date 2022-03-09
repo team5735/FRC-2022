@@ -53,17 +53,18 @@ public class ClimberSubsystem extends SubsystemBase {
           leftWinchMotor.set(-0.5);
         }
     }
-
-    if (LoggingConstants.CLIMBER_LEVEL.ordinal() >= LoggingLevel.DEBUG.ordinal()) {
-      SmartDashboard.putNumber("climber_cmd", leftWinchMotor.getAppliedOutput());
-      SmartDashboard.putNumber("climber_current", leftWinchMotor.getOutputCurrent());
-      SmartDashboard.putNumber("climber_speed", leftWinchMotor.getEncoder().getVelocity());
-      // System.out.println(leftWinchMotor.getEncoder().getCountsPerRevolution());
-      // System.out.println(leftWinchMotor.getEncoder().getPosition());
-    }
     //Inital Position: -19.024
     //Final Position: -496.858
     //Difference: 477.834 Ticks
+
+    SmartDashboard.putNumber("climber_cmd", leftWinchMotor.getAppliedOutput());
+    SmartDashboard.putNumber("climber_current", leftWinchMotor.getOutputCurrent());
+    SmartDashboard.putNumber("climber_speed", leftWinchMotor.getEncoder().getVelocity());
+
+    if (LoggingConstants.CLIMBER_LEVEL.ordinal() >= LoggingLevel.DEBUG.ordinal()) {
+      // System.out.println(leftWinchMotor.getEncoder().getCountsPerRevolution());
+      // System.out.println(leftWinchMotor.getEncoder().getPosition());
+    }
 
     if (LoggingConstants.CLIMBER_LEVEL.ordinal() >= LoggingLevel.COMPETITION.ordinal()) {}
   }
