@@ -1,6 +1,5 @@
 package frc.robot.commands.vision;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.subsystems.Drivetrain;
@@ -10,7 +9,9 @@ public class TurnToTarget extends CommandBase {
 
     private final Drivetrain drivetrain;
     private final Vision vision;
+
     private boolean isFinished = false;
+    private int rotationCompleted = 0;
     
     public TurnToTarget(Vision vision, Drivetrain drivetrain) {
         this.vision = vision;
@@ -23,8 +24,7 @@ public class TurnToTarget extends CommandBase {
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
-        isFinished = false;
-        //System.out.println("Set turn to target isFinished to false");
+        rotationCompleted = 0;
     }
 	
 	// Called every time the scheduler runs while the command is scheduled.
@@ -34,25 +34,34 @@ public class TurnToTarget extends CommandBase {
         double Kp = -0.4;  // Proportional control constant
         isFinished = false;
  
-        // Make sure Vision Tracking is Always Running
+        // Make sure Vision Tracking is running
         if (!vision.isTrackingEnabled())
             vision.enableTracking();
 
-        // ADD DEGREE ERROR?
-        // SPIN UNTIL HAS VALID TARGET
-        // HOW TO MAKE ROBOT SPIN
-        // HAS VALID TARGET SAME AS FETCHING tv
-        double tx = vision.getTX();
-        if (!vision.isTargetFound()) {
-            // drivetrain.drive
-            drivetrain.drive(0, 0, 5, false);
-        } else if (tx > 1.0 || tx < -1.0) {
-            // Also want to spin more until the target is closer to the center
-            steering_adjust = Kp * tx;
-            drivetrain.drive(0, 0, steering_adjust, false);
-        } else {
+        // stop if already turned 360 degree
+        if (rotationCompleted >= 360) {
             isFinished = true;
+        } else {
+            // ADD DEGREE ERROR?
+            // SPIN UNTIL HAS VALID TARGET
+            // HOW TO MAKE ROBOT SPIN
+            // HAS VALID TARGET SAME AS FETCHING tv
+            double tx = vision.getTX();
+            if (!vision.isTargetFound()) {
+                // drivetrain.drive
+                drivetrain.drive(0, 0, 5, false);
+                rotationCompleted += 5;
+            } else if (tx > 1.0 || tx < -1.0) {
+                // Also want to spin more until the target is closer to the center
+                steering_adjust = Kp * tx;
+                drivetrain.drive(0, 0, steering_adjust, false);
+            } else {
+                isFinished = true;
+            }
         }
+
+        System.out.println("turn_isFinished =" + isFinished);
+        System.out.println("turn_rotationCompleted = " + rotationCompleted);
 	}
 	
     // Called once the command ends or is interrupted.
@@ -64,10 +73,6 @@ public class TurnToTarget extends CommandBase {
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        if (!vision.isTargetFound() )
-            isFinished = false;
-
-        SmartDashboard.putBoolean("turn_isFinished", isFinished);
         return (isFinished);
 	}
 }
