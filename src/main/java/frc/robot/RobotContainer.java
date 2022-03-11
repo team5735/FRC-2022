@@ -34,9 +34,11 @@ import frc.robot.commands.intake.IntakeIn;
 import frc.robot.commands.intake.IntakeOut;
 import frc.robot.commands.intake.IntakeStop;
 import frc.robot.commands.shooter.FeederForward;
+import frc.robot.commands.shooter.FeederReverse;
 import frc.robot.commands.shooter.FeederStop;
 import frc.robot.commands.shooter.HoodSetAngle;
 import frc.robot.commands.shooter.HoodStop;
+import frc.robot.commands.shooter.ShooterWheelsReverse;
 import frc.robot.commands.shooter.ShooterWheelsSetSpeed;
 import frc.robot.commands.shooter.ShooterWheelsStop;
 import frc.robot.commands.vision.TurnToTarget;
@@ -242,7 +244,7 @@ public void setupPathChooser() {
         new ShooterWheelsStop(shooterWheelsSubsystem)
       ));
 
-    new JoystickButton(subsystemController, Button.kLeftBumper.value)
+      new JoystickButton(subsystemController, Button.kLeftBumper.value)
       .whenPressed(new ParallelCommandGroup(
         new HoodSetAngle(hoodSubsystem, () -> (SmartDashboard.getNumber("manual_hood_angle", 0.1))),
         new ShooterWheelsSetSpeed(shooterWheelsSubsystem, () -> (SmartDashboard.getNumber("vision_shooter_speed", 0)))
@@ -251,8 +253,16 @@ public void setupPathChooser() {
         new HoodStop(hoodSubsystem),
         new ShooterWheelsStop(shooterWheelsSubsystem)
       ));
-
-    
+      
+    new JoystickButton(subsystemController, Button.kB.value)
+      .whenPressed(new ParallelCommandGroup(
+        new FeederReverse(feederSubsystem),
+        new ShooterWheelsReverse(shooterWheelsSubsystem)
+      ))
+      .whenReleased(new ParallelCommandGroup(
+        new ShooterWheelsStop(shooterWheelsSubsystem),
+        new FeederStop(feederSubsystem)
+      ));
 
     new JoystickButton(subsystemController, Button.kY.value)
         .whenPressed(new FeederForward(feederSubsystem))

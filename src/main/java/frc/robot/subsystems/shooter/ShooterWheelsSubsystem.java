@@ -62,6 +62,10 @@ public class ShooterWheelsSubsystem extends SubsystemBase {
     setSmallShooter(speed * ShooterConstants.SMALL_BIG_SPEED_RATIO);
   }
 
+  public void reverse() {
+    setPercent(-0.2);
+  }
+  
   public void setBigShooterPercent(double percent) {
     bigShooterMasterMotor.set(ControlMode.PercentOutput, percent);
   }
