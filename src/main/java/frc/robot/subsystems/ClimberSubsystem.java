@@ -25,8 +25,8 @@ public class ClimberSubsystem extends SubsystemBase {
   private int mode;
 
   public ClimberSubsystem() {
-    leftWinchMotor = new CANSparkMax(RobotConstants.LEFT_WINCH_MOTOR_ID, MotorType.kBrushless);
-    rightWinchMotor = new CANSparkMax(RobotConstants.RIGHT_WINCH_MOTRO_ID, MotorType.kBrushless);
+    leftWinchMotor = new CANSparkMax(ClimberConstants.LEFT_WINCH_MOTOR_ID, MotorType.kBrushless);
+    rightWinchMotor = new CANSparkMax(ClimberConstants.RIGHT_WINCH_MOTRO_ID, MotorType.kBrushless);
 
     mode = 0;
   }
