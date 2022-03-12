@@ -27,7 +27,6 @@ public class ClimberSubsystem extends SubsystemBase {
   public ClimberSubsystem() {
     leftWinchMotor = new CANSparkMax(ClimberConstants.LEFT_WINCH_MOTOR_ID, MotorType.kBrushless);
     rightWinchMotor = new CANSparkMax(ClimberConstants.RIGHT_WINCH_MOTRO_ID, MotorType.kBrushless);
-
     mode = 0;
   }
 
@@ -37,8 +36,17 @@ public class ClimberSubsystem extends SubsystemBase {
     // mode 0 is manual control
     if (mode == 0) {
         double output = deadband(RobotContainer.subsystemController.getLeftY()); 
+        double output2 = deadband(RobotContainer.subsystemController.getRightY());
+        
         leftWinchMotor.set(output);
-        // System.out.println(output);
+        rightWinchMotor.set(output2);
+        
+        System.out.println("output = " + output);
+        System.out.println("output 2 =" + output2);
+
+        System.out.println("Left Encoder = " + leftWinchMotor.getEncoder().getPosition());
+        System.out.println("Right Encode = " + rightWinchMotor.getEncoder().getPosition());
+      // System.out.println(output);
     }
     // 1/2 is a test value;
     // mode 1 is auto up
