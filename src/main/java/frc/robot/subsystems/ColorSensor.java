@@ -53,10 +53,8 @@ public class ColorSensor {
         m_colorMatcher.addColorMatch(ColorConstants.NO_BALL);
     
         if (ColorConstants.ALLIANCE_COLOR.toString().equals("Red")) {
-            System.out.println("running alliance if - red");
             teamColor = "red";
         } else {
-            System.out.println("running alliance if - blue");
             teamColor = "blue";
         }
     
