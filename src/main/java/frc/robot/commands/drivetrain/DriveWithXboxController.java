@@ -38,7 +38,7 @@ public class DriveWithXboxController extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
 	@Override
 	public void execute() {
-        final var xSpeed = -m_xspeedLimiter.calculate(deadband(Math.pow(RobotContainer.driveController.getLeftY(),3), deadbandConstant)) * frc.robot.subsystems.Drivetrain.kMaxSpeed;
+        final var xSpeed = -m_xspeedLimiter.calculate(deadband(Math.pow(RobotContainer.driveController.getRightY(),3), deadbandConstant)) * frc.robot.subsystems.Drivetrain.kMaxSpeed;
 
         // Get the y speed or sideways/strafe speed. We are inverting this because
         // we want a positive value when we pull to the left. Xbox controllers
