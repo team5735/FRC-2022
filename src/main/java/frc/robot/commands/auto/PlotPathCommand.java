@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -21,13 +22,13 @@ public class PlotPathCommand extends CommandBase {
     private String fileTime;
     private DateTimeFormatter filenameFormatter;
     public Drivetrain swerveDrive;
+    private boolean isFinished = false;
+    PrintWriter writer;
+    // FileWriter myWriter;
+    // BufferedWriter bw;
 
-    private boolean isPlotting;
-
-    public PlotPathCommand (Drivetrain swerveDrive, boolean isPlotting) {
+    public PlotPathCommand (Drivetrain swerveDrive) {
         this.swerveDrive = swerveDrive;
-        this.isPlotting = isPlotting;
-
         addRequirements((Subsystem) swerveDrive);
     }
 
@@ -35,6 +36,13 @@ public class PlotPathCommand extends CommandBase {
     @Override
     public void initialize() {
         fileCreator();
+        try {
+            writer = new PrintWriter("/U/" + fileTime + ".txt");
+        } catch (IOException e) {
+            System.out.println("Couldn't create writer.");
+            e.printStackTrace();
+        }
+        swerveDrive.isPlotting = true;
     }
 
     // Called every time the scheduler runs while the command is scheduled.
@@ -46,12 +54,13 @@ public class PlotPathCommand extends CommandBase {
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
+        writer.close();
     }
 
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        return false;
+        return isFinished || !swerveDrive.isPlotting; //stops when swerveDrive is plotting is false
     }
 
     private void fileCreator() {
@@ -70,6 +79,7 @@ public class PlotPathCommand extends CommandBase {
             
         } catch (IOException e) {
             System.out.println("An error occurred.");
+            isFinished = true;
             e.printStackTrace();
         }
 
@@ -87,18 +97,9 @@ public class PlotPathCommand extends CommandBase {
       
         String pathCordString = time + "," + robotX + "," + robotY + "," + rotation + "," + actualRotation + "," + xSpeed + "," + ySpeed;
       
-        try {
-            FileWriter myWriter = new FileWriter("/U/" + fileTime + ".txt", true);
-            BufferedWriter bw = new BufferedWriter(myWriter);
-            bw.write(pathCordString);
-            bw.newLine();
-            bw.close();
-      
-            System.out.println("Successfully wrote to the file.");
-        } catch (IOException e) {
-            System.out.println("An error occurred.");
-            e.printStackTrace();
-        }
+        writer.println(pathCordString);
+  
+        System.out.println("Successfully wrote to the file.");
 
         swerveDrive.updateOdometry();
     }

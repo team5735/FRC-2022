@@ -85,8 +85,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
-    m_robotContainer.configureAutoButton();
-    m_robotContainer.drivingPlotter();
+    // m_robotContainer.configureAutoButton();
+    // m_robotContainer.drivingPlotter();
   }
 
   @Override

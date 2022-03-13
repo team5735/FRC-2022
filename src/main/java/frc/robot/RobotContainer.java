@@ -29,6 +29,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.auto.AutoDriveCommand;
 import frc.robot.commands.auto.PlotPathCommand;
+import frc.robot.commands.auto.StopPlottingCommand;
 import frc.robot.commands.drivetrain.FieldRelative;
 import frc.robot.commands.intake.IntakeIn;
 import frc.robot.commands.intake.IntakeOut;
@@ -207,9 +208,10 @@ public void setupPathChooser() {
     new JoystickButton(driveController, Button.kB.value)
         .whenPressed(new FieldRelative(swerveDrivetrain, false));
 
-    //Y button => toggle autonomous path plotting
-    // new JoystickButton(driveController, Button.kY.value)
-    //   .whenPressed(new PlotPathCommand(swerveDrivetrain, isPlotting));
+    // Y button => toggle autonomous path plotting
+    new JoystickButton(driveController, Button.kY.value)
+    //if the drivetrain is plotting, stop plotting. Otherwise, start plotting
+    .whenPressed(swerveDrivetrain.isPlotting ? new StopPlottingCommand(swerveDrivetrain) : new PlotPathCommand(swerveDrivetrain));
 
   }
 
