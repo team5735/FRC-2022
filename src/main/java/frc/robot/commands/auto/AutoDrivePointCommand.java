@@ -10,6 +10,7 @@ import frc.robot.subsystems.plotter.DataPoint;
 public class AutoDrivePointCommand extends CommandBase{
     
     private ArrayList<DataPoint> currentPath;
+    private int currentIndex = 1;
     private Drivetrain swerveDrive;
     private boolean fieldRelative;
     public static boolean commandFinished = false;
@@ -40,6 +41,42 @@ public class AutoDrivePointCommand extends CommandBase{
 
         */
 
+        if(currentIndex >= currentPath.size()) {
+            commandFinished = true;
+            return;
+        }
+        
+        double xSpeed = currentPath.get(currentIndex).xSpeed;
+        double ySpeed = currentPath.get(currentIndex).ySpeed;
+        double actRot = currentPath.get(currentIndex).actualRot;
+        Long time = currentPath.get(currentIndex).timeStamp;
+        Long prevTime = currentPath.get(currentIndex-1).timeStamp;
+
+        double currentX = swerveDrive.poseEstimator().getEstimatedPosition().getX();
+        double currentY = swerveDrive.poseEstimator().getEstimatedPosition().getY();
+
+        double xPos = currentPath.get(currentIndex).x;
+        double yPos = currentPath.get(currentIndex).y;
+
+        double x = currentX - xPos;
+        double y = currentY - yPos;
+        
+        System.out.println(xSpeed + ", " + ySpeed + ", " + actRot);
+        swerveDrive.drive(xSpeed, ySpeed, actRot, fieldRelative);
+
+        if(Math.sqrt((y*y) + (x*x)) < radiusThreshold) {
+
+            currentIndex++;
+
+        }
+
+        try {
+            Thread.sleep(time - prevTime);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        /*
         if(!commandFinished) {
 
             for (int i = 1; i < currentPath.size(); i++) {
@@ -88,7 +125,7 @@ public class AutoDrivePointCommand extends CommandBase{
             }
         }
 
-
+        */
 
     }
 
