@@ -63,7 +63,7 @@ public class ShooterWheelsSubsystem extends SubsystemBase {
   }
 
   public void reverse() {
-    setPercent(-0.2);
+    setPercent(-0.5);
   }
   
   public void setBigShooterPercent(double percent) {

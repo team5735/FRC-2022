@@ -254,14 +254,14 @@ public void setupPathChooser() {
         new ShooterWheelsStop(shooterWheelsSubsystem)
       ));
       
-    new JoystickButton(subsystemController, Button.kB.value)
+    new JoystickButton(subsystemController, Button.kA.value)
       .whenPressed(new ParallelCommandGroup(
         new FeederReverse(feederSubsystem),
         new ShooterWheelsReverse(shooterWheelsSubsystem)
       ))
       .whenReleased(new ParallelCommandGroup(
-        new ShooterWheelsStop(shooterWheelsSubsystem),
-        new FeederStop(feederSubsystem)
+        new FeederStop(feederSubsystem),
+        new ShooterWheelsStop(shooterWheelsSubsystem)
       ));
 
     new JoystickButton(subsystemController, Button.kY.value)
