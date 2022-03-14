@@ -38,12 +38,12 @@ public class DriveWithXboxController extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
 	@Override
 	public void execute() {
-        final var xSpeed = -m_xspeedLimiter.calculate(deadband(Math.pow(RobotContainer.driveController.getRightY(),3), deadbandConstant)) * frc.robot.subsystems.Drivetrain.kMaxSpeed;
+        final var xSpeed = -m_xspeedLimiter.calculate(deadband(Math.pow(RobotContainer.driveController.getLeftY(),3), deadbandConstant)) * frc.robot.subsystems.Drivetrain.kMaxSpeed;
 
         // Get the y speed or sideways/strafe speed. We are inverting this because
         // we want a positive value when we pull to the left. Xbox controllers
         // return positive values when you pull to the right by default.
-        final var ySpeed = -m_yspeedLimiter.calculate(deadband(Math.pow(RobotContainer.driveController.getRightX(), 3), deadbandConstant)) * frc.robot.subsystems.Drivetrain.kMaxSpeed;
+        final var ySpeed = -m_yspeedLimiter.calculate(deadband(Math.pow(RobotContainer.driveController.getLeftX(), 3), deadbandConstant)) * frc.robot.subsystems.Drivetrain.kMaxSpeed;
 
         // Get the rate of angular rotation. We are inverting this because we want a
         // positive value when we pull to the left (remember, CCW is positive in

@@ -24,12 +24,14 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.auto.AutoDriveCommand;
 import frc.robot.commands.auto.PlotPathCommand;
 import frc.robot.commands.drivetrain.FieldRelative;
+import frc.robot.commands.drivetrain.StopDrivetrainCommand;
 import frc.robot.commands.intake.IntakeIn;
 import frc.robot.commands.intake.IntakeOut;
 import frc.robot.commands.intake.IntakeStop;
@@ -79,7 +81,11 @@ public class RobotContainer {
   // Autonomous path generation related
   public static SendableChooser<String> autoPathChooser = new SendableChooser<>();
   public ArrayList<DataPoint> testAuto;
-  public ArrayList<DataPoint> rotAuto;
+  public ArrayList<DataPoint> runItBack;
+
+  //For Long Auto
+  public ArrayList<DataPoint> longAuto1; 
+  public ArrayList<DataPoint> longAuto2; 
 
 
   public static boolean isPlotting = false;
@@ -112,7 +118,9 @@ public class RobotContainer {
 
   public void readPaths() {
     testAuto = readAutoFile("/U/testAuto2.txt");
-    rotAuto = readAutoFile("/U/rotAuto.txt");
+    runItBack = readAutoFile("/U/runItBack.txt");
+    longAuto1 = readAutoFile("/U/LongAuto1.txt");
+    longAuto2 = readAutoFile("/U/LongAuto2.txt");
   }
 
   public ArrayList<DataPoint> readAutoFile(String filePath) {
@@ -149,7 +157,7 @@ public class RobotContainer {
 }
 
 public void setupPathChooser() {
-    String[] autoNames = {"testAuto2", "JustAuto", "RotAuto"};
+    String[] autoNames = {"testAuto", "JustAutoWTurn", "Turns and Shoots", "Run It Back", "Long Auto"};
 
     for (String pathName : autoNames) {
       autoPathChooser.addOption(pathName, pathName);
@@ -162,7 +170,7 @@ public void setupPathChooser() {
 
     String autoPath = autoPathChooser.getSelected();
 
-    if (autoPath.equals("testAuto2")) {
+    if (autoPath.equals("testAuto")) {
 
       return new SequentialCommandGroup(new ParallelCommandGroup(
         new AutoDriveCommand(testAuto, swerveDrivetrain, fieldRelative), new IntakeIn(intakeSubsystem)), 
@@ -175,11 +183,71 @@ public void setupPathChooser() {
       //return new AutoDriveCommand(testAuto, swerveDrivetrain, fieldRelative);
     }
 
-    else if (autoPath.equals("JustAuto")) {
-      return new AutoDriveCommand(testAuto, swerveDrivetrain, fieldRelative);
+    else if(autoPath.equals("Run It Back")) {
+
+      return new SequentialCommandGroup(
+        new ParallelDeadlineGroup(new AutoDriveCommand(runItBack, swerveDrivetrain, fieldRelative), new IntakeIn(intakeSubsystem)), 
+        new TurnToTarget(vision, swerveDrivetrain), new ParallelDeadlineGroup(new WaitCommand(1), new StopDrivetrainCommand(swerveDrivetrain)),
+
+        new SequentialCommandGroup(new ParallelDeadlineGroup(new WaitCommand(1), new ParallelCommandGroup(
+          new FeederReverse(feederSubsystem),
+          new ShooterWheelsReverse(shooterWheelsSubsystem)
+        ))), 
+          new ParallelCommandGroup(
+            new HoodSetAngle(hoodSubsystem, () -> (SmartDashboard.getNumber("vision_hood_angle", 0.1))),
+            new ShooterWheelsSetSpeed(shooterWheelsSubsystem, () -> (SmartDashboard.getNumber("vision_shooter_speed", 0))), 
+            new SequentialCommandGroup(new WaitCommand(3), new FeederForward(feederSubsystem)))
+
+      );
     }
-    else if (autoPath.equals("RotAuto")) {
-      return new AutoDriveCommand(rotAuto, swerveDrivetrain, fieldRelative);
+
+    else if (autoPath.equals("JustAutoWTurn")) {
+      return new SequentialCommandGroup(new AutoDriveCommand(runItBack, swerveDrivetrain, fieldRelative), new TurnToTarget(vision, swerveDrivetrain));
+      
+      //return new AutoDriveCommand(runItBack, swerveDrivetrain, fieldRelative);
+    }
+    else if (autoPath.equals("Turns and Shoots")) {
+      return new SequentialCommandGroup(new TurnToTarget(vision, swerveDrivetrain), new ParallelDeadlineGroup(new WaitCommand(1), new StopDrivetrainCommand(swerveDrivetrain)),
+      
+       new ParallelCommandGroup(
+          new HoodSetAngle(hoodSubsystem, () -> (SmartDashboard.getNumber("vision_hood_angle", 0.1))),
+          new ShooterWheelsSetSpeed(shooterWheelsSubsystem, () -> (SmartDashboard.getNumber("vision_shooter_speed", 0))), 
+          new SequentialCommandGroup(new WaitCommand(3), new FeederForward(feederSubsystem)))
+      
+      );
+    }
+
+    else if(autoPath.equals("Long Auto")) {
+
+      return new SequentialCommandGroup(
+
+        new AutoDriveCommand(longAuto1, swerveDrivetrain, fieldRelative),
+        new TurnToTarget(vision, swerveDrivetrain), new ParallelDeadlineGroup(
+          new WaitCommand(1), new StopDrivetrainCommand(swerveDrivetrain)),
+        new ParallelDeadlineGroup(
+          new WaitCommand(4),
+          new HoodSetAngle(hoodSubsystem, () -> (SmartDashboard.getNumber("vision_hood_angle", 0.1))),
+          new ShooterWheelsSetSpeed(shooterWheelsSubsystem, () -> (SmartDashboard.getNumber("vision_shooter_speed", 0))), 
+          new SequentialCommandGroup(new WaitCommand(2), new FeederForward(feederSubsystem))),
+
+        new FeederStop(feederSubsystem), new HoodStop(hoodSubsystem), new ShooterWheelsStop(shooterWheelsSubsystem),
+
+        new ParallelDeadlineGroup(
+          new AutoDriveCommand(longAuto2, swerveDrivetrain, fieldRelative), new IntakeIn(intakeSubsystem)),
+        new TurnToTarget(vision, swerveDrivetrain), new ParallelDeadlineGroup(
+          new WaitCommand(1), new StopDrivetrainCommand(swerveDrivetrain)),
+        new SequentialCommandGroup(new ParallelDeadlineGroup(new WaitCommand(1), new ParallelCommandGroup(
+          new FeederReverse(feederSubsystem),
+          new ShooterWheelsReverse(shooterWheelsSubsystem)))), 
+        new ParallelCommandGroup(
+            new HoodSetAngle(hoodSubsystem, () -> (SmartDashboard.getNumber("vision_hood_angle", 0.1))),
+            new ShooterWheelsSetSpeed(shooterWheelsSubsystem, () -> (SmartDashboard.getNumber("vision_shooter_speed", 0))), 
+            new SequentialCommandGroup(new WaitCommand(3), new FeederForward(feederSubsystem)))
+        
+
+      
+      );
+
     }
 
 
@@ -215,9 +283,15 @@ public void setupPathChooser() {
 
   public void configureAutoButton() {
     if(driveController.getYButtonPressed()){
-      isPlotting = !isPlotting;
+      isPlotting = true;
       fileCreator();
     }
+
+    if(driveController.getStartButton()) {
+      isPlotting = false;
+      fileCreator();
+    }
+
   }
 
   private void configureSubsystemControllerBindings() {
