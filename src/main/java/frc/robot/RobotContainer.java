@@ -257,6 +257,11 @@ public void setupPathChooser() {
   }
 
   private void configureDriveControllerBindings() {
+
+// 'X' button to aim, bind to cmd TurnToTarget
+    new JoystickButton(driveController, Button.kX.value)
+        .whenPressed(new TurnToTarget(vision, swerveDrivetrain));
+
     // right bumper => intake in
     new JoystickButton(driveController, Button.kRightBumper.value)
         .whenPressed(new IntakeIn(intakeSubsystem))
@@ -266,18 +271,6 @@ public void setupPathChooser() {
     new JoystickButton(driveController, Button.kLeftBumper.value)
         .whenPressed(new IntakeOut(intakeSubsystem))
         .whenReleased(new IntakeStop(intakeSubsystem));
-
-    // A button => set field centric to true
-    new JoystickButton(driveController, Button.kA.value)
-        .whenPressed(new FieldRelative(swerveDrivetrain, true));
-
-    // B button => set to robot centric
-    new JoystickButton(driveController, Button.kB.value)
-        .whenPressed(new FieldRelative(swerveDrivetrain, false));
-
-    // 'X' button to aim, bind to cmd TurnToTarget
-    new JoystickButton(subsystemController, Button.kX.value)
-        .whenPressed(new TurnToTarget(vision, swerveDrivetrain));
 
   }
 
@@ -296,7 +289,7 @@ public void setupPathChooser() {
 
   private void configureSubsystemControllerBindings() {
 
-    new JoystickButton(subsystemController, Button.kLeftBumper.value)
+    new JoystickButton(subsystemController, Button.kRightBumper.value)
       .whenPressed(new ParallelCommandGroup(
         new HoodSetAngle(hoodSubsystem, () -> (SmartDashboard.getNumber("vision_hood_angle", 0.1))),
         new ShooterWheelsSetSpeed(shooterWheelsSubsystem, () -> (SmartDashboard.getNumber("vision_shooter_speed", 0)))
@@ -326,7 +319,7 @@ public void setupPathChooser() {
         new ShooterWheelsStop(shooterWheelsSubsystem)
       ));
 
-    new JoystickButton(subsystemController, Button.kRightBumper.value)
+    new JoystickButton(subsystemController, Button.kX.value)
         .whenPressed(new FeederForward(feederSubsystem))
         .whenReleased(new FeederStop(feederSubsystem));
 
