@@ -216,41 +216,39 @@ public void setupPathChooser() {
       
       );
     }
-
-    else if(autoPath.equals("Long Auto")) {
-
+    else if (autoPath.equals("Long Auto")) {
       return new SequentialCommandGroup(
 
         new AutoDriveCommand(longAuto1, swerveDrivetrain, fieldRelative),
-        new TurnToTarget(vision, swerveDrivetrain), new ParallelDeadlineGroup(
-          new WaitCommand(1), new StopDrivetrainCommand(swerveDrivetrain)),
+        new TurnToTarget(vision, swerveDrivetrain),
+        new ParallelDeadlineGroup(
+          new WaitCommand(1),
+          new StopDrivetrainCommand(swerveDrivetrain)),
         new ParallelDeadlineGroup(
           new WaitCommand(4),
           new HoodSetAngle(hoodSubsystem, () -> (SmartDashboard.getNumber("vision_hood_angle", 0.1))),
           new ShooterWheelsSetSpeed(shooterWheelsSubsystem, () -> (SmartDashboard.getNumber("vision_shooter_speed", 0))), 
           new SequentialCommandGroup(new WaitCommand(2), new FeederForward(feederSubsystem))),
-
-        new FeederStop(feederSubsystem), new HoodStop(hoodSubsystem), new ShooterWheelsStop(shooterWheelsSubsystem),
-
+        new FeederStop(feederSubsystem),
+        new HoodStop(hoodSubsystem),
+        new ShooterWheelsStop(shooterWheelsSubsystem),
         new ParallelDeadlineGroup(
           new AutoDriveCommand(longAuto2, swerveDrivetrain, fieldRelative), new IntakeIn(intakeSubsystem)),
-        new TurnToTarget(vision, swerveDrivetrain), new ParallelDeadlineGroup(
+        new TurnToTarget(vision, swerveDrivetrain),
+        new ParallelDeadlineGroup(
           new WaitCommand(1), new StopDrivetrainCommand(swerveDrivetrain)),
-        new SequentialCommandGroup(new ParallelDeadlineGroup(new WaitCommand(1), new ParallelCommandGroup(
-          new FeederReverse(feederSubsystem),
-          new ShooterWheelsReverse(shooterWheelsSubsystem)))), 
+        new SequentialCommandGroup(
+          new ParallelDeadlineGroup(
+            new WaitCommand(1),
+            new ParallelCommandGroup(
+              new FeederReverse(feederSubsystem),
+              new ShooterWheelsReverse(shooterWheelsSubsystem)))), 
         new ParallelCommandGroup(
-            new HoodSetAngle(hoodSubsystem, () -> (SmartDashboard.getNumber("vision_hood_angle", 0.1))),
-            new ShooterWheelsSetSpeed(shooterWheelsSubsystem, () -> (SmartDashboard.getNumber("vision_shooter_speed", 0))), 
-            new SequentialCommandGroup(new WaitCommand(3), new FeederForward(feederSubsystem)))
-        
-
-      
+          new HoodSetAngle(hoodSubsystem, () -> (SmartDashboard.getNumber("vision_hood_angle", 0.1))),
+          new ShooterWheelsSetSpeed(shooterWheelsSubsystem, () -> (SmartDashboard.getNumber("vision_shooter_speed", 0))), 
+          new SequentialCommandGroup(new WaitCommand(3), new FeederForward(feederSubsystem)))
       );
-
     }
-
-
     else {
       return new SequentialCommandGroup(new Command[] {});
     }
@@ -258,7 +256,7 @@ public void setupPathChooser() {
 
   private void configureDriveControllerBindings() {
 
-// 'X' button to aim, bind to cmd TurnToTarget
+    // 'X' button to aim, bind to cmd TurnToTarget
     new JoystickButton(driveController, Button.kX.value)
         .whenPressed(new TurnToTarget(vision, swerveDrivetrain));
 
@@ -275,20 +273,20 @@ public void setupPathChooser() {
   }
 
   public void configureAutoButton() {
-    if(driveController.getStartButtonPressed()){
+    if (driveController.getStartButtonPressed()){
       isPlotting = true;
       fileCreator();
     }
 
-    if(driveController.getBackButtonPressed()) {
+    if (driveController.getBackButtonPressed()) {
       isPlotting = false;
       fileCreator();
     }
-
   }
 
   private void configureSubsystemControllerBindings() {
 
+    // right bumper => shoot
     new JoystickButton(subsystemController, Button.kRightBumper.value)
       .whenPressed(new ParallelCommandGroup(
         new HoodSetAngle(hoodSubsystem, () -> (SmartDashboard.getNumber("vision_hood_angle", 0.1))),
@@ -299,7 +297,7 @@ public void setupPathChooser() {
         new ShooterWheelsStop(shooterWheelsSubsystem)
       ));
 
-      new JoystickButton(subsystemController, Button.kB.value)
+    new JoystickButton(subsystemController, Button.kB.value)
       .whenPressed(new ParallelCommandGroup(
         new HoodSetAngle(hoodSubsystem, () -> (SmartDashboard.getNumber("manual_hood_angle", 0.1))),
         new ShooterWheelsSetSpeed(shooterWheelsSubsystem, () -> (SmartDashboard.getNumber("vision_shooter_speed", 0)))
@@ -308,7 +306,8 @@ public void setupPathChooser() {
         new HoodStop(hoodSubsystem),
         new ShooterWheelsStop(shooterWheelsSubsystem)
       ));
-      
+
+    // A button => feeder and shooter reverse
     new JoystickButton(subsystemController, Button.kA.value)
       .whenPressed(new ParallelCommandGroup(
         new FeederReverse(feederSubsystem),
@@ -319,10 +318,10 @@ public void setupPathChooser() {
         new ShooterWheelsStop(shooterWheelsSubsystem)
       ));
 
+    // X button => feeder forward
     new JoystickButton(subsystemController, Button.kX.value)
         .whenPressed(new FeederForward(feederSubsystem))
         .whenReleased(new FeederStop(feederSubsystem));
-
 
     //#region PID Tuning
     // for PID tuning      
@@ -371,7 +370,7 @@ public void setupPathChooser() {
     filenameFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy-HH-mm-ss");
 
     //Starts and Stops plotting
-      if(isPlotting) {
+    if (isPlotting) {
         try {
           fileTime = filenameFormatter.format(LocalDateTime.now());
           File myObj = new File("/U/" + fileTime + ".txt");
@@ -393,8 +392,9 @@ public void setupPathChooser() {
         SmartDashboard.putBoolean("Is Plotting", false);
       }
     }
+
     public void drivingPlotter() {
-      if(isPlotting) {
+      if (isPlotting) {
         Long time = System.currentTimeMillis() - startTime;
         double robotX = swerveDrivetrain.poseEstimator().getEstimatedPosition().getX();
         double robotY = swerveDrivetrain.poseEstimator().getEstimatedPosition().getY();
