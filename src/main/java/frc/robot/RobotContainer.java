@@ -275,19 +275,19 @@ public void setupPathChooser() {
     new JoystickButton(driveController, Button.kB.value)
         .whenPressed(new FieldRelative(swerveDrivetrain, false));
 
-    //Y button => toggle autonomous path plotting
-    // new JoystickButton(driveController, Button.kY.value)
-    //   .whenPressed(new PlotPathCommand(swerveDrivetrain, isPlotting));
+    // 'X' button to aim, bind to cmd TurnToTarget
+    new JoystickButton(subsystemController, Button.kX.value)
+        .whenPressed(new TurnToTarget(vision, swerveDrivetrain));
 
   }
 
   public void configureAutoButton() {
-    if(driveController.getYButtonPressed()){
+    if(driveController.getStartButtonPressed()){
       isPlotting = true;
       fileCreator();
     }
 
-    if(driveController.getStartButton()) {
+    if(driveController.getBackButtonPressed()) {
       isPlotting = false;
       fileCreator();
     }
@@ -296,19 +296,7 @@ public void setupPathChooser() {
 
   private void configureSubsystemControllerBindings() {
 
-    // new JoystickButton(subsystemController, Button.kA.value)
-    // .whenPressed(new InstantCommand(shooterSubsystem::testHood,
-    // shooterSubsystem))
-    // .whenReleased(new InstantCommand(shooterSubsystem::stopShooter,
-    // shooterSubsystem));
-
-    // new JoystickButton(subsystemController, Button.kB.value)
-    // .whenPressed(new HoodSetAngle(HoodSubsystem, 0.75));
-
-    // new JoystickButton(subsystemController, Button.kA.value)
-    // .whenPressed(new HoodSetAngle(shooterSubsystem, 0.15));
-
-    new JoystickButton(subsystemController, Button.kRightBumper.value)
+    new JoystickButton(subsystemController, Button.kLeftBumper.value)
       .whenPressed(new ParallelCommandGroup(
         new HoodSetAngle(hoodSubsystem, () -> (SmartDashboard.getNumber("vision_hood_angle", 0.1))),
         new ShooterWheelsSetSpeed(shooterWheelsSubsystem, () -> (SmartDashboard.getNumber("vision_shooter_speed", 0)))
@@ -318,7 +306,7 @@ public void setupPathChooser() {
         new ShooterWheelsStop(shooterWheelsSubsystem)
       ));
 
-      new JoystickButton(subsystemController, Button.kLeftBumper.value)
+      new JoystickButton(subsystemController, Button.kB.value)
       .whenPressed(new ParallelCommandGroup(
         new HoodSetAngle(hoodSubsystem, () -> (SmartDashboard.getNumber("manual_hood_angle", 0.1))),
         new ShooterWheelsSetSpeed(shooterWheelsSubsystem, () -> (SmartDashboard.getNumber("vision_shooter_speed", 0)))
@@ -338,10 +326,12 @@ public void setupPathChooser() {
         new ShooterWheelsStop(shooterWheelsSubsystem)
       ));
 
-    new JoystickButton(subsystemController, Button.kY.value)
+    new JoystickButton(subsystemController, Button.kRightBumper.value)
         .whenPressed(new FeederForward(feederSubsystem))
         .whenReleased(new FeederStop(feederSubsystem));
 
+
+    //#region PID Tuning
     // for PID tuning      
     // new JoystickButton(subsystemController, Button.kA.value)
     //     .whenPressed(new InstantCommand(()-> {
@@ -371,6 +361,8 @@ public void setupPathChooser() {
     //       swerveDrivetrain.turningMotorM4.configMotionCruiseVelocity(SmartDashboard.getNumber("kVel", 50000));
     //     }));
 
+    //#endregion
+
     // new JoystickButton(subsystemController, Button.kB.value)
     //   .whenPressed(new InstantCommand(() -> swerveDrivetrain.m_frontLeft.setDesiredState(new SwerveModuleState(0, new Rotation2d(Math.PI / 2)))))
     //   .whenReleased(new InstantCommand(() -> swerveDrivetrain.m_frontLeft.setDesiredState(new SwerveModuleState(0, new Rotation2d(0)))));
@@ -378,15 +370,7 @@ public void setupPathChooser() {
     new JoystickButton(subsystemController, Axis.kLeftTrigger.value)
         .whenPressed(new InstantCommand(()->shooterWheelsSubsystem.set(subsystemController.getLeftTriggerAxis()), shooterWheelsSubsystem))
         .whenReleased(new InstantCommand(shooterWheelsSubsystem::stopShooter, shooterWheelsSubsystem));
-
-    // left bumper to intake in
-    new JoystickButton(subsystemController, Button.kLeftBumper.value)
-        .whenPressed(new IntakeIn(intakeSubsystem))
-        .whenReleased(new IntakeStop(intakeSubsystem));
-
-    // 'X' button to aim, bind to cmd TurnToTarget
-    new JoystickButton(subsystemController, Button.kX.value)
-        .whenPressed(new TurnToTarget(vision, swerveDrivetrain));
+        
   }
 
   private void fileCreator() {
