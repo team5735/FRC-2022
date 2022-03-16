@@ -12,6 +12,8 @@ public class ClimberJoystickCommand extends CommandBase{
 
     public ClimberJoystickCommand(ClimberSubsystem climberSubsystem) {
         this.climberSubsystem = climberSubsystem;
+
+        addRequirements((Subsystem) climberSubsystem);
     }
 
     @Override
