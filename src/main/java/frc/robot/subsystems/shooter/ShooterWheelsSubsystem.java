@@ -59,7 +59,7 @@ public class ShooterWheelsSubsystem extends SubsystemBase {
 
   public void set(double speed) {
     setBigShooter(speed);
-    setSmallShooter(speed * ShooterConstants.SMALL_BIG_SPEED_RATIO);
+    setSmallShooter(speed * SmartDashboard.getNumber("vision_speed_ratio", ShooterConstants.SMALL_BIG_SPEED_RATIO));
   }
 
   public void reverse() {

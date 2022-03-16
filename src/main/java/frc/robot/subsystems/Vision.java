@@ -36,6 +36,7 @@ public class Vision extends SubsystemBase {
         // See RobotContainer.configureSubsystemControllerBindings()
         SmartDashboard.putNumber("vision_hood_angle", temp.getAngle());
         SmartDashboard.putNumber("vision_shooter_speed", temp.getSpeed());
+        SmartDashboard.putNumber("vision_speed_ratio", temp.getSpeedRatio());
     }
 
     public double getDistanceFromTargetInInches() {

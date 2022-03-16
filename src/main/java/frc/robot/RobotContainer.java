@@ -294,8 +294,8 @@ public void setupPathChooser() {
     // right bumper => shoot
     new JoystickButton(subsystemController, Button.kRightBumper.value)
       .whenPressed(new ParallelCommandGroup(
-        new HoodSetAngle(hoodSubsystem, () -> (SmartDashboard.getNumber("vision_hood_angle", 0.1))),
-        new ShooterWheelsSetSpeed(shooterWheelsSubsystem, () -> (SmartDashboard.getNumber("vision_shooter_speed", 0)))
+        new HoodSetAngle(hoodSubsystem, () -> (SmartDashboard.getNumber("manual_hood_angle", 0.1))),
+        new ShooterWheelsSetSpeed(shooterWheelsSubsystem, () -> (SmartDashboard.getNumber("manual_shooter_speed", 0)))
       ))
       .whenReleased(new ParallelCommandGroup(
         new HoodStop(hoodSubsystem),

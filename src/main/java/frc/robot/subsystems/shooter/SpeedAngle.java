@@ -3,9 +3,17 @@ package frc.robot.subsystems.shooter;
 public class SpeedAngle {
     private int speed;
     private double angle;
-    public SpeedAngle(int speed, double angle) {
+    private double speedRatio;
+    public SpeedAngle(int speed, double angle, double speedRatio) {
         this.speed = speed;
         this.angle = angle;
+        this.setSpeedRatio(speedRatio);
+    }
+    public double getSpeedRatio() {
+        return speedRatio;
+    }
+    public void setSpeedRatio(double speedRatio) {
+        this.speedRatio = speedRatio;
     }
     public double getAngle() {
         return angle;
@@ -19,4 +27,5 @@ public class SpeedAngle {
     public void setSpeed(int speed) {
         this.speed = speed;
     }
+    
 }
