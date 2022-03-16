@@ -64,8 +64,8 @@ public class TurnToTarget extends CommandBase {
         ////System.out.println("turn_isFinished =" + isFinished);
         ////System.out.println("turn_rotationCompleted = " + rotationCompleted);
 
-        SmartDashboard.getBoolean("Turning Is Finished", isFinished);
-        SmartDashboard.getNumber("Rotation Completed", rotationCompleted);
+        SmartDashboard.putBoolean("Turning Is Finished", isFinished);
+        SmartDashboard.putNumber("Rotation Completed", rotationCompleted);
 
 	}
 	
@@ -74,7 +74,7 @@ public class TurnToTarget extends CommandBase {
     public void end(boolean interrupted) {
         ////System.out.println("TURN TARGET COMMAND | END: " + interrupted);
 
-        SmartDashboard.getBoolean("TURN TARGET COMMAND | END", interrupted);
+        SmartDashboard.putBoolean("TURN TARGET COMMAND | END", interrupted);
 	}
 
     // Returns true when the command should end.

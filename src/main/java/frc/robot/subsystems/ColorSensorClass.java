@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 
@@ -12,6 +13,7 @@ import com.revrobotics.ColorSensorV3;
 import com.revrobotics.ColorMatchResult;
 import com.revrobotics.ColorMatch;
 
+import frc.robot.RobotContainer;
 import frc.robot.constants.ColorConstants;
 
 /** Add your docs here. */
@@ -22,6 +24,9 @@ public class ColorSensorClass {
     private final ColorMatch m_colorMatcher;
     private final String teamColor;
     private String colorString;
+    private String currentColor;
+
+    
 
     public ColorSensorClass(){
 
@@ -59,6 +64,8 @@ public class ColorSensorClass {
         }
     
         colorString = teamColor;
+
+        currentColor = RobotContainer.colorChooser.getSelected();
     }
 
     public void senseColor(double intakeMotorSpeed){
@@ -99,5 +106,16 @@ public class ColorSensorClass {
         SmartDashboard.putNumber("Confidence", match.confidence);
         SmartDashboard.putString("Detected Color", colorString);
         SmartDashboard.putString("Alliance", ColorConstants.ALLIANCE_COLOR.toString());
+
+        boolean isColor = false;
+
+        if(colorString == currentColor) {
+            isColor = true;
+        }
+        else {
+            isColor = false;
+        }
+
+        SmartDashboard.putBoolean("Ball Color", isColor);
     }
 }

@@ -53,6 +53,7 @@ public class DriveWithXboxController extends CommandBase {
         SmartDashboard.putNumber("xSpeed", xSpeed);
         SmartDashboard.putNumber("ySpeed", ySpeed);
         SmartDashboard.putNumber("rot", rot);
+        SmartDashboard.putBoolean("fieldRelative", fieldRelative);
         // m_swerve.drive(0, 0, rot, false);
 
         if (RobotContainer.driveController.getYButtonPressed()) {

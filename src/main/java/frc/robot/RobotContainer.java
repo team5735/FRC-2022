@@ -80,6 +80,7 @@ public class RobotContainer {
 
   // Autonomous path generation related
   public static SendableChooser<String> autoPathChooser = new SendableChooser<>();
+  public static SendableChooser<String> colorChooser = new SendableChooser<>();
   public ArrayList<DataPoint> testAuto;
   public ArrayList<DataPoint> runItBack;
 
@@ -109,6 +110,10 @@ public class RobotContainer {
     SmartDashboard.putNumber("kF", 0.0475);
     SmartDashboard.putNumber("kAccel", 50000);
     SmartDashboard.putNumber("kVel", 25000);
+
+    colorChooser.addOption("Red", "Red");
+    colorChooser.addOption("Blue", "Blue");
+    SmartDashboard.putData("Game Color", colorChooser);
 
 
     // Configure the button bindings
