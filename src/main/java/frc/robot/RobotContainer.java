@@ -48,6 +48,7 @@ import frc.robot.constants.RobotConstants;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.Vision;
+import frc.robot.subsystems.climber.ClimberSubsystem;
 import frc.robot.subsystems.plotter.DataPoint;
 import frc.robot.subsystems.shooter.FeederSubsystem;
 import frc.robot.subsystems.shooter.HoodSubsystem;
@@ -70,6 +71,7 @@ public class RobotContainer {
   public final ShooterWheelsSubsystem shooterWheelsSubsystem = new ShooterWheelsSubsystem();
   public final HoodSubsystem hoodSubsystem = new HoodSubsystem();
   public final FeederSubsystem feederSubsystem = new FeederSubsystem();
+  public final ClimberSubsystem climberSubsystem = new ClimberSubsystem();
 
   public final Vision vision = new Vision();
 
