@@ -63,13 +63,13 @@ public class PlotPathCommand extends CommandBase {
             File myObj = new File("/U/" + fileTime + ".txt");
             startTime = System.currentTimeMillis();
             if (myObj.createNewFile()) {
-                System.out.println("File created: " + myObj.getName());
+                //System.out.println("File created: " + myObj.getName());
             } else {
-                System.out.println("File already exists.");
+                //System.out.println("File already exists.");
             }
             
         } catch (IOException e) {
-            System.out.println("An error occurred.");
+            //System.out.println("An error occurred.");
             e.printStackTrace();
         }
 
@@ -94,9 +94,9 @@ public class PlotPathCommand extends CommandBase {
             bw.newLine();
             bw.close();
       
-            System.out.println("Successfully wrote to the file.");
+            //System.out.println("Successfully wrote to the file.");
         } catch (IOException e) {
-            System.out.println("An error occurred.");
+            //System.out.println("An error occurred.");
             e.printStackTrace();
         }
 

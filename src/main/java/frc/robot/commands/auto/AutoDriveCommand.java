@@ -40,7 +40,7 @@ public class AutoDriveCommand extends CommandBase {
                 Long time = currentPath.get(i).timeStamp;
                 Long prevTime = currentPath.get(i-1).timeStamp;
 
-                System.out.println(time + ", " + xSpeed + ", " + ySpeed + ", " + actRot);
+                ////System.out.println(time + ", " + xSpeed + ", " + ySpeed + ", " + actRot);
                 swerveDrive.drive(xSpeed, ySpeed, actRot, fieldRelative);
 
                 try {

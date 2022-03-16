@@ -51,15 +51,16 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void disabledInit() {}
+  public void disabledInit() {
+    m_robotContainer.readPaths();
+  }
 
   @Override
   public void disabledPeriodic() {}
 
   @Override
   public void autonomousInit() {
-
-    System.out.println("Starting auto");
+    //System.out.println("Starting auto");
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     if (m_autonomousCommand != null) {
@@ -72,7 +73,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousExit() {
-    System.out.println("Exiting Auto");
+    //System.out.println("Exiting Auto");
     //AutoDriveCommand.commandFinished = true;
   }
 

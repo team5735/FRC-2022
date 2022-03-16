@@ -61,7 +61,7 @@ public class AutoDrivePointCommand extends CommandBase{
         double x = currentX - xPos;
         double y = currentY - yPos;
         
-        System.out.println(xSpeed + ", " + ySpeed + ", " + actRot);
+        //System.out.println(xSpeed + ", " + ySpeed + ", " + actRot);
         swerveDrive.drive(xSpeed, ySpeed, actRot, fieldRelative);
 
         if(Math.sqrt((y*y) + (x*x)) < radiusThreshold) {
@@ -107,7 +107,7 @@ public class AutoDrivePointCommand extends CommandBase{
 
                     else {
 
-                        System.out.println(xSpeed + ", " + ySpeed + ", " + actRot);
+                        //System.out.println(xSpeed + ", " + ySpeed + ", " + actRot);
                         swerveDrive.drive(xSpeed, ySpeed, actRot, fieldRelative);
 
                     }

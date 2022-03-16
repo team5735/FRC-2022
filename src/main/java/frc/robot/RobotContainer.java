@@ -92,7 +92,7 @@ public class RobotContainer {
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
-    readPaths();
+    //readPaths();
     setupPathChooser();
 
     SmartDashboard.putNumber("manual_hood_angle", 0.1);
@@ -141,7 +141,7 @@ public class RobotContainer {
 
         myReader.close();
     } catch (FileNotFoundException e) {
-        System.out.println("An error occurred.");
+        //System.out.println("An error occurred.");
         e.printStackTrace();
     }
 
@@ -326,19 +326,19 @@ public void setupPathChooser() {
           File myObj = new File("/U/" + fileTime + ".txt");
           startTime = System.currentTimeMillis();
           if (myObj.createNewFile()) {
-            System.out.println("File created: " + myObj.getName());
+            //System.out.println("File created: " + myObj.getName());
           } else {
-            System.out.println("File already exists.");
+            //System.out.println("File already exists.");
           }
         
         } catch (IOException e) {
-          System.out.println("An error occurred.");
+          //System.out.println("An error occurred.");
           e.printStackTrace();
         }
         SmartDashboard.putBoolean("Is Plotting", true);
       }
       else{
-        System.out.println("Stops plotting");
+        //System.out.println("Stops plotting");
         SmartDashboard.putBoolean("Is Plotting", false);
       }
     }
@@ -361,9 +361,9 @@ public void setupPathChooser() {
           bw.newLine();
           bw.close();
     
-          System.out.println("Successfully wrote to the file.");
+          //System.out.println("Successfully wrote to the file.");
         } catch (IOException e) {
-          System.out.println("An error occurred.");
+          //System.out.println("An error occurred.");
           e.printStackTrace();
         }
 

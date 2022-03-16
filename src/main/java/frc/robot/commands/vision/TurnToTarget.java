@@ -1,5 +1,6 @@
 package frc.robot.commands.vision;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.subsystems.Drivetrain;
@@ -60,14 +61,20 @@ public class TurnToTarget extends CommandBase {
             }
         }
 
-        System.out.println("turn_isFinished =" + isFinished);
-        System.out.println("turn_rotationCompleted = " + rotationCompleted);
+        ////System.out.println("turn_isFinished =" + isFinished);
+        ////System.out.println("turn_rotationCompleted = " + rotationCompleted);
+
+        SmartDashboard.getBoolean("Turning Is Finished", isFinished);
+        SmartDashboard.getNumber("Rotation Completed", rotationCompleted);
+
 	}
 	
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-        System.out.println("TURN TARGET COMMAND | END: " + interrupted);
+        ////System.out.println("TURN TARGET COMMAND | END: " + interrupted);
+
+        SmartDashboard.getBoolean("TURN TARGET COMMAND | END", interrupted);
 	}
 
     // Returns true when the command should end.

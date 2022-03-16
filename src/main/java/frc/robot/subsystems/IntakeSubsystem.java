@@ -58,7 +58,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
   public boolean hasBall() {
 	  if (beambreak.get() == false) {
-      // System.out.println("################ BALL INSIDE FEEDER | BEAM BREAK");
+      // //System.out.println("################ BALL INSIDE FEEDER | BEAM BREAK");
     }
 
     return !beambreak.get();

@@ -17,8 +17,8 @@ public class Vision extends SubsystemBase {
         limelight = new LimeLight();
         limelight.setPipeline(0);
 
-        //Disable Tracking
-        //disableTracking();
+        // Disable Tracking
+        // disableTracking();
     }
 
     @Override
@@ -47,11 +47,14 @@ public class Vision extends SubsystemBase {
         double distance = 0;
 
         if (isTargetFound()) {
-	        double yAngleToTarget = limelight.getdegVerticalToTarget(); // degrees
-	        distance = heightDiff / Math.tan((RobotConstants.CAMERA_ANGLEFROMPARALLEL + yAngleToTarget)*Math.PI/180.0); // meters now inches
-	    }
+            double yAngleToTarget = limelight.getdegVerticalToTarget(); // degrees
+            distance = heightDiff
+                    / Math.tan((RobotConstants.CAMERA_ANGLEFROMPARALLEL + yAngleToTarget) * Math.PI / 180.0); // meters
+                                                                                                              // now
+                                                                                                              // inches
+        }
 
-	    return distance;
+        return distance;
     }
 
     public double getXAngleToTarget() {
@@ -63,14 +66,14 @@ public class Vision extends SubsystemBase {
     }
 
     public void enableTracking() {
-        System.out.println("ENABLED TRACKING");
+        // //System.out.println("ENABLED TRACKING");
         NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(3);
         NetworkTableInstance.getDefault().getTable("limelight").getEntry("camMode").setNumber(0);
         trackingMode = true;
     }
 
     public void disableTracking() {
-        System.out.println("DISABLED TRACKING");
+        // //System.out.println("DISABLED TRACKING");
         NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(1);
         NetworkTableInstance.getDefault().getTable("limelight").getEntry("camMode").setNumber(1);
         trackingMode = false;
@@ -89,7 +92,7 @@ public class Vision extends SubsystemBase {
     }
 
     public double getTX() {
-	    return NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx").getDouble(0.0);
+        return NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx").getDouble(0.0);
     }
 
     public double getTY() {

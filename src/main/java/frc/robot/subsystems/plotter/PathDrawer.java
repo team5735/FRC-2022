@@ -91,7 +91,7 @@ public class PathDrawer extends JFrame {
             }
             myReader.close();
         } catch (FileNotFoundException e) {
-            System.out.println("An error occurred.");
+            //System.out.println("An error occurred.");
             e.printStackTrace();
         }
         
@@ -169,7 +169,7 @@ public class PathDrawer extends JFrame {
     private void selectFile()
     {
         File selectedFile = null; 
-        System.out.println("Current folder " + lastFolderName.getName());
+        //System.out.println("Current folder " + lastFolderName.getName());
         // initialize the file selection window
         final JFileChooser fc = new JFileChooser();
         fc.setFileFilter(new FileNameExtensionFilter("Text Files", DATA_FILE_EXTENSION));
@@ -183,15 +183,15 @@ public class PathDrawer extends JFrame {
             selectedFile = fc.getSelectedFile();
             lastFolderName = fc.getCurrentDirectory();
             lastFile = selectedFile;
-            // System.out.println("hello");
+            // //System.out.println("hello");
             dataSet = readFile(selectedFile);
     
             updateGraphPanel();
             repaint();
-            System.out.println("opening file " + selectedFile.getPath());
+            //System.out.println("opening file " + selectedFile.getPath());
         }
         else {
-            System.out.println("No file selected");
+            //System.out.println("No file selected");
         }
     }
 
@@ -204,7 +204,7 @@ public class PathDrawer extends JFrame {
 
         if(returnVal == JFileChooser.APPROVE_OPTION) {
             File saveAsFile = fc.getSelectedFile();
-            System.out.println("File to save as: " + saveAsFile.getPath() +".txt");
+            //System.out.println("File to save as: " + saveAsFile.getPath() +".txt");
             Path sourcePath = FileSystems.getDefault().getPath(lastFile.getPath());
             Path destinationPath = FileSystems.getDefault().getPath(
                 saveAsFile.getPath() + "." + DATA_FILE_EXTENSION);

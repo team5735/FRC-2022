@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.subsystems;
+package frc.robot.subsystems.climber;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -42,13 +42,13 @@ public class ClimberSubsystem extends SubsystemBase {
         
         if (leftOutput != 0) {
           leftWinchMotor.set(leftOutput);
-          System.out.println("leftOutput = " + leftOutput);
-          System.out.println("Left Encoder = " + leftWinchMotor.getEncoder().getPosition());
+          //System.out.println("leftOutput = " + leftOutput);
+          //System.out.println("Left Encoder = " + leftWinchMotor.getEncoder().getPosition());
         }
         if (rightOutput != 0) {
           rightWinchMotor.set(rightOutput);
-          System.out.println("rightOutput =" + rightOutput);
-          System.out.println("Right Encode = " + rightWinchMotor.getEncoder().getPosition());
+          //System.out.println("rightOutput =" + rightOutput);
+          //System.out.println("Right Encode = " + rightWinchMotor.getEncoder().getPosition());
         }
     }
 
@@ -81,8 +81,8 @@ public class ClimberSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("climber_speed", leftWinchMotor.getEncoder().getVelocity());
 
     if (LoggingConstants.CLIMBER_LEVEL.ordinal() >= LoggingLevel.DEBUG.ordinal()) {
-      // System.out.println(leftWinchMotor.getEncoder().getCountsPerRevolution());
-      // System.out.println(leftWinchMotor.getEncoder().getPosition());
+      // //System.out.println(leftWinchMotor.getEncoder().getCountsPerRevolution());
+      // //System.out.println(leftWinchMotor.getEncoder().getPosition());
     }
 
     if (LoggingConstants.CLIMBER_LEVEL.ordinal() >= LoggingLevel.COMPETITION.ordinal()) {}
@@ -114,4 +114,11 @@ public class ClimberSubsystem extends SubsystemBase {
   public void down() {
     set(ClimberConstants.WINCH_DOWN_SPEED);
   }
+
+
+  public void right() {}
+
+  public void left() {}
+
+
 }
