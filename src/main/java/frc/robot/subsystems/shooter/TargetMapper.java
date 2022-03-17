@@ -30,7 +30,7 @@ public class TargetMapper {
         Map.entry(21,new SpeedAngle(11900, 0.68, 1.5)),
         Map.entry(22,new SpeedAngle(12000, 0.71, 1.5)),//ok
         Map.entry(23,new SpeedAngle(12000, 0.74, 1.5)),
-        Map.entry(24,new SpeedAngle(14000, 0.75, 1.5))
+        Map.entry(24,new SpeedAngle(15000, 0.75, 1.5))
     );
 
     public static SpeedAngle getSpeedAngleByDistance(double distance){
@@ -51,10 +51,16 @@ public class TargetMapper {
         double ratio = (distance - Math.floor(distance/12) * 12) / 12;
 
         SpeedAngle speedAngle = new SpeedAngle(
-            (int) Math.min(Math.max(speed, 8500), 10000),
+            (int) Math.max(speed, 10000),
             floorSpeedAngle.getAngle() + (ceilSpeedAngle.getAngle() - floorSpeedAngle.getAngle()) * ratio,
             distance < 90? 1:1.5
         );
+
+
+        SmartDashboard.putNumber("$Output Func", speed);
+        SmartDashboard.putNumber("Output Speed", speedAngle.getSpeed());
+        SmartDashboard.putNumber("Output Angle", speedAngle.getAngle());
+
 
         return speedAngle;
     }
