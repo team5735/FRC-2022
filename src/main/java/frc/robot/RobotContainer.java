@@ -194,7 +194,7 @@ public void setupPathChooser() {
 
       return new SequentialCommandGroup(
         // new HoodSetAngle(subsystem, angleGetter)
-        new HoodSetAngle(hoodSubsystem, () -> (SmartDashboard.getNumber("manual_hood_angle", 0.9))),
+        new ParallelDeadlineGroup(new WaitCommand(0.1), new HoodSetAngle(hoodSubsystem, () -> (0.5))),
         new ParallelDeadlineGroup(new AutoDriveCommand(runItBack, swerveDrivetrain, fieldRelative), new IntakeIn(intakeSubsystem)), 
         new TurnToTarget(vision, swerveDrivetrain), new ParallelDeadlineGroup(new WaitCommand(1), new StopDrivetrainCommand(swerveDrivetrain)),
 
@@ -207,10 +207,8 @@ public void setupPathChooser() {
             new ShooterWheelsSetSpeed(shooterWheelsSubsystem, () -> (SmartDashboard.getNumber("vision_shooter_speed", 0))), 
             new SequentialCommandGroup(new WaitCommand(1), new FeederForward(feederSubsystem))),
 
-          new WaitCommand(0.5),
-          new FeederStop(feederSubsystem),
-          new WaitCommand(0.25),
-          new FeederForward(feederSubsystem)
+          new ParallelDeadlineGroup(new WaitCommand(0.5),new FeederStop(feederSubsystem)),
+          new ParallelDeadlineGroup(new WaitCommand(0.25), new FeederForward(feederSubsystem))
 
       );
     }
@@ -222,7 +220,7 @@ public void setupPathChooser() {
     }
 
     else if(autoPath.equals("Hood Down")) {
-      return new SequentialCommandGroup(new HoodSetAngle(hoodSubsystem, () -> (SmartDashboard.getNumber("manual_hood_angle", 0.5))));
+      return new SequentialCommandGroup(new HoodSetAngle(hoodSubsystem, () -> (0.5)));
 
     }
 
