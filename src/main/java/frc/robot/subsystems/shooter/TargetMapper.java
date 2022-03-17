@@ -13,7 +13,7 @@ public class TargetMapper {
         Map.entry(4,new SpeedAngle(9100, 0.06, 1.0)),
         Map.entry(5,new SpeedAngle(9200, 0.06, 1.0)),
         Map.entry(6,new SpeedAngle(9300, 0.06, 1.0)),
-        Map.entry(7,new SpeedAngle(9400, 0.06, 1.0)),
+        Map.entry(7,new SpeedAngle(12750, 0.06, 1.0)),
         Map.entry(8,new SpeedAngle(9500, 0.26, 1.2)),
         Map.entry(9,new SpeedAngle(9600, 0.29, 1.5)),
         Map.entry(10,new SpeedAngle(9700, 0.32, 1.5)),

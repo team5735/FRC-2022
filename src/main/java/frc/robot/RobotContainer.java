@@ -71,7 +71,7 @@ public class RobotContainer {
   public final ShooterWheelsSubsystem shooterWheelsSubsystem = new ShooterWheelsSubsystem();
   public final HoodSubsystem hoodSubsystem = new HoodSubsystem();
   public final FeederSubsystem feederSubsystem = new FeederSubsystem();
-  public final ClimberSubsystem climberSubsystem = new ClimberSubsystem();
+  // public final ClimberSubsystem climberSubsystem = new ClimberSubsystem();
 
   public final Vision vision = new Vision();
 
@@ -85,6 +85,7 @@ public class RobotContainer {
   public static SendableChooser<String> colorChooser = new SendableChooser<>();
   public ArrayList<DataPoint> testAuto;
   public ArrayList<DataPoint> runItBack;
+  public ArrayList<DataPoint> turning;
 
   //For Long Auto
   public ArrayList<DataPoint> longAuto1; 
@@ -128,6 +129,7 @@ public class RobotContainer {
     runItBack = readAutoFile("/U/runItBack.txt");
     longAuto1 = readAutoFile("/U/LongAuto1.txt");
     longAuto2 = readAutoFile("/U/LongAuto2.txt");
+    turning = readAutoFile("/U/turning.txt");
   }
 
   public ArrayList<DataPoint> readAutoFile(String filePath) {
@@ -195,10 +197,18 @@ public void setupPathChooser() {
       return new SequentialCommandGroup(
         // new HoodSetAngle(subsystem, angleGetter)
         new ParallelDeadlineGroup(new WaitCommand(0.1), new HoodSetAngle(hoodSubsystem, () -> (0.5))),
-        new ParallelDeadlineGroup(new AutoDriveCommand(runItBack, swerveDrivetrain, fieldRelative), new IntakeIn(intakeSubsystem)), 
-        new TurnToTarget(vision, swerveDrivetrain), new ParallelDeadlineGroup(new WaitCommand(1), new StopDrivetrainCommand(swerveDrivetrain)),
+        new ParallelDeadlineGroup(
+            new WaitCommand(3),
+            new HoodSetAngle(hoodSubsystem, () -> (SmartDashboard.getNumber("vision_hood_angle", 0.1))),
+            new ShooterWheelsSetSpeed(shooterWheelsSubsystem, () -> (SmartDashboard.getNumber("vision_shooter_speed", 0))), 
+            new SequentialCommandGroup(new WaitCommand(0.5), new FeederForward(feederSubsystem))),
+        new ParallelDeadlineGroup(new AutoDriveCommand(runItBack, swerveDrivetrain, fieldRelative), new IntakeIn(intakeSubsystem), 
+        new FeederStop(feederSubsystem),
+        new HoodStop(hoodSubsystem),
+        new ShooterWheelsStop(shooterWheelsSubsystem)), 
+        new TurnToTarget(vision, swerveDrivetrain), new ParallelDeadlineGroup(new WaitCommand(0.5), new StopDrivetrainCommand(swerveDrivetrain)),
 
-        new SequentialCommandGroup(new ParallelDeadlineGroup(new WaitCommand(1), new ParallelCommandGroup(
+        new SequentialCommandGroup(new ParallelDeadlineGroup(new WaitCommand(0.3), new ParallelCommandGroup(
           new FeederReverse(feederSubsystem),
           new ShooterWheelsReverse(shooterWheelsSubsystem)
         ))), 
@@ -206,10 +216,10 @@ public void setupPathChooser() {
             new HoodSetAngle(hoodSubsystem, () -> (SmartDashboard.getNumber("vision_hood_angle", 0.1))),
             new ShooterWheelsSetSpeed(shooterWheelsSubsystem, () -> (SmartDashboard.getNumber("vision_shooter_speed", 0))), 
             new SequentialCommandGroup(new WaitCommand(1), new FeederForward(feederSubsystem))),
-
-          new ParallelDeadlineGroup(new WaitCommand(0.5),new FeederStop(feederSubsystem)),
-          new ParallelDeadlineGroup(new WaitCommand(0.25), new FeederForward(feederSubsystem))
-
+        new WaitCommand(1),
+        new FeederStop(feederSubsystem),
+        new HoodStop(hoodSubsystem),
+        new ShooterWheelsStop(shooterWheelsSubsystem)
       );
     }
 
@@ -320,10 +330,10 @@ public void setupPathChooser() {
         new ShooterWheelsStop(shooterWheelsSubsystem)
       ));
 
-    new JoystickButton(subsystemController, Button.kB.value)
+    new JoystickButton(subsystemController, Button.kLeftBumper.value)
       .whenPressed(new ParallelCommandGroup(
         new HoodSetAngle(hoodSubsystem, () -> (SmartDashboard.getNumber("manual_hood_angle", 0.1))),
-        new ShooterWheelsSetSpeed(shooterWheelsSubsystem, () -> (SmartDashboard.getNumber("vision_shooter_speed", 0)))
+        new ShooterWheelsSetSpeed(shooterWheelsSubsystem, () -> (SmartDashboard.getNumber("manual_shooter_speed", 0)))
       ))
       .whenReleased(new ParallelCommandGroup(
         new HoodStop(hoodSubsystem),
