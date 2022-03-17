@@ -164,7 +164,7 @@ public class RobotContainer {
 }
 
 public void setupPathChooser() {
-    String[] autoNames = {"testAuto", "JustAutoWTurn", "Turns and Shoots", "Run It Back", "Long Auto"};
+    String[] autoNames = {"testAuto", "JustAutoWTurn", "Turns and Shoots", "Run It Back", "Long Auto", "Hood Down"};
 
     for (String pathName : autoNames) {
       autoPathChooser.addOption(pathName, pathName);
@@ -220,6 +220,12 @@ public void setupPathChooser() {
       
       //return new AutoDriveCommand(runItBack, swerveDrivetrain, fieldRelative);
     }
+
+    else if(autoPath.equals("Hood Down")) {
+      return new SequentialCommandGroup(new HoodSetAngle(hoodSubsystem, () -> (SmartDashboard.getNumber("manual_hood_angle", 0.5))));
+
+    }
+
     else if (autoPath.equals("Turns and Shoots")) {
       return new SequentialCommandGroup(new TurnToTarget(vision, swerveDrivetrain), new ParallelDeadlineGroup(new WaitCommand(1), new StopDrivetrainCommand(swerveDrivetrain)),
       
