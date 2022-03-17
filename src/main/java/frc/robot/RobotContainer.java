@@ -194,6 +194,7 @@ public void setupPathChooser() {
 
       return new SequentialCommandGroup(
         // new HoodSetAngle(subsystem, angleGetter)
+        new HoodSetAngle(hoodSubsystem, () -> (SmartDashboard.getNumber("manual_hood_angle", 0.9))),
         new ParallelDeadlineGroup(new AutoDriveCommand(runItBack, swerveDrivetrain, fieldRelative), new IntakeIn(intakeSubsystem)), 
         new TurnToTarget(vision, swerveDrivetrain), new ParallelDeadlineGroup(new WaitCommand(1), new StopDrivetrainCommand(swerveDrivetrain)),
 
@@ -204,7 +205,12 @@ public void setupPathChooser() {
           new ParallelCommandGroup(
             new HoodSetAngle(hoodSubsystem, () -> (SmartDashboard.getNumber("vision_hood_angle", 0.1))),
             new ShooterWheelsSetSpeed(shooterWheelsSubsystem, () -> (SmartDashboard.getNumber("vision_shooter_speed", 0))), 
-            new SequentialCommandGroup(new WaitCommand(3), new FeederForward(feederSubsystem)))
+            new SequentialCommandGroup(new WaitCommand(1), new FeederForward(feederSubsystem))),
+
+          new WaitCommand(0.5),
+          new FeederStop(feederSubsystem),
+          new WaitCommand(0.25),
+          new FeederForward(feederSubsystem)
 
       );
     }
@@ -220,11 +226,12 @@ public void setupPathChooser() {
        new ParallelCommandGroup(
           new HoodSetAngle(hoodSubsystem, () -> (SmartDashboard.getNumber("vision_hood_angle", 0.1))),
           new ShooterWheelsSetSpeed(shooterWheelsSubsystem, () -> (SmartDashboard.getNumber("vision_shooter_speed", 0))), 
-          new SequentialCommandGroup(new WaitCommand(3), new FeederForward(feederSubsystem))),
+          new SequentialCommandGroup(new WaitCommand(0.75), new FeederForward(feederSubsystem))),
 
+        new WaitCommand(0.5),
         new FeederStop(feederSubsystem),
-        new HoodStop(hoodSubsystem),
-        new ShooterWheelsStop(shooterWheelsSubsystem),
+        new WaitCommand(0.25),
+        new FeederForward(feederSubsystem)
       
       );
     }
