@@ -107,15 +107,6 @@ public class ColorSensorClass {
         SmartDashboard.putString("Detected Color", colorString);
         SmartDashboard.putString("Alliance", ColorConstants.ALLIANCE_COLOR.toString());
 
-        boolean isColor = false;
-
-        if(colorString == currentColor) {
-            isColor = true;
-        }
-        else {
-            isColor = false;
-        }
-
-        SmartDashboard.putBoolean("Ball Color", isColor);
+        SmartDashboard.putBoolean("Ball Color", colorString.equals(currentColor));
     }
 }

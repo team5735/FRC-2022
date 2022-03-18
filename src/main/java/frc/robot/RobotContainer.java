@@ -71,7 +71,7 @@ public class RobotContainer {
   public final ShooterWheelsSubsystem shooterWheelsSubsystem = new ShooterWheelsSubsystem();
   public final HoodSubsystem hoodSubsystem = new HoodSubsystem();
   public final FeederSubsystem feederSubsystem = new FeederSubsystem();
-  // public final ClimberSubsystem climberSubsystem = new ClimberSubsystem();
+  public final ClimberSubsystem climberSubsystem = new ClimberSubsystem();
 
   public final Vision vision = new Vision();
 
