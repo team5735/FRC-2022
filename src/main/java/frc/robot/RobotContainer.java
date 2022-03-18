@@ -30,6 +30,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.auto.AutoDriveCommand;
 import frc.robot.commands.auto.PlotPathCommand;
+import frc.robot.commands.climber.ClimberLeftCommand;
 import frc.robot.commands.drivetrain.FieldRelative;
 import frc.robot.commands.drivetrain.StopDrivetrainCommand;
 import frc.robot.commands.intake.IntakeIn;
@@ -48,6 +49,8 @@ import frc.robot.constants.RobotConstants;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.Vision;
+import frc.robot.subsystems.climber.ClimberLeftSubsystem;
+import frc.robot.subsystems.climber.ClimberRightSubsystem;
 import frc.robot.subsystems.climber.ClimberSubsystem;
 import frc.robot.subsystems.plotter.DataPoint;
 import frc.robot.subsystems.shooter.FeederSubsystem;
@@ -71,7 +74,9 @@ public class RobotContainer {
   public final ShooterWheelsSubsystem shooterWheelsSubsystem = new ShooterWheelsSubsystem();
   public final HoodSubsystem hoodSubsystem = new HoodSubsystem();
   public final FeederSubsystem feederSubsystem = new FeederSubsystem();
-  public final ClimberSubsystem climberSubsystem = new ClimberSubsystem();
+  // public final ClimberSubsystem climberSubsystem = new ClimberSubsystem();
+  public final ClimberLeftSubsystem climberLeftSubsystem = new ClimberLeftSubsystem();
+  public final ClimberRightSubsystem climberRightSubsystem = new ClimberRightSubsystem();
 
   public final Vision vision = new Vision();
 
@@ -216,6 +221,7 @@ public void setupPathChooser() {
             new HoodSetAngle(hoodSubsystem, () -> (SmartDashboard.getNumber("vision_hood_angle", 0.1))),
             new ShooterWheelsSetSpeed(shooterWheelsSubsystem, () -> (SmartDashboard.getNumber("vision_shooter_speed", 0))), 
             new SequentialCommandGroup(new WaitCommand(0.7), new FeederForward(feederSubsystem))),
+          
         new WaitCommand(0.3),
         new FeederStop(feederSubsystem),
         new HoodStop(hoodSubsystem),

@@ -12,27 +12,22 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
 import frc.robot.commands.climber.ClimberJoystickCommand;
+import frc.robot.commands.climber.ClimberLeftCommand;
 import frc.robot.constants.ClimberConstants;
 import frc.robot.constants.LoggingConstants;
 import frc.robot.constants.LoggingConstants.LoggingLevel;
 
-public class ClimberSubsystem extends SubsystemBase { //TODO: change to PID subsystem
-  private CANSparkMax leftWinchMotor;
-  private CANSparkMax rightWinchMotor;
-  private CANSparkMax leftRotateMotor;
-  private CANSparkMax rightRotateMotor;
+public class ClimberLeftSubsystem extends SubsystemBase {
+  private CANSparkMax winchMotor;
+  private CANSparkMax rotateMotor;
 
   private final double DEADBAND = 0.05;
-  private double leftStartPosition;
-  private double rightStartPosition;
 
-  public ClimberSubsystem() {
-    leftWinchMotor = new CANSparkMax(ClimberConstants.LEFT_WINCH_MOTOR_ID, MotorType.kBrushless);
-    rightWinchMotor = new CANSparkMax(ClimberConstants.RIGHT_WINCH_MOTOR_ID, MotorType.kBrushless);
-    leftRotateMotor = new CANSparkMax(ClimberConstants.LEFT_ROTATE_MOTOR_ID, MotorType.kBrushless);
-    rightRotateMotor = new CANSparkMax(ClimberConstants.RIGHT_ROTATE_MOTOR_ID, MotorType.kBrushless);
+  public ClimberLeftSubsystem() {
+    winchMotor = new CANSparkMax(ClimberConstants.LEFT_WINCH_MOTOR_ID, MotorType.kBrushless);
+    rotateMotor = new CANSparkMax(ClimberConstants.LEFT_ROTATE_MOTOR_ID, MotorType.kBrushless);
     
-    CommandScheduler.getInstance().setDefaultCommand(this, new ClimberJoystickCommand(this));
+    CommandScheduler.getInstance().setDefaultCommand(this, new ClimberLeftCommand(this));
     
     // leftStartPosition = leftWinchMotor.getEncoder().getPosition();
     // rightStartPosition = rightWinchMotor.getEncoder().getPosition();
@@ -44,9 +39,9 @@ public class ClimberSubsystem extends SubsystemBase { //TODO: change to PID subs
     //Final Position: -496.858
     //Difference: 477.834 Ticks
 
-    SmartDashboard.putNumber("climber_cmd", leftWinchMotor.getAppliedOutput());
-    SmartDashboard.putNumber("climber_current", leftWinchMotor.getOutputCurrent());
-    SmartDashboard.putNumber("climber_speed", leftWinchMotor.getEncoder().getVelocity());
+    SmartDashboard.putNumber("climber_cmd", winchMotor.getAppliedOutput());
+    SmartDashboard.putNumber("climber_current", winchMotor.getOutputCurrent());
+    SmartDashboard.putNumber("climber_speed", winchMotor.getEncoder().getVelocity());
 
     if (LoggingConstants.CLIMBER_LEVEL.ordinal() >= LoggingLevel.DEBUG.ordinal()) {
       // //System.out.println(leftWinchMotor.getEncoder().getCountsPerRevolution());
@@ -57,13 +52,11 @@ public class ClimberSubsystem extends SubsystemBase { //TODO: change to PID subs
   }
 
   public void set(double speed) {
-    leftWinchMotor.set(speed);
-    rightWinchMotor.set(speed);
+    winchMotor.set(speed);
   }
 
   public void rotate(double speed) {
-    leftRotateMotor.set(speed);
-    rightRotateMotor.set(speed);
+    rotateMotor.set(speed);
   }
 
   public void up() {
