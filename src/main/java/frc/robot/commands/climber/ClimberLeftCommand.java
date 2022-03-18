@@ -9,7 +9,6 @@ import frc.robot.subsystems.climber.ClimberLeftSubsystem;
 public class ClimberLeftCommand extends CommandBase{
 
     private ClimberLeftSubsystem climberSubsystem;
-    private final double DEADBAND = 0.05;
 
     public ClimberLeftCommand(ClimberLeftSubsystem climberSubsystem) {
         this.climberSubsystem = climberSubsystem;
@@ -23,8 +22,8 @@ public class ClimberLeftCommand extends CommandBase{
 
     @Override
     public void execute() {
-        double yInput = deadband(RobotContainer.subsystemController.getLeftY(), DEADBAND);
-        double xInput = deadband(RobotContainer.subsystemController.getLeftX(), DEADBAND);
+        double yInput = deadband(RobotContainer.subsystemController.getLeftY(), ClimberConstants.DEADBAND);
+        double xInput = deadband(RobotContainer.subsystemController.getLeftX(), ClimberConstants.DEADBAND);
         if(yInput > 0) {
             climberSubsystem.set(yInput * ClimberConstants.WINCH_UP_SPEED);
         }

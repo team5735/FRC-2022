@@ -21,10 +21,10 @@ public class ClimberRightSubsystem extends SubsystemBase {
   private CANSparkMax winchMotor;
   private CANSparkMax rotateMotor;
 
-  private final double DEADBAND = 0.05;
-
   public ClimberRightSubsystem() {
     winchMotor = new CANSparkMax(ClimberConstants.RIGHT_WINCH_MOTOR_ID, MotorType.kBrushless);
+    winchMotor.restoreFactoryDefaults();
+    winchMotor.setInverted(true);
     rotateMotor = new CANSparkMax(ClimberConstants.RIGHT_ROTATE_MOTOR_ID, MotorType.kBrushless);
     
     CommandScheduler.getInstance().setDefaultCommand(this, new ClimberRightCommand(this));
