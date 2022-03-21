@@ -23,10 +23,10 @@ public class ClimberRightSubsystem extends SubsystemBase {
 
   public ClimberRightSubsystem() {
     winchMotor = new CANSparkMax(ClimberConstants.RIGHT_WINCH_MOTOR_ID, MotorType.kBrushless);
-    winchMotor.restoreFactoryDefaults();
+    // winchMotor.restoreFactoryDefaults();
     winchMotor.setInverted(true);
     rotateMotor = new CANSparkMax(ClimberConstants.RIGHT_ROTATE_MOTOR_ID, MotorType.kBrushless);
-    
+    rotateMotor.restoreFactoryDefaults();
     CommandScheduler.getInstance().setDefaultCommand(this, new ClimberRightCommand(this));
     
     // leftStartPosition = leftWinchMotor.getEncoder().getPosition();
@@ -38,10 +38,12 @@ public class ClimberRightSubsystem extends SubsystemBase {
     //Inital Position: -19.024
     //Final Position: -496.858
     //Difference: 477.834 Ticks
+    // System.out.println("RIGHT WINCH ENCODER: " + winchMotor.getEncoder().getPosition());
 
-    SmartDashboard.putNumber("climber_cmd", winchMotor.getAppliedOutput());
-    SmartDashboard.putNumber("climber_current", winchMotor.getOutputCurrent());
-    SmartDashboard.putNumber("climber_speed", winchMotor.getEncoder().getVelocity());
+    // SmartDashboard.putNumber("climber_cmd", winchMotor.getAppliedOutput());
+    // SmartDashboard.putNumber("climber_current", winchMotor.getOutputCurrent());
+    // SmartDashboard.putNumber("climber_speed", winchMotor.getEncoder().getVelocity());
+    SmartDashboard.putNumber("RIGHT WINCH ENCODER", winchMotor.getEncoder().getPosition());
 
     if (LoggingConstants.CLIMBER_LEVEL.ordinal() >= LoggingLevel.DEBUG.ordinal()) {
       // //System.out.println(leftWinchMotor.getEncoder().getCountsPerRevolution());

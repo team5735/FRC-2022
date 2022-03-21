@@ -23,7 +23,9 @@ public class ClimberRightCommand extends CommandBase{
     @Override
     public void execute() {
         double yInput = deadband(RobotContainer.subsystemController.getRightY(), ClimberConstants.DEADBAND);
-        double xInput = deadband(RobotContainer.subsystemController.getRightX(), ClimberConstants.DEADBAND);
+        // double xInput = Math.pow(deadband(RobotContainer.subsystemController.getRightX(), ClimberConstants.DEADBAND), 3);
+        double xInput = 0;
+
         if(yInput > 0) {
             climberSubsystem.set(yInput * ClimberConstants.WINCH_UP_SPEED);
         }
@@ -33,7 +35,15 @@ public class ClimberRightCommand extends CommandBase{
             climberSubsystem.set(0);
         }
 
-        climberSubsystem.rotate(xInput * ClimberConstants.ARM_ROTATE_SPEED);
+        /*
+        if(xInput > 0) { //UP
+            climberSubsystem.rotate(xInput * ClimberConstants.ARM_ROTATE_UP_SPEED);
+        } else if(xInput < 0) { //DOWN
+            climberSubsystem.rotate(xInput * ClimberConstants.ARM_ROTATE_DOWN_SPEED);
+        } else {
+            climberSubsystem.rotate(0);
+        }
+        */
     }
     
 	@Override

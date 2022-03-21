@@ -34,7 +34,7 @@ public class ClimberJoystickCommand extends CommandBase{
             climberSubsystem.set(0);
         }
 
-        climberSubsystem.rotate(xInput * ClimberConstants.ARM_ROTATE_SPEED);
+        // climberSubsystem.rotate(xInput * ClimberConstants.ARM_ROTATE_SPEED);
     }
     
 	@Override

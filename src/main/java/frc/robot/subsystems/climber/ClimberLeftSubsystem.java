@@ -23,7 +23,7 @@ public class ClimberLeftSubsystem extends SubsystemBase {
 
   public ClimberLeftSubsystem() {
     winchMotor = new CANSparkMax(ClimberConstants.LEFT_WINCH_MOTOR_ID, MotorType.kBrushless);
-    winchMotor.restoreFactoryDefaults();
+    // winchMotor.restoreFactoryDefaults();
     winchMotor.setInverted(true);
     rotateMotor = new CANSparkMax(ClimberConstants.LEFT_ROTATE_MOTOR_ID, MotorType.kBrushless);
     
@@ -39,9 +39,12 @@ public class ClimberLeftSubsystem extends SubsystemBase {
     //Final Position: -496.858
     //Difference: 477.834 Ticks
 
-    SmartDashboard.putNumber("climber_cmd", winchMotor.getAppliedOutput());
-    SmartDashboard.putNumber("climber_current", winchMotor.getOutputCurrent());
-    SmartDashboard.putNumber("climber_speed", winchMotor.getEncoder().getVelocity());
+    // System.out.println("LEFT WINCH ENCODER: " + winchMotor.getEncoder().getPosition());
+
+    // SmartDashboard.putNumber("climber_cmd", winchMotor.getAppliedOutput());
+    // SmartDashboard.putNumber("climber_current", winchMotor.getOutputCurrent());
+    // SmartDashboard.putNumber("climber_speed", winchMotor.getEncoder().getVelocity());
+    SmartDashboard.putNumber("LEFT WINCH ENCODER", winchMotor.getEncoder().getPosition());
 
     if (LoggingConstants.CLIMBER_LEVEL.ordinal() >= LoggingLevel.DEBUG.ordinal()) {
       // //System.out.println(leftWinchMotor.getEncoder().getCountsPerRevolution());
@@ -71,6 +74,9 @@ public class ClimberLeftSubsystem extends SubsystemBase {
   public void right() {}
 
   public void left() {}
+  public void setBreakMode(boolean isBreakMode) {
+    
+  }
 
 
 }

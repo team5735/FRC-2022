@@ -32,7 +32,7 @@ public class TurnToTarget extends CommandBase {
 	@Override
 	public void execute() {
         double steering_adjust;
-        double Kp = -0.2;  // Proportional control constant
+        double Kp = -0.15;  // Proportional control constant
         isFinished = false;
  
         // Make sure Vision Tracking is running
