@@ -3,6 +3,8 @@ package frc.robot.subsystems.plotter;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import frc.robot.constants.RunItBackAutoPath;
+
 import java.awt.*;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -50,7 +52,8 @@ public class PathDrawer extends JFrame {
         pack();
         setVisible(true);
 
-        dataSet = readFile(new File("28-01-2022-20-59-13.txt"));
+        // dataSet = readFile(new File("28-01-2022-20-59-13.txt"));
+        dataSet = AutoPath.getDataOatgPoints(RunItBackAutoPath.RUN_IT_BACK_AUTO_PATH);
         updateGraphPanel();
         setSize(w, h);      
     }
