@@ -52,6 +52,7 @@ import frc.robot.subsystems.Vision;
 import frc.robot.subsystems.climber.ClimberLeftSubsystem;
 import frc.robot.subsystems.climber.ClimberRightSubsystem;
 import frc.robot.subsystems.climber.ClimberSubsystem;
+import frc.robot.subsystems.plotter.AutoPath;
 import frc.robot.subsystems.plotter.DataPoint;
 import frc.robot.subsystems.shooter.FeederSubsystem;
 import frc.robot.subsystems.shooter.HoodSubsystem;
@@ -96,7 +97,6 @@ public class RobotContainer {
   public ArrayList<DataPoint> longAuto1; 
   public ArrayList<DataPoint> longAuto2; 
 
-
   public static boolean isPlotting = false;
 
   private Long startTime;
@@ -123,10 +123,8 @@ public class RobotContainer {
     colorChooser.addOption("Blue", "Blue");
     SmartDashboard.putData("Game Color", colorChooser);
 
-
     SmartDashboard.putString("DistanceTwoBall", "108");
     SmartDashboard.putString("DistanceManual", "75");
-
 
     // Configure the button bindings
     configureDriveControllerBindings();
@@ -135,46 +133,13 @@ public class RobotContainer {
 
   public void readPaths() {
     // testAuto = readAutoFile("/U/testAuto2.txt");
-    runItBack = readAutoFile("/files/runItBack.txt");
+    runItBack = AutoPath.readAutoFile("runItBack.txt");
     // longAuto1 = readAutoFile("/U/LongAuto1.txt");
     // longAuto2 = readAutoFile("/U/LongAuto2.txt");
     // turning = readAutoFile("/U/turning.txt");
   }
 
-  public ArrayList<DataPoint> readAutoFile(String filePath) {
-
-    ArrayList<DataPoint> dataPathPoints = new ArrayList<>();
-    File file = new File(filePath);
-
-    try {
-        Scanner myReader = new Scanner(file);
-
-        while (myReader.hasNextLine()) {
-            String data = myReader.nextLine();
-            //List<String> dataPoint = Arrays.asList(data.split(","));
-            String[] dataPointStr = data.split(",");
-            long timeStamp = Long.parseLong(dataPointStr[0]);
-            double xPos = Double.parseDouble(dataPointStr[1]);
-            double yPos = Double.parseDouble(dataPointStr[2]);
-            double angle = Double.parseDouble(dataPointStr[3]);
-            double actRot = Double.parseDouble(dataPointStr[4]);
-            double xS = Double.parseDouble(dataPointStr[5]);
-            double yS = Double.parseDouble(dataPointStr[6]);
-
-            DataPoint dataPoint = new DataPoint(timeStamp, xPos, yPos, angle, actRot, xS, yS);
-            dataPathPoints.add(dataPoint);
-        }
-
-        myReader.close();
-    } catch (FileNotFoundException e) {
-        //System.out.println("An error occurred.");
-        e.printStackTrace();
-    }
-
-    return dataPathPoints;
-}
-
-public void setupPathChooser() {
+  public void setupPathChooser() {
     String[] autoNames = {"testAuto", "JustAutoWTurn", "Turns and Shoots", "Run It Back", "Long Auto", "Hood Down"};
 
     for (String pathName : autoNames) {
@@ -201,7 +166,7 @@ public void setupPathChooser() {
       //return new AutoDriveCommand(testAuto, swerveDrivetrain, fieldRelative);
     }
 
-    else if(autoPath.equals("Run It Back")) {
+    else if (autoPath.equals("Run It Back")) {
       //faster
 /*
       return new SequentialCommandGroup(
