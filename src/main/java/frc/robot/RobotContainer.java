@@ -167,38 +167,6 @@ public class RobotContainer {
     }
 
     else if (autoPath.equals("Run It Back")) {
-      //faster
-/*
-      return new SequentialCommandGroup(
-        // new HoodSetAngle(subsystem, angleGetter)
-        new ParallelDeadlineGroup(new WaitCommand(1), new HoodSetAngle(hoodSubsystem, () -> (0.5))),
-        new ParallelDeadlineGroup(
-            new WaitCommand(1.5),
-            new HoodSetAngle(hoodSubsystem, () -> (SmartDashboard.getNumber("vision_hood_angle", 0.1))),
-            new ShooterWheelsSetSpeed(shooterWheelsSubsystem, () -> (SmartDashboard.getNumber("vision_shooter_speed", 0))), 
-            new SequentialCommandGroup(new WaitCommand(0.5), new FeederForward(feederSubsystem))),
-        new ParallelDeadlineGroup(new AutoDriveCommand(runItBack, swerveDrivetrain, fieldRelative), new IntakeIn(intakeSubsystem), 
-        new FeederStop(feederSubsystem),
-        new HoodStop(hoodSubsystem),
-        new ShooterWheelsStop(shooterWheelsSubsystem)), 
-        new TurnToTarget(vision, swerveDrivetrain), new ParallelDeadlineGroup(new WaitCommand(0.5), new StopDrivetrainCommand(swerveDrivetrain)),
-
-        new SequentialCommandGroup(new ParallelDeadlineGroup(new WaitCommand(0.3), new ParallelCommandGroup(
-          new FeederReverse(feederSubsystem),
-          new ShooterWheelsReverse(shooterWheelsSubsystem)
-        ))), 
-          new ParallelCommandGroup(
-            new HoodSetAngle(hoodSubsystem, () -> (SmartDashboard.getNumber("vision_hood_angle", 0.1))),
-            new ShooterWheelsSetSpeed(shooterWheelsSubsystem, () -> (SmartDashboard.getNumber("vision_shooter_speed", 0))), 
-            new SequentialCommandGroup(new WaitCommand(0.7), new FeederForward(feederSubsystem))),
-          
-        new WaitCommand(0.3),
-        new FeederStop(feederSubsystem),
-        new HoodStop(hoodSubsystem),
-        new ShooterWheelsStop(shooterWheelsSubsystem),
-        new IntakeStop(intakeSubsystem)
-      );
-      */
       return new SequentialCommandGroup(
         // new HoodSetAngle(subsystem, angleGetter)
         new ParallelDeadlineGroup(new WaitCommand(1), new HoodSetAngle(hoodSubsystem, () -> (0.6))),
@@ -212,7 +180,6 @@ public class RobotContainer {
         new HoodStop(hoodSubsystem),
         new ShooterWheelsStop(shooterWheelsSubsystem)), 
         new TurnToTarget(vision, swerveDrivetrain), new ParallelDeadlineGroup(new WaitCommand(0.5), new StopDrivetrainCommand(swerveDrivetrain)),
-        new TurnToTarget(vision, swerveDrivetrain), new ParallelDeadlineGroup(new WaitCommand(0.4), new StopDrivetrainCommand(swerveDrivetrain)),
         new SequentialCommandGroup(new ParallelDeadlineGroup(new WaitCommand(0.3), new ParallelCommandGroup(
           new FeederReverse(feederSubsystem),
           new ShooterWheelsReverse(shooterWheelsSubsystem)
@@ -308,6 +275,24 @@ public class RobotContainer {
         .whenPressed(new IntakeOut(intakeSubsystem))
         .whenReleased(new IntakeStop(intakeSubsystem));
 
+
+    new JoystickButton(driveController, Button.kA.value)
+        .whenPressed(new ParallelCommandGroup(
+          new TurnToTarget(vision, swerveDrivetrain),
+          new ParallelDeadlineGroup(
+            new WaitCommand(1),
+            new ShooterWheelsSetSpeed(shooterWheelsSubsystem, () -> (SmartDashboard.getNumber("vision_shooter_speed", 0))),
+            new HoodSetAngle(hoodSubsystem, () -> (SmartDashboard.getNumber("vision_hood_angle", 0.1))),
+            new ShooterWheelsSetSpeed(shooterWheelsSubsystem, () -> (SmartDashboard.getNumber("vision_shooter_speed", 0)))),
+            new SequentialCommandGroup(new WaitCommand(0.25), new FeederForward(feederSubsystem))
+        ))
+        .whenReleased(
+          new ParallelCommandGroup(
+          new FeederStop(feederSubsystem),
+          new HoodStop(hoodSubsystem),
+          new ShooterWheelsStop(shooterWheelsSubsystem))
+        );
+
   }
 
   public void configureAutoButton() {
@@ -361,42 +346,6 @@ public class RobotContainer {
     new JoystickButton(subsystemController, Button.kX.value)
         .whenPressed(new FeederForward(feederSubsystem))
         .whenReleased(new FeederStop(feederSubsystem));
-
-    //#region PID Tuning
-    // for PID tuning      
-    // new JoystickButton(subsystemController, Button.kA.value)
-    //     .whenPressed(new InstantCommand(()-> {
-    //       swerveDrivetrain.turningMotorM1.config_kP(0, SmartDashboard.getNumber("kP", 0));
-    //       swerveDrivetrain.turningMotorM1.config_kI(0, SmartDashboard.getNumber("kI", 0));
-    //       swerveDrivetrain.turningMotorM1.config_kD(0, SmartDashboard.getNumber("kD", 0));
-    //       swerveDrivetrain.turningMotorM1.config_kF(0, SmartDashboard.getNumber("kF", 0.0475));
-    //       swerveDrivetrain.turningMotorM1.configMotionAcceleration(SmartDashboard.getNumber("kAccel", 100000));
-    //       swerveDrivetrain.turningMotorM1.configMotionCruiseVelocity(SmartDashboard.getNumber("kVel", 50000));
-    //       swerveDrivetrain.turningMotorM2.config_kP(0, SmartDashboard.getNumber("kP", 0));
-    //       swerveDrivetrain.turningMotorM2.config_kI(0, SmartDashboard.getNumber("kI", 0));
-    //       swerveDrivetrain.turningMotorM2.config_kD(0, SmartDashboard.getNumber("kD", 0));
-    //       swerveDrivetrain.turningMotorM2.config_kF(0, SmartDashboard.getNumber("kF", 0.0475));
-    //       swerveDrivetrain.turningMotorM2.configMotionAcceleration(SmartDashboard.getNumber("kAccel", 100000));
-    //       swerveDrivetrain.turningMotorM2.configMotionCruiseVelocity(SmartDashboard.getNumber("kVel", 50000));
-    //       swerveDrivetrain.turningMotorM3.config_kP(0, SmartDashboard.getNumber("kP", 0));
-    //       swerveDrivetrain.turningMotorM3.config_kI(0, SmartDashboard.getNumber("kI", 0));
-    //       swerveDrivetrain.turningMotorM3.config_kD(0, SmartDashboard.getNumber("kD", 0));
-    //       swerveDrivetrain.turningMotorM3.config_kF(0, SmartDashboard.getNumber("kF", 0.0475));
-    //       swerveDrivetrain.turningMotorM3.configMotionAcceleration(SmartDashboard.getNumber("kAccel", 100000));
-    //       swerveDrivetrain.turningMotorM3.configMotionCruiseVelocity(SmartDashboard.getNumber("kVel", 50000));
-    //       swerveDrivetrain.turningMotorM4.config_kP(0, SmartDashboard.getNumber("kP", 0));
-    //       swerveDrivetrain.turningMotorM4.config_kI(0, SmartDashboard.getNumber("kI", 0));
-    //       swerveDrivetrain.turningMotorM4.config_kD(0, SmartDashboard.getNumber("kD", 0));
-    //       swerveDrivetrain.turningMotorM4.config_kF(0, SmartDashboard.getNumber("kF", 0.0475));
-    //       swerveDrivetrain.turningMotorM4.configMotionAcceleration(SmartDashboard.getNumber("kAccel", 100000));
-    //       swerveDrivetrain.turningMotorM4.configMotionCruiseVelocity(SmartDashboard.getNumber("kVel", 50000));
-    //     }));
-
-    //#endregion
-
-    // new JoystickButton(subsystemController, Button.kB.value)
-    //   .whenPressed(new InstantCommand(() -> swerveDrivetrain.m_frontLeft.setDesiredState(new SwerveModuleState(0, new Rotation2d(Math.PI / 2)))))
-    //   .whenReleased(new InstantCommand(() -> swerveDrivetrain.m_frontLeft.setDesiredState(new SwerveModuleState(0, new Rotation2d(0)))));
 
     new JoystickButton(subsystemController, Axis.kLeftTrigger.value)
         .whenPressed(new InstantCommand(()->shooterWheelsSubsystem.set(subsystemController.getLeftTriggerAxis()), shooterWheelsSubsystem))
