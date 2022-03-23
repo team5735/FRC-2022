@@ -1,7 +1,5 @@
 package frc.robot.subsystems.plotter;
 
-import javax.xml.crypto.Data;
-
 public class DataPoint {
     public final long timeStamp;
     public final double x, y, degrees, actualRot, xSpeed, ySpeed;

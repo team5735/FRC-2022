@@ -5,7 +5,6 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.I2C;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 
@@ -16,8 +15,7 @@ import com.revrobotics.ColorMatch;
 import frc.robot.RobotContainer;
 import frc.robot.constants.ColorConstants;
 
-/** Add your docs here. */
-public class ColorSensorClass {
+public class ColorSensor {
     
     private final I2C.Port i2cPort;
     private final ColorSensorV3 m_colorSensor;
@@ -26,9 +24,7 @@ public class ColorSensorClass {
     private String colorString;
     private String currentColor;
 
-    
-
-    public ColorSensorClass(){
+    public ColorSensor() {
 
         /**
         * Change the I2C port below to match the connection of color sensor
@@ -68,7 +64,7 @@ public class ColorSensorClass {
         currentColor = RobotContainer.colorChooser.getSelected();
     }
 
-    public void senseColor(double intakeMotorSpeed){
+    public void senseColor(double intakeMotorSpeed) {
         
         /**
          * The method GetColor() returns a normalized color value from the sensor and can be
@@ -88,11 +84,11 @@ public class ColorSensorClass {
         ColorMatchResult match = m_colorMatcher.matchClosestColor(detectedColor);
 
         if (match.color == ColorConstants.K_BLUE_BALL) {
-        colorString = "Blue";
-        //set led to blue
+            //set led to blue
+            colorString = "Blue";
         } else if (match.color == ColorConstants.K_RED_BALL) {
-        colorString = "Red";
-        // set led to red
+            // set led to red
+            colorString = "Red";
         } //if (match.color == ColorConstants.NO_BALL) {//maintain color = don't change anything}
 
         // If intake running out, set color to teamColor (default)
@@ -109,4 +105,5 @@ public class ColorSensorClass {
 
         SmartDashboard.putBoolean("Ball Color", colorString.equals(currentColor));
     }
+
 }

@@ -4,7 +4,6 @@
 
 package frc.robot.subsystems;
 
-import com.fasterxml.jackson.databind.ser.std.StdArraySerializers.IntArraySerializer;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
@@ -19,7 +18,7 @@ import frc.robot.constants.LoggingConstants.LoggingLevel;
 public class IntakeSubsystem extends SubsystemBase {
   private CANSparkMax intakeMotor;
   private final DigitalInput beambreak;
-  public ColorSensorClass m_colorSensor;
+  public ColorSensor m_colorSensor;
 
   public IntakeSubsystem() {
     intakeMotor = new CANSparkMax(RobotConstants.INTAKE_MOTOR_ID, MotorType.kBrushless);
@@ -28,7 +27,7 @@ public class IntakeSubsystem extends SubsystemBase {
   
     beambreak = new DigitalInput(RobotConstants.FEEDER_BEAMBREAK_DIGITAL_PORT);
 
-    m_colorSensor = new ColorSensorClass();
+    m_colorSensor = new ColorSensor();
   }
 
   @Override
