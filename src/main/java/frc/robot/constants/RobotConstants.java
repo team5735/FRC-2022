@@ -14,8 +14,6 @@ public class RobotConstants {
     public static final int HOOD_MOTOR_CURRENT_LIMIT = 2;
     public static final int HOOD_ENCODER_DIO_PORT = 5;
 
-    public static final int WINCH_MOTOR_ID = -1; //TODO change to actual ID
-
     // digital input ports
     public static final int FEEDER_BEAMBREAK_DIGITAL_PORT = 6;
 

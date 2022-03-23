@@ -276,22 +276,22 @@ public class RobotContainer {
         .whenReleased(new IntakeStop(intakeSubsystem));
 
 
-    new JoystickButton(driveController, Button.kA.value)
-        .whenPressed(new ParallelCommandGroup(
-          new TurnToTarget(vision, swerveDrivetrain),
-          new ParallelDeadlineGroup(
-            new WaitCommand(1),
-            new ShooterWheelsSetSpeed(shooterWheelsSubsystem, () -> (SmartDashboard.getNumber("vision_shooter_speed", 0))),
-            new HoodSetAngle(hoodSubsystem, () -> (SmartDashboard.getNumber("vision_hood_angle", 0.1))),
-            new ShooterWheelsSetSpeed(shooterWheelsSubsystem, () -> (SmartDashboard.getNumber("vision_shooter_speed", 0)))),
-            new SequentialCommandGroup(new WaitCommand(0.25), new FeederForward(feederSubsystem))
-        ))
-        .whenReleased(
-          new ParallelCommandGroup(
-          new FeederStop(feederSubsystem),
-          new HoodStop(hoodSubsystem),
-          new ShooterWheelsStop(shooterWheelsSubsystem))
-        );
+    // new JoystickButton(driveController, Button.kA.value)
+    //     .whenPressed(new ParallelCommandGroup(
+    //       new TurnToTarget(vision, swerveDrivetrain),
+    //       new ParallelDeadlineGroup(
+    //         new WaitCommand(1),
+    //         new ShooterWheelsSetSpeed(shooterWheelsSubsystem, () -> (SmartDashboard.getNumber("vision_shooter_speed", 0))),
+    //         new HoodSetAngle(hoodSubsystem, () -> (SmartDashboard.getNumber("vision_hood_angle", 0.1))),
+    //         new ShooterWheelsSetSpeed(shooterWheelsSubsystem, () -> (SmartDashboard.getNumber("vision_shooter_speed", 0)))),
+    //         new SequentialCommandGroup(new WaitCommand(0.25), new FeederForward(feederSubsystem))
+    //     ))
+    //     .whenReleased(
+    //       new ParallelCommandGroup(
+    //       new FeederStop(feederSubsystem),
+    //       new HoodStop(hoodSubsystem),
+    //       new ShooterWheelsStop(shooterWheelsSubsystem))
+    //     );
 
   }
 
