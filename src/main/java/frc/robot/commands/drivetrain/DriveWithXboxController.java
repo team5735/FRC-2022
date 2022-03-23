@@ -7,7 +7,6 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.Drivetrain;
 
-
 public class DriveWithXboxController extends CommandBase {
     
     private Drivetrain swerveDrive;
@@ -56,12 +55,12 @@ public class DriveWithXboxController extends CommandBase {
         SmartDashboard.putBoolean("fieldRelative", fieldRelative);
         // m_swerve.drive(0, 0, rot, false);
 
+        // Y butoon => toggle field centric
         if (RobotContainer.driveController.getYButtonPressed()) {
             swerveDrive.resetAHRS();
             fieldRelative = !fieldRelative;
             RobotContainer.fieldRelative = fieldRelative;
         }
-
 
         xSpeedValue = xSpeed;
         ySpeedValue = ySpeed;

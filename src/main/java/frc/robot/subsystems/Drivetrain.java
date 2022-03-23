@@ -6,12 +6,10 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
-//import edu.wpi.first.cameraserver.CameraServer;
 //import edu.wpi.first.wpilibj.AnalogGyro;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.commands.drivetrain.DriveWithXboxController;
@@ -31,7 +29,7 @@ import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.wpilibj.SPI;
 
 /** Represents a swerve drive style drivetrain. */
-public class Drivetrain extends SubsystemBase{
+public class Drivetrain extends SubsystemBase {
   public static final double kMaxSpeed = 3.0; // 3 meters per second
   public static final double kMaxAngularSpeed = Math.PI*1; // 1/2 rotation per second
 
@@ -41,7 +39,7 @@ public class Drivetrain extends SubsystemBase{
   private final Translation2d m_backRightLocation = new Translation2d(0.381, -0.381);
   private final SwerveDriveKinematics m_kinematics = new SwerveDriveKinematics(m_frontLeftLocation, m_frontRightLocation, m_backLeftLocation, m_backRightLocation);
        
-    //Swerve Module Motors
+  //Swerve Module Motors
   private final TalonFX driveMotorM1 = new TalonFX(1);
   private final TalonFX turningMotorM1 = new TalonFX(2);
   private final TalonFX driveMotorM2 = new TalonFX(3);
@@ -58,13 +56,11 @@ public class Drivetrain extends SubsystemBase{
   private final DutyCycleEncoder absoluteEncoderM2 = new DutyCycleEncoder(2);
   private final DutyCycleEncoder absoluteEncoderM3 = new DutyCycleEncoder(3);
   private final DutyCycleEncoder absoluteEncoderM4 = new DutyCycleEncoder(4);
-  
 
   private final SwerveModule m_frontLeft = new SwerveModule(driveMotorM1, turningMotorM1, swervePIDConfigM1, absoluteEncoderM1, 0.679, 1);
   private final SwerveModule m_frontRight = new SwerveModule(driveMotorM2, turningMotorM2, swervePIDConfigM2, absoluteEncoderM2, 0.390, 2);
   private final SwerveModule m_backLeft = new SwerveModule(driveMotorM3, turningMotorM3, swervePIDConfigM3, absoluteEncoderM3, 0.112, 3);
   private final SwerveModule m_backRight = new SwerveModule(driveMotorM4, turningMotorM4, swervePIDConfigM4, absoluteEncoderM4, 0.305, 4);
-  
 
   // private final SwerveModule m_frontLeft = new SwerveModule(driveMotorM1, turningMotorM1, swervePIDConfigM1, absoluteEncoderM1, -0.280, 1);
   // private final SwerveModule m_frontRight = new SwerveModule(driveMotorM2, turningMotorM2, swervePIDConfigM2, absoluteEncoderM2, -0.153, 2);
@@ -117,7 +113,6 @@ public class Drivetrain extends SubsystemBase{
     m_frontRight.setDesiredState(swerveModuleStates[1]);
     m_backLeft.setDesiredState(swerveModuleStates[2]);
     m_backRight.setDesiredState(swerveModuleStates[3]);
-    
   }
 
   /** Updates the field relative position of the robot. */
@@ -145,10 +140,6 @@ public class Drivetrain extends SubsystemBase{
     return m_poseEstimator;
   }
 
-  
-
-  
-
   public void turnWheel(double xSpeed, double ySpeed, double rot, boolean fieldRelative, int turnWheel) {
     var swerveModuleStates =
         m_kinematics.toSwerveModuleStates(
@@ -156,13 +147,13 @@ public class Drivetrain extends SubsystemBase{
                 ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, ahrs.getRotation2d())
                 : new ChassisSpeeds(xSpeed, ySpeed, rot));
 
-    if(turnWheel == 0) {
+    if (turnWheel == 0) {
       m_frontLeft.setDesiredState(swerveModuleStates[turnWheel]);
     }
-    else if(turnWheel == 1) {
+    else if (turnWheel == 1) {
       m_frontRight.setDesiredState(swerveModuleStates[turnWheel]);
     }
-    else if(turnWheel == 2) {
+    else if (turnWheel == 2) {
       m_backLeft.setDesiredState(swerveModuleStates[turnWheel]);
     }
     else {
@@ -179,6 +170,5 @@ public class Drivetrain extends SubsystemBase{
   public double getRot() {
     return DriveWithXboxController.rotation();
   }
-
 
 }
