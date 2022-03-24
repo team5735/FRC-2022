@@ -1,8 +1,10 @@
 package frc.robot.commands.vision;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Subsystem;
+import frc.robot.constants.ShooterConstants;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Vision;
 
@@ -13,6 +15,9 @@ public class TurnToTarget extends CommandBase {
 
     private boolean isFinished = false;
     private int rotationCompleted = 0;
+    private long lastRecordedTime; 
+
+    PIDController pid = new PIDController(0.1, 0, 0);
     
     public TurnToTarget(Vision vision, Drivetrain drivetrain) {
         this.vision = vision;
@@ -26,6 +31,7 @@ public class TurnToTarget extends CommandBase {
     @Override
     public void initialize() {
         rotationCompleted = 0;
+        lastRecordedTime = System.currentTimeMillis();
     }
 	
 	// Called every time the scheduler runs while the command is scheduled.
@@ -52,12 +58,23 @@ public class TurnToTarget extends CommandBase {
                 // drivetrain.drive
                 drivetrain.drive(0, 0, 5, false);
                 rotationCompleted += 5;
-            } else if (tx > 1.0 || tx < -1.0) {
-                // Also want to spin more until the target is closer to the center
-                steering_adjust = Kp * tx;
-                drivetrain.drive(0, 0, steering_adjust, false);
+                lastRecordedTime = System.currentTimeMillis();
             } else {
-                isFinished = true;
+                // Also want to spin more until the target is closer to the center
+                steering_adjust = pid.calculate(tx, 0);
+                drivetrain.drive(0, 0, steering_adjust, false);
+
+                if (Math.abs(tx) < 3) {
+                    if(System.currentTimeMillis() - lastRecordedTime > ShooterConstants.MIN_TURN_TIME) {
+                        isFinished = true;
+                    }
+                    else if(System.currentTimeMillis() - lastRecordedTime > ShooterConstants.TURN_TIMEOUT) {
+                        isFinished = true;
+                    }
+                } else {
+                    lastRecordedTime = System.currentTimeMillis();
+                }
+
             }
         }
 

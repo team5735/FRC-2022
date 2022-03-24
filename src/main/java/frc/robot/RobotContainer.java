@@ -92,6 +92,7 @@ public class RobotContainer {
   public ArrayList<DataPoint> testAuto;
   public ArrayList<DataPoint> runItBack;
   public ArrayList<DataPoint> turning;
+  public ArrayList<DataPoint> twoBallInitial;
 
   //For Long Auto
   public ArrayList<DataPoint> longAuto1; 
@@ -134,13 +135,14 @@ public class RobotContainer {
   public void readPaths() {
     // testAuto = readAutoFile("/U/testAuto2.txt");
     runItBack = AutoPath.readAutoFile("runItBack.txt");
+    twoBallInitial = AutoPath.readAutoFile("twoBallInitial.txt");
     // longAuto1 = readAutoFile("/U/LongAuto1.txt");
     // longAuto2 = readAutoFile("/U/LongAuto2.txt");
     // turning = readAutoFile("/U/turning.txt");
   }
 
   public void setupPathChooser() {
-    String[] autoNames = {"testAuto", "JustAutoWTurn", "Turns and Shoots", "Run It Back", "Long Auto", "Hood Down"};
+    String[] autoNames = {"testAuto", "JustAutoWTurn", "Turns and Shoots", "Run It Back", "Long Auto", "Hood Down", "Two Ball"};
 
     for (String pathName : autoNames) {
       autoPathChooser.addOption(pathName, pathName);
@@ -192,6 +194,26 @@ public class RobotContainer {
         new FeederStop(feederSubsystem),
         new HoodStop(hoodSubsystem),
         new ShooterWheelsStop(shooterWheelsSubsystem)
+      );
+    }
+
+    else if(autoPath.equals("Two Ball")) {
+      return new SequentialCommandGroup(
+        new ParallelDeadlineGroup(new WaitCommand(1), new IntakeIn(intakeSubsystem), new HoodSetAngle(hoodSubsystem, () -> (0.6))),
+        new ParallelDeadlineGroup(new AutoDriveCommand(twoBallInitial, swerveDrivetrain, fieldRelative), new IntakeIn(intakeSubsystem)),
+        new TurnToTarget(vision, swerveDrivetrain), new ParallelDeadlineGroup(new WaitCommand(0.5), new StopDrivetrainCommand(swerveDrivetrain)),
+        new SequentialCommandGroup(new ParallelDeadlineGroup(new WaitCommand(0.5), new ParallelCommandGroup(
+          new FeederReverse(feederSubsystem),
+          new ShooterWheelsReverse(shooterWheelsSubsystem)
+        ))),
+        new ParallelCommandGroup(
+            new HoodSetAngle(hoodSubsystem, () -> (SmartDashboard.getNumber("vision_hood_angle", 0.1))),
+            new ShooterWheelsSetSpeed(shooterWheelsSubsystem, () -> (SmartDashboard.getNumber("vision_shooter_speed", 0))), 
+            new SequentialCommandGroup(new WaitCommand(1.5), new ParallelDeadlineGroup(new WaitCommand(0.2), new FeederForward(feederSubsystem)),
+              new FeederStop(feederSubsystem),
+              new WaitCommand(1.5),
+              new ParallelDeadlineGroup(new WaitCommand(1), new ParallelCommandGroup(new IntakeIn(intakeSubsystem), new FeederForward(feederSubsystem)))  
+            ))
       );
     }
 
