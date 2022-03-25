@@ -16,6 +16,7 @@ public class TurnToTarget extends CommandBase {
     private boolean isFinished = false;
     private int rotationCompleted = 0;
     private long lastRecordedTime; 
+    private long startTime;
 
     PIDController pid = new PIDController(0.1, 0, 0);
     
@@ -32,6 +33,7 @@ public class TurnToTarget extends CommandBase {
     public void initialize() {
         rotationCompleted = 0;
         lastRecordedTime = System.currentTimeMillis();
+        startTime = lastRecordedTime;
     }
 	
 	// Called every time the scheduler runs while the command is scheduled.
@@ -68,13 +70,16 @@ public class TurnToTarget extends CommandBase {
                     if(System.currentTimeMillis() - lastRecordedTime > ShooterConstants.MIN_TURN_TIME) {
                         isFinished = true;
                     }
-                    else if(System.currentTimeMillis() - lastRecordedTime > ShooterConstants.TURN_TIMEOUT) {
-                        isFinished = true;
-                    }
-                } else {
+                    
+                } 
+                else {
                     lastRecordedTime = System.currentTimeMillis();
                 }
 
+            }
+
+            if(System.currentTimeMillis() - startTime > ShooterConstants.TURN_TIMEOUT) {
+                isFinished = true;
             }
         }
 

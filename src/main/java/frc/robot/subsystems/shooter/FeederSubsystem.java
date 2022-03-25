@@ -43,6 +43,10 @@ public class FeederSubsystem extends SubsystemBase {
     feederMotor.set(ShooterConstants.FEEDER_REVERSE_SPEED);
   }
 
+  public void feederPlusIntake() {
+    feederMotor.set(ShooterConstants.FEEDER_REVERSE_FOR_INTAKE_SPEED);
+  }
+
   public void feederStop() {
     feederMotor.set(0);
   }
