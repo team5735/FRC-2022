@@ -12,13 +12,12 @@ public class TurnToTarget extends CommandBase {
 
     private final Drivetrain drivetrain;
     private final Vision vision;
-
     private boolean isFinished = false;
     private int rotationCompleted = 0;
     private long lastRecordedTime; 
     private long startTime;
 
-    PIDController pid = new PIDController(0.1, 0, 0);
+    PIDController pid = new PIDController(0.07, 0.01, 0);
     
     public TurnToTarget(Vision vision, Drivetrain drivetrain) {
         this.vision = vision;
@@ -58,7 +57,7 @@ public class TurnToTarget extends CommandBase {
             double tx = vision.getTX();
             if (!vision.isTargetFound()) {
                 // drivetrain.drive
-                drivetrain.drive(0, 0, 5, false);
+                drivetrain.drive(0, 0, 3, false);
                 rotationCompleted += 5;
                 lastRecordedTime = System.currentTimeMillis();
             } else {

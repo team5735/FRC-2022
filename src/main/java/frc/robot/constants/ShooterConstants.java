@@ -14,7 +14,7 @@ public class ShooterConstants {
 
     public static final double FEEDER_FORWARD_SPEED = 0.4;
     public static final double FEEDER_REVERSE_SPEED = -0.4;
-    public static final double FEEDER_REVERSE_FOR_INTAKE_SPEED = -0.1;
+    public static final double FEEDER_REVERSE_FOR_INTAKE_SPEED = -0.07;
 
     public static final double BIG_WHEEL_KP = 0.2;
     public static final double BIG_WHEEL_KI = 0;
@@ -32,6 +32,6 @@ public class ShooterConstants {
     public static final double BIG_ERROR_TOLERANCE = 100, SMALL_ERROR_TOLERANCE = 100;
 
     public static final long MIN_TURN_TIME = 300; //millis
-    public static final long TURN_TIMEOUT = 1000;
+    public static final long TURN_TIMEOUT = 5000;
 
 }
