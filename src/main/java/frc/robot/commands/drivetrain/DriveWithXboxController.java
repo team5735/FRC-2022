@@ -56,17 +56,17 @@ public class DriveWithXboxController extends CommandBase {
         // m_swerve.drive(0, 0, rot, false);
 
         // Y butoon => toggle field centric
-        if (RobotContainer.driveController.getYButtonPressed()) {
-            swerveDrive.resetAHRS();
-            fieldRelative = !fieldRelative;
-            RobotContainer.fieldRelative = fieldRelative;
-        }
+        // if (RobotContainer.driveController.getYButtonPressed()) {
+        //     swerveDrive.resetAHRS();
+        //     fieldRelative = !fieldRelative;
+        //     RobotContainer.fieldRelative = fieldRelative;
+        // }
 
         xSpeedValue = xSpeed;
         ySpeedValue = ySpeed;
         rotValue = rot;
 
-        swerveDrive.drive(xSpeed, ySpeed, rot, fieldRelative);
+        swerveDrive.drive(xSpeed, ySpeed, rot, false);
     }
 
     // Called once the command ends or is interrupted.

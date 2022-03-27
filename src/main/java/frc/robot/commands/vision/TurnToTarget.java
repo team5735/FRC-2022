@@ -17,7 +17,7 @@ public class TurnToTarget extends CommandBase {
     private long lastRecordedTime; 
     private long startTime;
 
-    PIDController pid = new PIDController(0.07, 0.01, 0);
+    PIDController pid = new PIDController(0.08, 0.15, 0);
     
     public TurnToTarget(Vision vision, Drivetrain drivetrain) {
         this.vision = vision;
@@ -33,6 +33,7 @@ public class TurnToTarget extends CommandBase {
         rotationCompleted = 0;
         lastRecordedTime = System.currentTimeMillis();
         startTime = lastRecordedTime;
+        pid.reset();
     }
 	
 	// Called every time the scheduler runs while the command is scheduled.
@@ -47,7 +48,8 @@ public class TurnToTarget extends CommandBase {
             vision.enableTracking();
 
         // stop if already turned 360 degree
-        if (rotationCompleted >= 360) {
+        if(false){
+        // if (rotationCompleted >= 360) {
             isFinished = true;
         } else {
             // ADD DEGREE ERROR?
@@ -65,7 +67,7 @@ public class TurnToTarget extends CommandBase {
                 steering_adjust = pid.calculate(tx, 0);
                 drivetrain.drive(0, 0, steering_adjust, false);
 
-                if (Math.abs(tx) < 3) {
+                if (Math.abs(tx) > 3) {
                     if(System.currentTimeMillis() - lastRecordedTime > ShooterConstants.MIN_TURN_TIME) {
                         isFinished = true;
                     }

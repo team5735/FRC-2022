@@ -25,6 +25,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -42,6 +43,7 @@ import frc.robot.commands.shooter.FeederReverse;
 import frc.robot.commands.shooter.FeederStop;
 import frc.robot.commands.shooter.HoodSetAngle;
 import frc.robot.commands.shooter.HoodStop;
+import frc.robot.commands.shooter.ShooterWheelsAtSpeed;
 import frc.robot.commands.shooter.ShooterWheelsReverse;
 import frc.robot.commands.shooter.ShooterWheelsSetSpeed;
 import frc.robot.commands.shooter.ShooterWheelsStop;
@@ -92,6 +94,7 @@ public class RobotContainer {
   public static SendableChooser<String> colorChooser = new SendableChooser<>();
   public ArrayList<DataPoint> testAuto;
   public ArrayList<DataPoint> runItBack;
+  public ArrayList<DataPoint> twoBallInitial;
   public ArrayList<DataPoint> turning;
 
   //For Long Auto
@@ -111,8 +114,8 @@ public class RobotContainer {
     //readPaths();
     setupPathChooser();
 
-    SmartDashboard.putNumber("manual_hood_angle", 0.1);
-    SmartDashboard.putNumber("manual_shooter_speed", 0);
+    SmartDashboard.putNumber("manual_hood_angle", 0.3);
+    SmartDashboard.putNumber("manual_shooter_speed", 12750);
     SmartDashboard.putNumber("kP", 0);
     SmartDashboard.putNumber("kI", 0);
     SmartDashboard.putNumber("kD", 0);
@@ -135,13 +138,14 @@ public class RobotContainer {
   public void readPaths() {
     // testAuto = readAutoFile("/U/testAuto2.txt");
     runItBack = AutoPath.readAutoFile("runItBack.txt");
+    twoBallInitial = AutoPath.readAutoFile("twoBallInitial.txt");
     // longAuto1 = readAutoFile("/U/LongAuto1.txt");
     // longAuto2 = readAutoFile("/U/LongAuto2.txt");
     // turning = readAutoFile("/U/turning.txt");
   }
 
   public void setupPathChooser() {
-    String[] autoNames = {"testAuto", "JustAutoWTurn", "Turns and Shoots", "Run It Back", "Long Auto", "Hood Down"};
+    String[] autoNames = {"testAuto", "JustAutoWTurn", "Turns and Shoots", "Run It Back", "Long Auto", "Hood Down", "Two Ball"};
 
     for (String pathName : autoNames) {
       autoPathChooser.addOption(pathName, pathName);
@@ -190,6 +194,59 @@ public class RobotContainer {
             new ShooterWheelsSetSpeed(shooterWheelsSubsystem, () -> (SmartDashboard.getNumber("vision_shooter_speed", 0))), 
             new SequentialCommandGroup(new WaitCommand(1), new FeederForward(feederSubsystem))),
         new WaitCommand(1),
+        new FeederStop(feederSubsystem),
+        new HoodStop(hoodSubsystem),
+        new ShooterWheelsStop(shooterWheelsSubsystem)
+      );
+    }
+
+    else if(autoPath.equals("Two Ball")) {
+      return new SequentialCommandGroup(
+        new ParallelDeadlineGroup(
+          new WaitCommand(1),
+          new IntakeIn(intakeSubsystem),
+          new HoodSetAngle(hoodSubsystem, () -> (0.6))
+        ),
+        new ParallelDeadlineGroup(
+          new AutoDriveCommand(twoBallInitial, swerveDrivetrain, fieldRelative),
+          new IntakeIn(intakeSubsystem)
+        ),
+        new TurnToTarget(vision, swerveDrivetrain),
+        new ParallelDeadlineGroup(
+          new WaitCommand(0.5),
+          new StopDrivetrainCommand(swerveDrivetrain)
+        ),
+        new SequentialCommandGroup(
+          new ParallelDeadlineGroup(
+            new WaitCommand(1),
+            new ParallelCommandGroup(
+              new FeederReverse(feederSubsystem),
+              new ShooterWheelsReverse(shooterWheelsSubsystem)
+            )
+          )
+        ),
+        new ParallelCommandGroup(
+            new HoodSetAngle(hoodSubsystem, () -> (SmartDashboard.getNumber("vision_hood_angle", 0.1))),
+            new ShooterWheelsSetSpeed(shooterWheelsSubsystem, () -> (SmartDashboard.getNumber("vision_shooter_speed", 0))*1.1), 
+            new SequentialCommandGroup(
+              new WaitCommand(1.5), 
+              new ParallelDeadlineGroup(
+                new WaitCommand(0.2), 
+                new FeederForward(feederSubsystem)
+              ),
+              new FeederStop(feederSubsystem),
+              new WaitCommand(1.5),
+              new ParallelDeadlineGroup(
+                new WaitCommand(1), 
+                new ParallelCommandGroup(
+                  new IntakeIn(intakeSubsystem), 
+                  new FeederForward(feederSubsystem)
+                )
+              )  
+            )
+        ),
+        new WaitCommand(0.5),
+        new IntakeStop(intakeSubsystem),
         new FeederStop(feederSubsystem),
         new HoodStop(hoodSubsystem),
         new ShooterWheelsStop(shooterWheelsSubsystem)
@@ -264,7 +321,12 @@ public class RobotContainer {
 
     // 'X' button to aim, bind to cmd TurnToTarget
     new JoystickButton(driveController, Button.kX.value)
-        .whenPressed(new TurnToTarget(vision, swerveDrivetrain));
+        .whenPressed(
+          new ParallelRaceGroup(
+            new WaitCommand(3),  
+            new TurnToTarget(vision, swerveDrivetrain)
+          )
+        );
 
     // right bumper => intake in
     new JoystickButton(driveController, Button.kRightBumper.value)
@@ -282,18 +344,35 @@ public class RobotContainer {
 
 
     //One button shoot including ramp up and feeder (plus intake)
-    new JoystickButton(driveController, Button.kB.value)
+    new JoystickButton(driveController, Button.kA.value)
         .whenPressed(new SequentialCommandGroup(
-          new TurnToTarget(vision, swerveDrivetrain),
-          new ParallelDeadlineGroup(new WaitCommand(1.5),
+          // new ParallelDeadlineGroup(
+          //   new TurnToTarget(vision, swerveDrivetrain),
+          //   new HoodSetAngle(hoodSubsystem, () -> (0.45)),
+          //   new ShooterWheelsSetSpeed(shooterWheelsSubsystem, () -> ((double)10000))),
+          new ParallelDeadlineGroup(new ShooterWheelsAtSpeed(shooterWheelsSubsystem),
             new HoodSetAngle(hoodSubsystem, () -> (SmartDashboard.getNumber("vision_hood_angle", 0.1))),
-            new ShooterWheelsSetSpeed(shooterWheelsSubsystem, () -> (SmartDashboard.getNumber("vision_shooter_speed", 0)))),
-          new SequentialCommandGroup(new WaitCommand(0.5), new FeederForward(feederSubsystem))))
+            new ShooterWheelsSetSpeed(shooterWheelsSubsystem, () -> (SmartDashboard.getNumber("vision_shooter_speed", 0))))
+            ,
+          new SequentialCommandGroup(new WaitCommand(1), 
+            new ParallelCommandGroup(
+              new FeederForward(feederSubsystem),
+              new IntakeIn(intakeSubsystem)
+            )
+          )
+          
+        ))
         .whenReleased(new ParallelCommandGroup(
           new FeederStop(feederSubsystem),
           new HoodStop(hoodSubsystem),
-          new ShooterWheelsStop(shooterWheelsSubsystem)));
+          new ShooterWheelsStop(shooterWheelsSubsystem),
+          new IntakeStop(intakeSubsystem)
+          ));
 
+
+      new JoystickButton(driveController, Button.kB.value).whenPressed(
+        new StopDrivetrainCommand(swerveDrivetrain)
+        );
   }
 
   public void configureAutoButton() {
@@ -345,8 +424,16 @@ public class RobotContainer {
 
     // X button => feeder forward
     new JoystickButton(subsystemController, Button.kX.value)
-        .whenPressed(new FeederForward(feederSubsystem))
-        .whenReleased(new FeederStop(feederSubsystem));
+        .whenPressed(
+          new ParallelCommandGroup(
+            new FeederForward(feederSubsystem)
+          )
+        )
+        .whenReleased(
+          new ParallelCommandGroup(
+            new FeederStop(feederSubsystem)
+          )
+        );
 
     new JoystickButton(subsystemController, Axis.kLeftTrigger.value)
         .whenPressed(new InstantCommand(()->shooterWheelsSubsystem.set(subsystemController.getLeftTriggerAxis()), shooterWheelsSubsystem))
@@ -411,6 +498,10 @@ public class RobotContainer {
       }
       // SmartDashboard.putNumber("pos", swerveDrivetrain.m_frontLeft.getState().angle.getDegrees());
 
+    }
+
+    public void stopAll() {
+      
     }
 
 }

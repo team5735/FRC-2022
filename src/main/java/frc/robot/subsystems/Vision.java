@@ -15,7 +15,7 @@ public class Vision extends SubsystemBase {
 
     public Vision() {
         limelight = new LimeLight();
-        limelight.setPipeline(1);
+        limelight.setPipeline(0);
 
         // Disable Tracking
         // disableTracking();

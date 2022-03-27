@@ -22,7 +22,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
   public IntakeSubsystem() {
     intakeMotor = new CANSparkMax(RobotConstants.INTAKE_MOTOR_ID, MotorType.kBrushless);
-    intakeMotor.restoreFactoryDefaults();
+    // intakeMotor.restoreFactoryDefaults();
     intakeMotor.setInverted(true);
   
     beambreak = new DigitalInput(RobotConstants.FEEDER_BEAMBREAK_DIGITAL_PORT);

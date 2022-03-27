@@ -35,6 +35,7 @@ public class ClimberRightCommand extends CommandBase{
             climberSubsystem.set(0);
         }
 
+        /*
         if(xInput > 0) { //UP
             climberSubsystem.rotate(xInput * ClimberConstants.ARM_ROTATE_UP_SPEED);
         } else if(xInput < 0) { //DOWN
@@ -42,6 +43,7 @@ public class ClimberRightCommand extends CommandBase{
         } else {
             climberSubsystem.rotate(0);
         }
+        */
     }
     
 	@Override

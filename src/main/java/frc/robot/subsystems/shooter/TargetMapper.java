@@ -30,7 +30,7 @@ public class TargetMapper {
         Map.entry(21,new SpeedAngle(12238, 0.90, 1.5)),
         Map.entry(22,new SpeedAngle(12439, 0.95, 1.5)),//ok
         Map.entry(23,new SpeedAngle(12634, 0.95, 1.5)),
-        Map.entry(24,new SpeedAngle(12824, 0.95, 1.5))
+        Map.entry(24,new SpeedAngle(13500, 0.95, 1.5))
     );
 
     public static SpeedAngle getSpeedAngleByDistance(double distance){
