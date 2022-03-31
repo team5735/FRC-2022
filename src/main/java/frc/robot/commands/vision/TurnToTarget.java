@@ -31,8 +31,8 @@ public class TurnToTarget extends CommandBase {
     @Override
     public void initialize() {
         rotationCompleted = 0;
+        startTime = System.currentTimeMillis();
         lastRecordedTime = System.currentTimeMillis();
-        startTime = lastRecordedTime;
         pid.reset();
     }
 	
@@ -43,61 +43,54 @@ public class TurnToTarget extends CommandBase {
         double Kp = -0.15;  // Proportional control constant
         isFinished = false;
  
+        // check if command runs too long
+        if (System.currentTimeMillis() - startTime > ShooterConstants.TURN_TIMEOUT) {
+            isFinished = true;
+            return;
+        }
+
+        // check if pid runs too long
+        if (System.currentTimeMillis() - lastRecordedTime > ShooterConstants.MIN_TURN_TIME) {
+            isFinished = true;
+            return;
+        }
+
         // Make sure Vision Tracking is running
         if (!vision.isTrackingEnabled())
             vision.enableTracking();
 
-        // stop if already turned 360 degree
-        if(false){
-        // if (rotationCompleted >= 360) {
-            isFinished = true;
+        // ADD DEGREE ERROR?
+        // SPIN UNTIL HAS VALID TARGET
+        // HOW TO MAKE ROBOT SPIN
+        // HAS VALID TARGET SAME AS FETCHING tv
+        if (!vision.isTargetFound()) {
+            // drivetrain.drive
+            drivetrain.drive(0, 0, 3.5, false);
+            // rotationCompleted += 3;
+            lastRecordedTime = System.currentTimeMillis();
         } else {
-            // ADD DEGREE ERROR?
-            // SPIN UNTIL HAS VALID TARGET
-            // HOW TO MAKE ROBOT SPIN
-            // HAS VALID TARGET SAME AS FETCHING tv
             double tx = vision.getTX();
-            if (!vision.isTargetFound()) {
-                // drivetrain.drive
-                drivetrain.drive(0, 0, 3.5, false);
-                rotationCompleted += 5;
-                lastRecordedTime = System.currentTimeMillis();
-            } else {
+
+            if (Math.abs(tx) > 3) {
                 // Also want to spin more until the target is closer to the center
                 steering_adjust = pid.calculate(tx, 0);
                 drivetrain.drive(0, 0, steering_adjust, false);
-
-                if (Math.abs(tx) > 3) {
-                    if(System.currentTimeMillis() - lastRecordedTime > ShooterConstants.MIN_TURN_TIME) {
-                        isFinished = true;
-                    }
-                    
-                } 
-                else {
-                    lastRecordedTime = System.currentTimeMillis();
-                }
-
-            }
-
-            if(System.currentTimeMillis() - startTime > ShooterConstants.TURN_TIMEOUT) {
+            } else {
                 isFinished = true;
             }
         }
 
-        ////System.out.println("turn_isFinished =" + isFinished);
-        ////System.out.println("turn_rotationCompleted = " + rotationCompleted);
-
-        SmartDashboard.putBoolean("Turning Is Finished", isFinished);
-        SmartDashboard.putNumber("Rotation Completed", rotationCompleted);
-
+        //System.out.println("turn_isFinished =" + isFinished);
+        //System.out.println("turn_rotationCompleted = " + rotationCompleted);
 	}
 	
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-        ////System.out.println("TURN TARGET COMMAND | END: " + interrupted);
-
-        SmartDashboard.putBoolean("TURN TARGET COMMAND | END", interrupted);
+        long now = System.currentTimeMillis() ;
+        System.out.println("turn-to-target ends=" + now + ", took=" + (now - startTime) + ", pidTim=" + (now - lastRecordedTime));
+        //System.out.println("TURN TARGET COMMAND | END: " + interrupted);
+        //SmartDashboard.putBoolean("TURN TARGET COMMAND | END", interrupted);
 	}
 
     // Returns true when the command should end.
