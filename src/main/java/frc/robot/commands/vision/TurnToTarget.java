@@ -59,7 +59,7 @@ public class TurnToTarget extends CommandBase {
             double tx = vision.getTX();
             if (!vision.isTargetFound()) {
                 // drivetrain.drive
-                drivetrain.drive(0, 0, 3, false);
+                drivetrain.drive(0, 0, 3.5, false);
                 rotationCompleted += 5;
                 lastRecordedTime = System.currentTimeMillis();
             } else {

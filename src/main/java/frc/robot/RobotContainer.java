@@ -176,7 +176,7 @@ public class RobotContainer {
         // new HoodSetAngle(subsystem, angleGetter)
         new ParallelDeadlineGroup(new WaitCommand(1), new HoodSetAngle(hoodSubsystem, () -> (0.6))),
         new ParallelDeadlineGroup(
-            new WaitCommand(3),
+            new WaitCommand(2),
             new HoodSetAngle(hoodSubsystem, () -> (SmartDashboard.getNumber("vision_hood_angle", 0.1))),
             new ShooterWheelsSetSpeed(shooterWheelsSubsystem, () -> (SmartDashboard.getNumber("vision_shooter_speed", 0))), 
             new SequentialCommandGroup(new WaitCommand(0.5), new FeederForward(feederSubsystem))),
@@ -184,7 +184,8 @@ public class RobotContainer {
         new FeederStop(feederSubsystem),
         new HoodStop(hoodSubsystem),
         new ShooterWheelsStop(shooterWheelsSubsystem)), 
-        new TurnToTarget(vision, swerveDrivetrain), new ParallelDeadlineGroup(new WaitCommand(0.5), new StopDrivetrainCommand(swerveDrivetrain)),
+        new TurnToTarget(vision, swerveDrivetrain), 
+        new ParallelDeadlineGroup(new WaitCommand(0.5), new StopDrivetrainCommand(swerveDrivetrain)),
         new SequentialCommandGroup(new ParallelDeadlineGroup(new WaitCommand(0.3), new ParallelCommandGroup(
           new FeederReverse(feederSubsystem),
           new ShooterWheelsReverse(shooterWheelsSubsystem)
@@ -323,7 +324,7 @@ public class RobotContainer {
     new JoystickButton(driveController, Button.kX.value)
         .whenPressed(
           new ParallelRaceGroup(
-            new WaitCommand(3),  
+            new WaitCommand(2),  
             new TurnToTarget(vision, swerveDrivetrain)
           )
         );
@@ -498,10 +499,6 @@ public class RobotContainer {
       }
       // SmartDashboard.putNumber("pos", swerveDrivetrain.m_frontLeft.getState().angle.getDegrees());
 
-    }
-
-    public void stopAll() {
-      
     }
 
 }

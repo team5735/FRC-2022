@@ -32,6 +32,6 @@ public class ShooterConstants {
     public static final double BIG_ERROR_TOLERANCE = 100, SMALL_ERROR_TOLERANCE = 100;
 
     public static final long MIN_TURN_TIME = 500; //millis
-    public static final long TURN_TIMEOUT = 3000;
+    public static final long TURN_TIMEOUT = 2000;
 
 }
