@@ -78,6 +78,7 @@ public class TurnToTarget extends CommandBase {
             } else {
                 isFinished = true;
             }
+
         }
 
         //System.out.println("turn_isFinished =" + isFinished);
