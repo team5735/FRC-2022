@@ -7,7 +7,6 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.IntakeConstants;
@@ -17,15 +16,12 @@ import frc.robot.constants.LoggingConstants.LoggingLevel;
 
 public class IntakeSubsystem extends SubsystemBase {
   private CANSparkMax intakeMotor;
-  private final DigitalInput beambreak;
   public ColorSensor m_colorSensor;
 
   public IntakeSubsystem() {
     intakeMotor = new CANSparkMax(RobotConstants.INTAKE_MOTOR_ID, MotorType.kBrushless);
     // intakeMotor.restoreFactoryDefaults();
     intakeMotor.setInverted(true);
-  
-    beambreak = new DigitalInput(RobotConstants.FEEDER_BEAMBREAK_DIGITAL_PORT);
 
     m_colorSensor = new ColorSensor();
   }
@@ -53,16 +49,12 @@ public class IntakeSubsystem extends SubsystemBase {
     set(IntakeConstants.INTAKE_IN_SPEED);
   }
 
+  public void inForShoot() {
+    set(IntakeConstants.INTAKE_IN_FOR_SHOOTING_SPEED);
+  }
+
   public void out() {
     set(IntakeConstants.INTAKE_OUT_SPEED);
   }
-
-  public boolean hasBall() {
-	  if (beambreak.get() == false) {
-      // //System.out.println("################ BALL INSIDE FEEDER | BEAM BREAK");
-    }
-
-    return !beambreak.get();
-	}
 
 }

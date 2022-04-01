@@ -7,10 +7,10 @@ package frc.robot.commands.intake;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.IntakeSubsystem;
 
-public class IntakeOut extends CommandBase {
+public class IntakeInForShoot extends CommandBase {
   private final IntakeSubsystem subsystem;
 
-  public IntakeOut(IntakeSubsystem subsystem) {
+  public IntakeInForShoot(IntakeSubsystem subsystem) {
     this.subsystem = subsystem;
     addRequirements(subsystem);
   }
@@ -18,7 +18,7 @@ public class IntakeOut extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void initialize() {
-    subsystem.out();
+    subsystem.inForShoot();
   }
 
   // Returns true when the command should end.
