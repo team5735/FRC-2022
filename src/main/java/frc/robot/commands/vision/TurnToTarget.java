@@ -1,7 +1,6 @@
 package frc.robot.commands.vision;
 
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.constants.ShooterConstants;
@@ -13,7 +12,6 @@ public class TurnToTarget extends CommandBase {
     private final Drivetrain drivetrain;
     private final Vision vision;
     private boolean isFinished = false;
-    private int rotationCompleted = 0;
     private long lastRecordedTime; 
     private long startTime;
 
@@ -30,7 +28,6 @@ public class TurnToTarget extends CommandBase {
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
-        rotationCompleted = 0;
         startTime = System.currentTimeMillis();
         lastRecordedTime = System.currentTimeMillis();
         pid.reset();
@@ -40,7 +37,6 @@ public class TurnToTarget extends CommandBase {
 	@Override
 	public void execute() {
         double steering_adjust;
-        double Kp = -0.15;  // Proportional control constant
         isFinished = false;
  
         // check if command runs too long
