@@ -31,14 +31,15 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.auto.AutoDriveCommand;
-import frc.robot.commands.auto.PlotPathCommand;
 import frc.robot.commands.climber.ClimberLeftCommand;
 import frc.robot.commands.drivetrain.FieldRelative;
 import frc.robot.commands.drivetrain.StopDrivetrainCommand;
 import frc.robot.commands.intake.IntakeIn;
+import frc.robot.commands.intake.IntakeInForShoot;
 import frc.robot.commands.intake.IntakeOut;
 import frc.robot.commands.intake.IntakeStop;
 import frc.robot.commands.shooter.FeederForward;
+import frc.robot.commands.shooter.FeederForwardForShoot;
 import frc.robot.commands.shooter.FeederPlusIntakeIn;
 import frc.robot.commands.shooter.FeederReverse;
 import frc.robot.commands.shooter.FeederStop;
@@ -358,8 +359,8 @@ public class RobotContainer {
             ,
           new SequentialCommandGroup(new WaitCommand(1), 
             new ParallelCommandGroup(
-              new FeederForward(feederSubsystem),
-              new IntakeIn(intakeSubsystem)
+              new FeederForwardForShoot(feederSubsystem),
+              new IntakeInForShoot(intakeSubsystem)
             )
           )
           
