@@ -49,12 +49,6 @@ public class TurnToTarget extends CommandBase {
             return;
         }
 
-        // check if pid runs too long
-        if (System.currentTimeMillis() - lastRecordedTime > ShooterConstants.MIN_TURN_TIME) {
-            isFinished = true;
-            return;
-        }
-
         // Make sure Vision Tracking is running
         if (!vision.isTrackingEnabled())
             vision.enableTracking();
@@ -71,12 +65,15 @@ public class TurnToTarget extends CommandBase {
         } else {
             double tx = vision.getTX();
 
-            if (Math.abs(tx) > 3) {
-                // Also want to spin more until the target is closer to the center
-                steering_adjust = pid.calculate(tx, 0);
-                drivetrain.drive(0, 0, steering_adjust, false);
-            } else {
-                isFinished = true;
+            // Also want to spin more until the target is closer to the center
+            steering_adjust = pid.calculate(tx, 0);
+            drivetrain.drive(0, 0, steering_adjust, false);
+
+            if (Math.abs(tx) < 3) {
+                // check if pid runs too long
+                if (System.currentTimeMillis() - lastRecordedTime > ShooterConstants.MIN_TURN_TIME) {
+                    isFinished = true;
+                }
             }
 
         }
@@ -89,7 +86,9 @@ public class TurnToTarget extends CommandBase {
     @Override
     public void end(boolean interrupted) {
         long now = System.currentTimeMillis() ;
-        System.out.println("turn-to-target ends=" + now + ", took=" + (now - startTime) + ", pidTim=" + (now - lastRecordedTime));
+        System.out.println("turn-to-target ends=" + now + ", took=" + (now - startTime)
+             + ", pidTim=" + (now - lastRecordedTime) + ", isFinished=" + isFinished
+             + ", interrupted=" + interrupted + ", tx=" + vision.getTX());
         //System.out.println("TURN TARGET COMMAND | END: " + interrupted);
         //SmartDashboard.putBoolean("TURN TARGET COMMAND | END", interrupted);
 	}
