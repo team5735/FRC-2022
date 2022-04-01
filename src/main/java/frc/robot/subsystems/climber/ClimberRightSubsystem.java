@@ -10,8 +10,6 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.RobotContainer;
-import frc.robot.commands.climber.ClimberJoystickCommand;
 import frc.robot.commands.climber.ClimberRightCommand;
 import frc.robot.constants.ClimberConstants;
 import frc.robot.constants.LoggingConstants;
@@ -69,10 +67,8 @@ public class ClimberRightSubsystem extends SubsystemBase {
     set(ClimberConstants.WINCH_DOWN_SPEED);
   }
 
-
   public void right() {}
 
   public void left() {}
-
 
 }
