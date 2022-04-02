@@ -15,7 +15,7 @@ public class AutoDrivePointCommand extends CommandBase{
     private boolean fieldRelative;
     public static boolean commandFinished = false;
 
-    private double radiusThreshold = 10;
+    private double radiusThreshold = 0.0001;
 
     public AutoDrivePointCommand(ArrayList<DataPoint> currentPath, Drivetrain swerveDrive, boolean fieldRelative) {
         this.currentPath = currentPath;
@@ -46,11 +46,11 @@ public class AutoDrivePointCommand extends CommandBase{
             return;
         }
         
-        double xSpeed = currentPath.get(currentIndex).xSpeed;
-        double ySpeed = currentPath.get(currentIndex).ySpeed;
+
         double actRot = currentPath.get(currentIndex).actualRot;
         Long time = currentPath.get(currentIndex).timeStamp;
         Long prevTime = currentPath.get(currentIndex-1).timeStamp;
+        long deltaTime = time-prevTime;
 
         double currentX = swerveDrive.poseEstimator().getEstimatedPosition().getX();
         double currentY = swerveDrive.poseEstimator().getEstimatedPosition().getY();
@@ -58,13 +58,18 @@ public class AutoDrivePointCommand extends CommandBase{
         double xPos = currentPath.get(currentIndex).x;
         double yPos = currentPath.get(currentIndex).y;
 
-        double x = currentX - xPos;
-        double y = currentY - yPos;
+        double dx = currentX - xPos;
+        double dy = currentY - yPos;
+
+        double xSpeed = dx / deltaTime;
+        double ySpeed = dy / deltaTime;
         
         //System.out.println(xSpeed + ", " + ySpeed + ", " + actRot);
         swerveDrive.drive(xSpeed, ySpeed, actRot, fieldRelative);
 
-        if(Math.sqrt((y*y) + (x*x)) < radiusThreshold) {
+        swerveDrive.updateOdometry();
+
+        if(Math.sqrt((dy*dy) + (dx*dx)) < radiusThreshold) {
 
             currentIndex++;
 
@@ -75,58 +80,6 @@ public class AutoDrivePointCommand extends CommandBase{
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
-        /*
-        if(!commandFinished) {
-
-            for (int i = 1; i < currentPath.size(); i++) {
-
-                boolean hasReachedPoint = false;
-                double xSpeed = currentPath.get(i).xSpeed;
-                double ySpeed = currentPath.get(i).ySpeed;
-                double actRot = currentPath.get(i).actualRot;
-                Long time = currentPath.get(i).timeStamp;
-                Long prevTime = currentPath.get(i-1).timeStamp;
-
-                while(!hasReachedPoint) {
-
-                    double currentX = swerveDrive.poseEstimator().getEstimatedPosition().getX();
-                    double currentY = swerveDrive.poseEstimator().getEstimatedPosition().getY();
-
-                    double xPos = currentPath.get(i).x;
-                    double yPos = currentPath.get(i).y;
-
-                    double x = currentX - xPos;
-                    double y = currentY - yPos;
-
-                    if(Math.sqrt((y*y) + (x*x)) < radiusThreshold) {
-
-                        hasReachedPoint = true;
-
-                    }
-
-                    else {
-
-                        //System.out.println(xSpeed + ", " + ySpeed + ", " + actRot);
-                        swerveDrive.drive(xSpeed, ySpeed, actRot, fieldRelative);
-
-                    }
-
-
-                }
-
-                try {
-                    Thread.sleep(time - prevTime);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-    
-                
-            }
-        }
-
-        */
-
     }
 
     // Called once the command ends or is interrupted.
@@ -137,6 +90,6 @@ public class AutoDrivePointCommand extends CommandBase{
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        return false;
+        return commandFinished;
     }
 }
