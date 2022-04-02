@@ -7,7 +7,6 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.IntakeConstants;
@@ -44,6 +43,10 @@ public class IntakeSubsystem extends SubsystemBase {
 
   public void in() {
     set(IntakeConstants.INTAKE_IN_SPEED);
+  }
+
+  public void inForShoot() {
+    set(IntakeConstants.INTAKE_IN_FOR_SHOOTING_SPEED);
   }
 
   public void out() {

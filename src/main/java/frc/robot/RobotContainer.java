@@ -6,13 +6,11 @@ package frc.robot;
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -32,9 +30,11 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.auto.AutoDriveCommand;
 import frc.robot.commands.drivetrain.StopDrivetrainCommand;
 import frc.robot.commands.intake.IntakeIn;
+import frc.robot.commands.intake.IntakeInForShoot;
 import frc.robot.commands.intake.IntakeOut;
 import frc.robot.commands.intake.IntakeStop;
 import frc.robot.commands.shooter.FeederForward;
+import frc.robot.commands.shooter.FeederForwardForShoot;
 import frc.robot.commands.shooter.FeederPlusIntakeIn;
 import frc.robot.commands.shooter.FeederReverse;
 import frc.robot.commands.shooter.FeederStop;
@@ -286,8 +286,8 @@ public class RobotContainer {
             ,
           new SequentialCommandGroup(new WaitCommand(1), 
             new ParallelCommandGroup(
-              new FeederForward(feederSubsystem),
-              new IntakeIn(intakeSubsystem)
+              new FeederForwardForShoot(feederSubsystem),
+              new IntakeInForShoot(intakeSubsystem)
             )
           )
           

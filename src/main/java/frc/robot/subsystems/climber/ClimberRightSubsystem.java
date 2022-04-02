@@ -65,10 +65,8 @@ public class ClimberRightSubsystem extends SubsystemBase {
     set(ClimberConstants.WINCH_DOWN_SPEED);
   }
 
-
   public void right() {}
 
   public void left() {}
-
 
 }

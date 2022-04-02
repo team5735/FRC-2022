@@ -39,6 +39,10 @@ public class FeederSubsystem extends SubsystemBase {
     feederMotor.set(ShooterConstants.FEEDER_FORWARD_SPEED);
   }
 
+  public void feederForwardForShoot() {
+    feederMotor.set(ShooterConstants.FEEDER_FORWARD_FOR_SHOOTTING_SPEED);
+  }
+
   public void feederReverse() {
     feederMotor.set(ShooterConstants.FEEDER_REVERSE_SPEED);
   }
