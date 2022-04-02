@@ -56,13 +56,9 @@ public class TurnToTarget extends CommandBase {
         if (!vision.isTargetFound()) {
             // drivetrain.drive
             drivetrain.drive(0, 0, 3.5, false);
-            // rotationCompleted += 3;
             lastRecordedTime = System.currentTimeMillis();
         } else {
             double tx = vision.getTX();
-            System.out.println("tx=" + tx);
-            steering_adjust = pid.calculate(tx, 0);
-            drivetrain.drive(0, 0, steering_adjust, false);
 
             // Also want to spin more until the target is closer to the center
             steering_adjust = pid.calculate(tx, 0);
@@ -74,12 +70,7 @@ public class TurnToTarget extends CommandBase {
                     isFinished = true;
                 }
             }
-
-            // }
         }
-
-        //System.out.println("turn_isFinished =" + isFinished);
-        //System.out.println("turn_rotationCompleted = " + rotationCompleted);
 	}
 	
     // Called once the command ends or is interrupted.
@@ -98,4 +89,5 @@ public class TurnToTarget extends CommandBase {
     public boolean isFinished() {
         return (isFinished);
 	}
+
 }

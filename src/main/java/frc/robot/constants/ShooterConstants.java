@@ -12,11 +12,10 @@ public class ShooterConstants {
 
     public static final double HOOD_ENCODER_OFFSET = 1-((HOOD_RAW_BOTTOM + HOOD_RAW_TOP) / 2);
 
-    public static final double FEEDER_FORWARD_SPEED = 0.1;
+    public static final double FEEDER_FORWARD_SPEED = 0.4;
     public static final double FEEDER_REVERSE_SPEED = -0.4;
     public static final double FEEDER_REVERSE_FOR_INTAKE_SPEED = -0.07;
     public static final double FEEDER_FORWARD_FOR_SHOOTTING_SPEED = 0.1;
-
 
     public static final double BIG_WHEEL_KP = 0.2;
     public static final double BIG_WHEEL_KI = 0;
