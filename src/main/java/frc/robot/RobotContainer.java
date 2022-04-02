@@ -28,6 +28,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.auto.AutoDriveCommand;
+import frc.robot.commands.auto.AutoDrivePointCommand;
 import frc.robot.commands.drivetrain.StopDrivetrainCommand;
 import frc.robot.commands.intake.IntakeIn;
 import frc.robot.commands.intake.IntakeInForShoot;
@@ -45,7 +46,9 @@ import frc.robot.commands.shooter.ShooterWheelsReverse;
 import frc.robot.commands.shooter.ShooterWheelsSetSpeed;
 import frc.robot.commands.shooter.ShooterWheelsStop;
 import frc.robot.commands.vision.TurnToTarget;
+import frc.robot.constants.LoggingConstants;
 import frc.robot.constants.RobotConstants;
+import frc.robot.constants.LoggingConstants.LoggingLevel;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.Vision;
@@ -90,6 +93,7 @@ public class RobotContainer {
   public ArrayList<DataPoint> runItBack;
   public ArrayList<DataPoint> twoBallInitial;
   public ArrayList<DataPoint> turning;
+  public ArrayList<DataPoint> slowTest;
 
   public static boolean isPlotting = false;
 
@@ -124,10 +128,11 @@ public class RobotContainer {
   public void readPaths() {
     runItBack = AutoPath.readAutoFile("runItBack.txt");
     twoBallInitial = AutoPath.readAutoFile("twoBallInitial.txt");
+    slowTest = AutoPath.readAutoFile("5ftTest.txt");
   }
 
   public void setupPathChooser() {
-    String[] autoNames = {"Turns and Shoots", "Run It Back", "Two Ball"};
+    String[] autoNames = {"Turns and Shoots", "Run It Back", "Two Ball", "Slow Test"};
 
     for (String pathName : autoNames) {
       autoPathChooser.addOption(pathName, pathName);
@@ -242,6 +247,9 @@ public class RobotContainer {
         new FeederForward(feederSubsystem)
       );
     }
+    else if (autoPath.equals("Slow Test")) {
+      return new AutoDrivePointCommand(slowTest, swerveDrivetrain, fieldRelative);
+    }
     else {
       return new SequentialCommandGroup(new Command[] {});
     }
@@ -267,7 +275,7 @@ public class RobotContainer {
           new IntakeStop(intakeSubsystem), 
           new FeederStop(feederSubsystem)));
 
-    // left bumper => intake ou
+    // left bumper => intake out
     new JoystickButton(driveController, Button.kLeftBumper.value)
         .whenPressed(new IntakeOut(intakeSubsystem))
         .whenReleased(new IntakeStop(intakeSubsystem));
@@ -280,11 +288,13 @@ public class RobotContainer {
           //   new TurnToTarget(vision, swerveDrivetrain),
           //   new HoodSetAngle(hoodSubsystem, () -> (0.45)),
           //   new ShooterWheelsSetSpeed(shooterWheelsSubsystem, () -> ((double)10000))),
-          new ParallelDeadlineGroup(new ShooterWheelsAtSpeed(shooterWheelsSubsystem),
+          new ParallelDeadlineGroup(
+            new ShooterWheelsAtSpeed(shooterWheelsSubsystem),
             new HoodSetAngle(hoodSubsystem, () -> (SmartDashboard.getNumber("vision_hood_angle", 0.1))),
-            new ShooterWheelsSetSpeed(shooterWheelsSubsystem, () -> (SmartDashboard.getNumber("vision_shooter_speed", 0))))
-            ,
-          new SequentialCommandGroup(new WaitCommand(1), 
+            new ShooterWheelsSetSpeed(shooterWheelsSubsystem, () -> (SmartDashboard.getNumber("vision_shooter_speed", 0)))
+          ),
+          new SequentialCommandGroup(
+            new WaitCommand(1), 
             new ParallelCommandGroup(
               new FeederForwardForShoot(feederSubsystem),
               new IntakeInForShoot(intakeSubsystem)
@@ -292,12 +302,14 @@ public class RobotContainer {
           )
           
         ))
-        .whenReleased(new ParallelCommandGroup(
-          new FeederStop(feederSubsystem),
-          new HoodStop(hoodSubsystem),
-          new ShooterWheelsStop(shooterWheelsSubsystem),
-          new IntakeStop(intakeSubsystem)
-          ));
+        .whenReleased(
+          new ParallelCommandGroup(
+            new FeederStop(feederSubsystem),
+            new HoodStop(hoodSubsystem),
+            new ShooterWheelsStop(shooterWheelsSubsystem),
+            new IntakeStop(intakeSubsystem)
+          )
+        );
 
 
       new JoystickButton(driveController, Button.kB.value).whenPressed(
@@ -318,8 +330,7 @@ public class RobotContainer {
   }
 
   private void configureSubsystemControllerBindings() {
-
-    // right bumper => shoot
+    // right bumper => vision shoot
     new JoystickButton(subsystemController, Button.kRightBumper.value)
       .whenPressed(new ParallelCommandGroup(
         new HoodSetAngle(hoodSubsystem, () -> (SmartDashboard.getNumber("vision_hood_angle", 0.1))),

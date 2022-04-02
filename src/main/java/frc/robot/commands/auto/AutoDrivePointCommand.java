@@ -2,6 +2,7 @@ package frc.robot.commands.auto;
 
 import java.util.ArrayList;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.subsystems.Drivetrain;
@@ -15,7 +16,7 @@ public class AutoDrivePointCommand extends CommandBase{
     private boolean fieldRelative;
     public static boolean commandFinished = false;
 
-    private double radiusThreshold = 0.0001;
+    private double radiusThreshold = 0.1;
 
     public AutoDrivePointCommand(ArrayList<DataPoint> currentPath, Drivetrain swerveDrive, boolean fieldRelative) {
         this.currentPath = currentPath;
@@ -61,18 +62,24 @@ public class AutoDrivePointCommand extends CommandBase{
         double dx = currentX - xPos;
         double dy = currentY - yPos;
 
-        double xSpeed = dx / deltaTime;
-        double ySpeed = dy / deltaTime;
+        double xSpeed = dx / deltaTime * 1000;
+        double ySpeed = dy / deltaTime * 1000;
         
-        //System.out.println(xSpeed + ", " + ySpeed + ", " + actRot);
-        swerveDrive.drive(xSpeed, ySpeed, actRot, fieldRelative);
+        //System.out.println();
+        //swerveDrive.drive(xSpeed, ySpeed, 0, fieldRelative);
 
         swerveDrive.updateOdometry();
+
+        System.out.println(currentIndex + ", " + Math.sqrt((dy*dy) + (dx*dx)));
+
+        SmartDashboard.putNumber("xSpeed", xSpeed);
+
+        SmartDashboard.putNumber("ySpeed", ySpeed);
+
 
         if(Math.sqrt((dy*dy) + (dx*dx)) < radiusThreshold) {
 
             currentIndex++;
-
         }
 
         try {
