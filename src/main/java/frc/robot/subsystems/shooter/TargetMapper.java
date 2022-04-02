@@ -34,9 +34,6 @@ public class TargetMapper {
     );
 
     public static SpeedAngle getSpeedAngleByDistance(double distance){
-        if (LoggingConstants.SHOOTER_LEVEL.ordinal() >= LoggingLevel.DEBUG.ordinal()) {
-            SmartDashboard.putNumber("Input Distance", distance);
-          }
 
         if (distance < 90)
             return targetMapping.get(7);
@@ -55,10 +52,13 @@ public class TargetMapper {
             floorSpeedAngle.getAngle() + (ceilSpeedAngle.getAngle() - floorSpeedAngle.getAngle()) * ratio,
             distance < 90? 1:1.5
         );
-
-        SmartDashboard.putNumber("$Output Func", speed);
-        SmartDashboard.putNumber("Output Speed", speedAngle.getSpeed());
-        SmartDashboard.putNumber("Output Angle", speedAngle.getAngle());
+        
+        if (LoggingConstants.SHOOTER_LEVEL.ordinal() >= LoggingLevel.DEBUG.ordinal()) {
+            SmartDashboard.putNumber("Input Distance", distance);
+            SmartDashboard.putNumber("Output Func", speed);
+            SmartDashboard.putNumber("Output Speed", speedAngle.getSpeed());
+            SmartDashboard.putNumber("Output Angle", speedAngle.getAngle());
+        }
 
         return speedAngle;
     }

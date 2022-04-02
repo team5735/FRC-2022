@@ -19,7 +19,6 @@ public class IntakeOut extends CommandBase {
   @Override
   public void initialize() {
     subsystem.out();
-    subsystem.hasBall();
   }
 
   // Returns true when the command should end.

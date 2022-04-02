@@ -22,7 +22,6 @@ import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
@@ -31,9 +30,6 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.auto.AutoDriveCommand;
-import frc.robot.commands.auto.PlotPathCommand;
-import frc.robot.commands.climber.ClimberLeftCommand;
-import frc.robot.commands.drivetrain.FieldRelative;
 import frc.robot.commands.drivetrain.StopDrivetrainCommand;
 import frc.robot.commands.intake.IntakeIn;
 import frc.robot.commands.intake.IntakeOut;
@@ -55,7 +51,6 @@ import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.Vision;
 import frc.robot.subsystems.climber.ClimberLeftSubsystem;
 import frc.robot.subsystems.climber.ClimberRightSubsystem;
-import frc.robot.subsystems.climber.ClimberSubsystem;
 import frc.robot.subsystems.plotter.AutoPath;
 import frc.robot.subsystems.plotter.DataPoint;
 import frc.robot.subsystems.shooter.FeederSubsystem;
@@ -79,7 +74,6 @@ public class RobotContainer {
   public final ShooterWheelsSubsystem shooterWheelsSubsystem = new ShooterWheelsSubsystem();
   public final HoodSubsystem hoodSubsystem = new HoodSubsystem();
   public final FeederSubsystem feederSubsystem = new FeederSubsystem();
-  // public final ClimberSubsystem climberSubsystem = new ClimberSubsystem();
   public final ClimberLeftSubsystem climberLeftSubsystem = new ClimberLeftSubsystem();
   public final ClimberRightSubsystem climberRightSubsystem = new ClimberRightSubsystem();
 
@@ -92,15 +86,10 @@ public class RobotContainer {
 
   // Autonomous path generation related
   public static SendableChooser<String> autoPathChooser = new SendableChooser<>();
-  public static SendableChooser<String> colorChooser = new SendableChooser<>();
   public ArrayList<DataPoint> testAuto;
   public ArrayList<DataPoint> runItBack;
   public ArrayList<DataPoint> twoBallInitial;
   public ArrayList<DataPoint> turning;
-
-  //For Long Auto
-  public ArrayList<DataPoint> longAuto1; 
-  public ArrayList<DataPoint> longAuto2; 
 
   public static boolean isPlotting = false;
 
@@ -117,16 +106,12 @@ public class RobotContainer {
 
     SmartDashboard.putNumber("manual_hood_angle", 0.3);
     SmartDashboard.putNumber("manual_shooter_speed", 12750);
-    SmartDashboard.putNumber("kP", 0);
-    SmartDashboard.putNumber("kI", 0);
-    SmartDashboard.putNumber("kD", 0);
-    SmartDashboard.putNumber("kF", 0.0475);
-    SmartDashboard.putNumber("kAccel", 50000);
-    SmartDashboard.putNumber("kVel", 25000);
-
-    colorChooser.addOption("Red", "Red");
-    colorChooser.addOption("Blue", "Blue");
-    SmartDashboard.putData("Game Color", colorChooser);
+    // SmartDashboard.putNumber("kP", 0);
+    // SmartDashboard.putNumber("kI", 0);
+    // SmartDashboard.putNumber("kD", 0);
+    // SmartDashboard.putNumber("kF", 0.0475);
+    // SmartDashboard.putNumber("kAccel", 50000);
+    // SmartDashboard.putNumber("kVel", 25000);
 
     SmartDashboard.putString("DistanceTwoBall", "108");
     SmartDashboard.putString("DistanceManual", "75");
@@ -137,16 +122,12 @@ public class RobotContainer {
   }
 
   public void readPaths() {
-    // testAuto = readAutoFile("/U/testAuto2.txt");
     runItBack = AutoPath.readAutoFile("runItBack.txt");
     twoBallInitial = AutoPath.readAutoFile("twoBallInitial.txt");
-    // longAuto1 = readAutoFile("/U/LongAuto1.txt");
-    // longAuto2 = readAutoFile("/U/LongAuto2.txt");
-    // turning = readAutoFile("/U/turning.txt");
   }
 
   public void setupPathChooser() {
-    String[] autoNames = {"testAuto", "JustAutoWTurn", "Turns and Shoots", "Run It Back", "Long Auto", "Hood Down", "Two Ball"};
+    String[] autoNames = {"Turns and Shoots", "Run It Back", "Two Ball"};
 
     for (String pathName : autoNames) {
       autoPathChooser.addOption(pathName, pathName);
@@ -158,21 +139,8 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
 
     String autoPath = autoPathChooser.getSelected();
-
-    if (autoPath.equals("testAuto")) {
-
-      return new SequentialCommandGroup(new ParallelCommandGroup(
-        new AutoDriveCommand(testAuto, swerveDrivetrain, fieldRelative), new IntakeIn(intakeSubsystem)), 
-        new ParallelCommandGroup(
-          new HoodSetAngle(hoodSubsystem, () -> (SmartDashboard.getNumber("vision_hood_angle", 0.1))),
-          new ShooterWheelsSetSpeed(shooterWheelsSubsystem, () -> (SmartDashboard.getNumber("vision_shooter_speed", 0))), 
-          new SequentialCommandGroup(new WaitCommand(5), new FeederForward(feederSubsystem)))
-          );
-
-      //return new AutoDriveCommand(testAuto, swerveDrivetrain, fieldRelative);
-    }
-
-    else if (autoPath.equals("Run It Back")) {
+    
+    if (autoPath.equals("Run It Back")) {
       return new SequentialCommandGroup(
         // new HoodSetAngle(subsystem, angleGetter)
         new ParallelDeadlineGroup(new WaitCommand(1), new HoodSetAngle(hoodSubsystem, () -> (0.6))),
@@ -255,19 +223,13 @@ public class RobotContainer {
       );
     }
 
-    else if (autoPath.equals("JustAutoWTurn")) {
-      return new SequentialCommandGroup(new AutoDriveCommand(runItBack, swerveDrivetrain, fieldRelative), new TurnToTarget(vision, swerveDrivetrain));
-      
-      //return new AutoDriveCommand(runItBack, swerveDrivetrain, fieldRelative);
-    }
-
-    else if(autoPath.equals("Hood Down")) {
-      return new SequentialCommandGroup(new HoodSetAngle(hoodSubsystem, () -> (0.5)));
-
-    }
-
     else if (autoPath.equals("Turns and Shoots")) {
-      return new SequentialCommandGroup(new TurnToTarget(vision, swerveDrivetrain), new ParallelDeadlineGroup(new WaitCommand(1), new StopDrivetrainCommand(swerveDrivetrain)),
+      return new SequentialCommandGroup(
+        new TurnToTarget(vision, swerveDrivetrain), 
+        new ParallelDeadlineGroup(
+          new WaitCommand(1),
+          new StopDrivetrainCommand(swerveDrivetrain)
+        ),
       
        new ParallelCommandGroup(
           new HoodSetAngle(hoodSubsystem, () -> (SmartDashboard.getNumber("vision_hood_angle", 0.1))),
@@ -278,40 +240,6 @@ public class RobotContainer {
         new FeederStop(feederSubsystem),
         new WaitCommand(0.25),
         new FeederForward(feederSubsystem)
-      
-      );
-    }
-    else if (autoPath.equals("Long Auto")) {
-      return new SequentialCommandGroup(
-
-        new AutoDriveCommand(longAuto1, swerveDrivetrain, fieldRelative),
-        new TurnToTarget(vision, swerveDrivetrain),
-        new ParallelDeadlineGroup(
-          new WaitCommand(1),
-          new StopDrivetrainCommand(swerveDrivetrain)),
-        new ParallelDeadlineGroup(
-          new WaitCommand(4),
-          new HoodSetAngle(hoodSubsystem, () -> (SmartDashboard.getNumber("vision_hood_angle", 0.1))),
-          new ShooterWheelsSetSpeed(shooterWheelsSubsystem, () -> (SmartDashboard.getNumber("vision_shooter_speed", 0))), 
-          new SequentialCommandGroup(new WaitCommand(2), new FeederForward(feederSubsystem))),
-        new FeederStop(feederSubsystem),
-        new HoodStop(hoodSubsystem),
-        new ShooterWheelsStop(shooterWheelsSubsystem),
-        new ParallelDeadlineGroup(
-          new AutoDriveCommand(longAuto2, swerveDrivetrain, fieldRelative), new IntakeIn(intakeSubsystem)),
-        new TurnToTarget(vision, swerveDrivetrain),
-        new ParallelDeadlineGroup(
-          new WaitCommand(1), new StopDrivetrainCommand(swerveDrivetrain)),
-        new SequentialCommandGroup(
-          new ParallelDeadlineGroup(
-            new WaitCommand(1),
-            new ParallelCommandGroup(
-              new FeederReverse(feederSubsystem),
-              new ShooterWheelsReverse(shooterWheelsSubsystem)))), 
-        new ParallelCommandGroup(
-          new HoodSetAngle(hoodSubsystem, () -> (SmartDashboard.getNumber("vision_hood_angle", 0.1))),
-          new ShooterWheelsSetSpeed(shooterWheelsSubsystem, () -> (SmartDashboard.getNumber("vision_shooter_speed", 0))), 
-          new SequentialCommandGroup(new WaitCommand(3), new FeederForward(feederSubsystem)))
       );
     }
     else {
@@ -444,7 +372,7 @@ public class RobotContainer {
         .whenReleased(new InstantCommand(shooterWheelsSubsystem::stopShooter, shooterWheelsSubsystem));
   }
 
-  private void fileCreator() {
+  private void fileCreator() { 
 
     filenameFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy-HH-mm-ss");
 

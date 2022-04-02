@@ -15,7 +15,6 @@ public class RobotConstants {
     public static final int HOOD_ENCODER_DIO_PORT = 5;
 
     // digital input ports
-    public static final int FEEDER_BEAMBREAK_DIGITAL_PORT = 6;
 
     //Game Field Values
     // public static final double TARGET_HEIGHTFROMGROUND = Units.inchesToMeters(/*Test Val*/ 31.5); // Original: 104 in //Returns Meters

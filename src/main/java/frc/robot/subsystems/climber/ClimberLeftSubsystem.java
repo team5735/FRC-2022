@@ -10,8 +10,6 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.RobotContainer;
-import frc.robot.commands.climber.ClimberJoystickCommand;
 import frc.robot.commands.climber.ClimberLeftCommand;
 import frc.robot.constants.ClimberConstants;
 import frc.robot.constants.LoggingConstants;
@@ -44,14 +42,12 @@ public class ClimberLeftSubsystem extends SubsystemBase {
     // SmartDashboard.putNumber("climber_cmd", winchMotor.getAppliedOutput());
     // SmartDashboard.putNumber("climber_current", winchMotor.getOutputCurrent());
     // SmartDashboard.putNumber("climber_speed", winchMotor.getEncoder().getVelocity());
-    SmartDashboard.putNumber("LEFT WINCH ENCODER", winchMotor.getEncoder().getPosition());
 
     if (LoggingConstants.CLIMBER_LEVEL.ordinal() >= LoggingLevel.DEBUG.ordinal()) {
+      SmartDashboard.putNumber("LEFT WINCH ENCODER", winchMotor.getEncoder().getPosition());
       // //System.out.println(leftWinchMotor.getEncoder().getCountsPerRevolution());
       // //System.out.println(leftWinchMotor.getEncoder().getPosition());
     }
-
-    if (LoggingConstants.CLIMBER_LEVEL.ordinal() >= LoggingLevel.COMPETITION.ordinal()) {}
   }
 
   public void set(double speed) {

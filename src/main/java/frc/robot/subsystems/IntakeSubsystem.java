@@ -17,17 +17,12 @@ import frc.robot.constants.LoggingConstants.LoggingLevel;
 
 public class IntakeSubsystem extends SubsystemBase {
   private CANSparkMax intakeMotor;
-  private final DigitalInput beambreak;
-  public ColorSensor m_colorSensor;
-
+  
   public IntakeSubsystem() {
     intakeMotor = new CANSparkMax(RobotConstants.INTAKE_MOTOR_ID, MotorType.kBrushless);
     // intakeMotor.restoreFactoryDefaults();
     intakeMotor.setInverted(true);
-  
-    beambreak = new DigitalInput(RobotConstants.FEEDER_BEAMBREAK_DIGITAL_PORT);
 
-    m_colorSensor = new ColorSensor();
   }
 
   @Override
@@ -41,8 +36,6 @@ public class IntakeSubsystem extends SubsystemBase {
     // SmartDashboard.putBoolean("intake_beamBreak", hasBall());
 
     if (LoggingConstants.INTAKE_LEVEL.ordinal() >= LoggingLevel.COMPETITION.ordinal()) {}
-
-    m_colorSensor.senseColor(intakeMotor.get());
   }
   
   public void set(double speed) {
@@ -56,13 +49,4 @@ public class IntakeSubsystem extends SubsystemBase {
   public void out() {
     set(IntakeConstants.INTAKE_OUT_SPEED);
   }
-
-  public boolean hasBall() {
-	  if (beambreak.get() == false) {
-      // //System.out.println("################ BALL INSIDE FEEDER | BEAM BREAK");
-    }
-
-    return !beambreak.get();
-	}
-
 }

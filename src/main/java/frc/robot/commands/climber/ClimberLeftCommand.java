@@ -22,9 +22,37 @@ public class ClimberLeftCommand extends CommandBase{
 
     @Override
     public void execute() {
-        double yInput = deadband(RobotContainer.subsystemController.getLeftY(), ClimberConstants.DEADBAND);
-        double xInput = Math.pow(deadband(RobotContainer.subsystemController.getLeftX(), ClimberConstants.DEADBAND * 2), 3);
-        xInput = 0; //disable rotation
+        double yInput = RobotContainer.subsystemController.getLeftTriggerAxis() * ClimberConstants.WINCH_UP_SPEED;
+
+        if(RobotContainer.subsystemController.getBButton()) {
+            yInput=-yInput;
+        }
+
+        // double xInput = Math.pow(deadband(RobotContainer.subsystemController.getLeftX(), ClimberConstants.DEADBAND * 2), 3);
+        double xInput = deadband(RobotContainer.subsystemController.getLeftY(), ClimberConstants.DEADBAND) * ClimberConstants.ARM_ROTATE_UP_SPEED;
+
+        /*
+        if (RobotContainer.subsystemController.getPOV() != -1){
+            System.out.println(RobotContainer.subsystemController.getPOV());
+        }
+
+        switch (RobotContainer.subsystemController.getPOV()) {
+            case 0:
+                xInput = ClimberConstants.ARM_ROTATE_UP_SPEED;
+                break;
+            case 90:
+                xInput = ClimberConstants.ARM_ROTATE_UP_SPEED * 0.5;
+                break;
+            case 180:
+                xInput = -ClimberConstants.ARM_ROTATE_DOWN_SPEED;
+                break;
+            case 270:
+                xInput = -ClimberConstants.ARM_ROTATE_DOWN_SPEED * 0.5;
+                break; 
+            default:
+                break;
+        }
+        */
 
         if(yInput > 0) {
             climberSubsystem.set(yInput * ClimberConstants.WINCH_UP_SPEED);
@@ -33,11 +61,9 @@ public class ClimberLeftCommand extends CommandBase{
             climberSubsystem.set(yInput * ClimberConstants.WINCH_DOWN_SPEED);
         } else {
             climberSubsystem.set(0);
-            
-        
         }
 
-        /*
+
         if(xInput > 0) { 
             climberSubsystem.rotate(xInput * ClimberConstants.ARM_ROTATE_UP_SPEED);
         } else if(xInput < 0) {
@@ -45,7 +71,6 @@ public class ClimberLeftCommand extends CommandBase{
         } else {
             climberSubsystem.rotate(0);
         }
-        */
     }
     
 	@Override

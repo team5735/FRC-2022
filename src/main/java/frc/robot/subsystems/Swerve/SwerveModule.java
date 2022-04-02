@@ -11,6 +11,8 @@ import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.constants.LoggingConstants;
+import frc.robot.constants.LoggingConstants.LoggingLevel;
 
 public class SwerveModule {
   private static final double kWheelRadius = 0.0508;
@@ -108,14 +110,14 @@ boolean flag = true;
     // Set turning motor to target angle
     double angleDifference = getDiff(targetState.angle.getRadians(),  absoluteEncoderToRadians(currentAngle));
 
-    SmartDashboard.putNumber(module + "currentAngle", radiansToDegree(absoluteEncoderToRadians(currentAngle)));
-    SmartDashboard.putNumber(module + "angleDifference", radiansToDegree(angleDifference));
 
     if (( angleDifference >= Math.PI/2 || angleDifference <= -(Math.PI/2))){
-      SmartDashboard.putNumber(module + "desiredState",radiansToDegree( desiredState.angle.getRadians()));
-      SmartDashboard.putNumber(module + "targetState", radiansToDegree(targetState.angle.getRadians()));
-      SmartDashboard.putNumber(module + "currentAngle", radiansToDegree(absoluteEncoderToRadians(currentAngle)));
-      SmartDashboard.putNumber(module + "angleDifference", radiansToDegree(angleDifference));
+      if (LoggingConstants.DRIVING_LEVEL.ordinal() >= LoggingLevel.DEBUG.ordinal()) {
+        SmartDashboard.putNumber(module + "desiredState",radiansToDegree( desiredState.angle.getRadians()));
+        SmartDashboard.putNumber(module + "targetState", radiansToDegree(targetState.angle.getRadians()));
+        SmartDashboard.putNumber(module + "currentAngle", radiansToDegree(absoluteEncoderToRadians(currentAngle)));
+        SmartDashboard.putNumber(module + "angleDifference", radiansToDegree(angleDifference));
+      }
       flag = false;
     }
 
@@ -124,14 +126,22 @@ boolean flag = true;
   private double getDiff (double target, double current){
     double diff = target - current;
     if (diff > Math.PI){
-      SmartDashboard.putNumber(module + "+diff",diff);
+      if (LoggingConstants.DRIVING_LEVEL.ordinal() >= LoggingLevel.DEBUG.ordinal()) {
+        SmartDashboard.putNumber(module + "+diff",diff);
+      }
       return diff -(2*Math.PI);
     }
     if (diff < -Math.PI){
-      SmartDashboard.putNumber(module + "-diff",diff);
+      
+      if (LoggingConstants.DRIVING_LEVEL.ordinal() >= LoggingLevel.DEBUG.ordinal()) {
+        SmartDashboard.putNumber(module + "-diff",diff);
+      }
       return diff + (2*Math.PI);
     }
-    SmartDashboard.putNumber(module + "diff",diff);
+    
+    if (LoggingConstants.DRIVING_LEVEL.ordinal() >= LoggingLevel.DEBUG.ordinal()) {
+      SmartDashboard.putNumber(module + "diff",diff);
+    }
     return diff;
   }
 }

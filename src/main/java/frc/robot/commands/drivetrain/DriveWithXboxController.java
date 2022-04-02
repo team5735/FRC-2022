@@ -1,10 +1,13 @@
 package frc.robot.commands.drivetrain;
 
+import edu.wpi.first.cscore.CameraServerJNI.LoggerFunction;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.RobotContainer;
+import frc.robot.constants.LoggingConstants;
+import frc.robot.constants.LoggingConstants.LoggingLevel;
 import frc.robot.subsystems.Drivetrain;
 
 public class DriveWithXboxController extends CommandBase {
@@ -49,10 +52,14 @@ public class DriveWithXboxController extends CommandBase {
         // mathematics). Xbox controllers return positive values when you pull to
         // the right by default.
         final var rot = m_rotLimiter.calculate(RobotContainer.driveController.getLeftTriggerAxis() - RobotContainer.driveController.getRightTriggerAxis()) * frc.robot.subsystems.Drivetrain.kMaxAngularSpeed;
-        SmartDashboard.putNumber("xSpeed", xSpeed);
-        SmartDashboard.putNumber("ySpeed", ySpeed);
-        SmartDashboard.putNumber("rot", rot);
-        SmartDashboard.putBoolean("fieldRelative", fieldRelative);
+        
+        if(LoggingConstants.DRIVING_LEVEL.ordinal() >= LoggingLevel.COMPETITION.ordinal()) {
+            SmartDashboard.putNumber("xSpeed", xSpeed);
+            SmartDashboard.putNumber("ySpeed", ySpeed);
+            SmartDashboard.putNumber("rot", rot);
+            SmartDashboard.putBoolean("fieldRelative", fieldRelative);
+        }
+
         // m_swerve.drive(0, 0, rot, false);
 
         // Y butoon => toggle field centric
