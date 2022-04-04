@@ -10,6 +10,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.commands.drivetrain.DriveWithXboxController;
@@ -18,10 +19,12 @@ import frc.robot.subsystems.Swerve.SwerveModule;
 import frc.robot.subsystems.Swerve.SwervePIDConfig;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 //import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 //import edu.wpi.first.math.kinematics.SwerveModuleState;
 //import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.math.util.Units;
@@ -33,11 +36,11 @@ public class Drivetrain extends SubsystemBase {
   public static final double kMaxSpeed = 3.0; // 3 meters per second
   public static final double kMaxAngularSpeed = Math.PI*1; // 1/2 rotation per second
 
-  private final Translation2d m_frontLeftLocation = new Translation2d(-0.381, 0.381);
-  private final Translation2d m_frontRightLocation = new Translation2d(-0.381, -0.381);
-  private final Translation2d m_backLeftLocation = new Translation2d(0.381, 0.381);
-  private final Translation2d m_backRightLocation = new Translation2d(0.381, -0.381);
-  private final SwerveDriveKinematics m_kinematics = new SwerveDriveKinematics(m_frontLeftLocation, m_frontRightLocation, m_backLeftLocation, m_backRightLocation);
+  public final Translation2d m_frontLeftLocation = new Translation2d(-0.381, 0.381);
+  public final Translation2d m_frontRightLocation = new Translation2d(-0.381, -0.381);
+  public final Translation2d m_backLeftLocation = new Translation2d(0.381, 0.381);
+  public final Translation2d m_backRightLocation = new Translation2d(0.381, -0.381);
+  public final SwerveDriveKinematics m_kinematics = new SwerveDriveKinematics(m_frontLeftLocation, m_frontRightLocation, m_backLeftLocation, m_backRightLocation);
        
   //Swerve Module Motors
   private final TalonFX driveMotorM1 = new TalonFX(1);
@@ -60,7 +63,7 @@ public class Drivetrain extends SubsystemBase {
   private final SwerveModule m_frontLeft = new SwerveModule(driveMotorM1, turningMotorM1, swervePIDConfigM1, absoluteEncoderM1, 0.678 , 1);
   private final SwerveModule m_frontRight = new SwerveModule(driveMotorM2, turningMotorM2, swervePIDConfigM2, absoluteEncoderM2, 0.389, 2);
   private final SwerveModule m_backLeft = new SwerveModule(driveMotorM3, turningMotorM3, swervePIDConfigM3, absoluteEncoderM3, 0.110, 3);
-  private final SwerveModule m_backRight = new SwerveModule(driveMotorM4, turningMotorM4, swervePIDConfigM4, absoluteEncoderM4, 0.303, 4);
+  private final SwerveModule m_backRight = new SwerveModule(driveMotorM4, turningMotorM4, swervePIDConfigM4, absoluteEncoderM4, 0.544, 4);
 
   // private final SwerveModule m_frontLeft = new SwerveModule(driveMotorM1, turningMotorM1, swervePIDConfigM1, absoluteEncoderM1, -0.280, 1);
   // private final SwerveModule m_frontRight = new SwerveModule(driveMotorM2, turningMotorM2, swervePIDConfigM2, absoluteEncoderM2, -0.153, 2);
@@ -115,6 +118,26 @@ public class Drivetrain extends SubsystemBase {
     m_backRight.setDesiredState(swerveModuleStates[3]);
   }
 
+  public void setModuleStates(SwerveModuleState[] desiredStates) {
+
+      SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, kMaxSpeed);
+      m_frontLeft.setDesiredState(desiredStates[0]);
+      m_frontRight.setDesiredState(desiredStates[1]);
+      m_backLeft.setDesiredState(desiredStates[2]);
+      m_backRight.setDesiredState(desiredStates[3]);
+
+  }
+
+//   public void setModuleStates(SwerveModuleState[] desiredStates) {
+//     SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
+//     frontLeft.setDesiredState(desiredStates[0]);
+//     frontRight.setDesiredState(desiredStates[1]);
+//     backLeft.setDesiredState(desiredStates[2]);
+//     backRight.setDesiredState(desiredStates[3]);
+// }
+
+
+
   /** Updates the field relative position of the robot. */
   public void updateOdometry() {
     m_poseEstimator.update(
@@ -131,6 +154,11 @@ public class Drivetrain extends SubsystemBase {
             m_poseEstimator.getEstimatedPosition()),
         Timer.getFPGATimestamp() - 0.3);
   }
+
+  public void resetOdometry(Pose2d pose) {
+    m_poseEstimator.resetPosition(pose, getRotation2d());
+  }
+
 
   public double getFrontLeftDouble() {
     return m_frontLeft.getState().speedMetersPerSecond;
@@ -171,4 +199,31 @@ public class Drivetrain extends SubsystemBase {
     return DriveWithXboxController.rotation();
   }
 
+  public double getHeading() {
+    return Math.IEEEremainder(ahrs.getAngle(), 360);
 }
+
+  public Rotation2d getRotation2d() {
+      return Rotation2d.fromDegrees(getHeading());
+  }
+
+  public Pose2d getPose() {
+
+    double x = m_poseEstimator.getEstimatedPosition().getX() * 4.1667;
+    double y = m_poseEstimator.getEstimatedPosition().getY() * 4.1667;
+
+    return new Pose2d(new Translation2d(x,y), m_poseEstimator.rotation));
+  
+  
+  
+  }
+
+  public void stopAllModules() {
+    m_frontLeft.stop();;
+    m_frontRight.stop();
+    m_backLeft.stop();  
+    m_backRight.stop();
+  }
+
+}
+

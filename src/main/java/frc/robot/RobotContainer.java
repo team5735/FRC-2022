@@ -11,9 +11,18 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.List;
 
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.trajectory.TrajectoryConfig;
+import edu.wpi.first.math.trajectory.TrajectoryGenerator;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Axis;
 import edu.wpi.first.wpilibj.XboxController.Button;
@@ -25,6 +34,7 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.auto.AutoDriveCommand;
@@ -440,6 +450,34 @@ public class RobotContainer {
       }
       // SmartDashboard.putNumber("pos", swerveDrivetrain.m_frontLeft.getState().angle.getDegrees());
 
+    }
+
+    //IN TESTING
+    public Command getAutoCommandImproved() {
+
+      TrajectoryConfig trajectoryConfig = new TrajectoryConfig(Drivetrain.kMaxSpeed/2, 5);
+
+      Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
+      new Pose2d(0, 0, new Rotation2d(0)),
+      List.of(
+        new Translation2d(0.5, 0),
+        new Translation2d(1, 0)),
+      new Pose2d(1.5, 0, Rotation2d.fromDegrees(0)),
+      trajectoryConfig);
+
+      PIDController xController = new PIDController(1.5, 0, 0);
+      PIDController yController = new PIDController(1.5, 0, 0);
+      TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(Drivetrain.kMaxAngularSpeed, Math.PI / 4);
+      ProfiledPIDController thetaController = new ProfiledPIDController(3, 0, 0, kThetaControllerConstraints);
+      thetaController.enableContinuousInput(-Math.PI, Math.PI);
+
+      SwerveControllerCommand swerveControllerCommand = new SwerveControllerCommand(trajectory, swerveDrivetrain::getPose, swerveDrivetrain.m_kinematics, xController, yController, thetaController, swerveDrivetrain::setModuleStates, swerveDrivetrain);
+
+      return new SequentialCommandGroup(
+        new InstantCommand(() -> swerveDrivetrain.resetOdometry(trajectory.getInitialPose())),
+        swerveControllerCommand,
+        new InstantCommand(() -> swerveDrivetrain.stopAllModules())
+        );
     }
 
 }
