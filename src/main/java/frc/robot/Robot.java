@@ -33,9 +33,9 @@ public class Robot extends TimedRobot {
     m_robotContainer.readPaths();
 
     try {
-        //UsbCamera camera = CameraServer.startAutomaticCapture();
-        //camera.setResolution(80, 60);
-        //camera.setFPS(10);
+        UsbCamera camera = CameraServer.startAutomaticCapture();
+        camera.setResolution(80, 60);
+        camera.setFPS(10);
     } catch (VideoException e) {
       e.printStackTrace();
     }

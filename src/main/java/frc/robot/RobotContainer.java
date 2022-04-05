@@ -23,10 +23,10 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
-import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.commands.CancelCommand;
 import frc.robot.commands.auto.AutoDriveCommand;
 import frc.robot.commands.auto.AutoDrivePointCommand;
 import frc.robot.commands.drivetrain.StopDrivetrainCommand;
@@ -46,9 +46,7 @@ import frc.robot.commands.shooter.ShooterWheelsReverse;
 import frc.robot.commands.shooter.ShooterWheelsSetSpeed;
 import frc.robot.commands.shooter.ShooterWheelsStop;
 import frc.robot.commands.vision.TurnToTarget;
-import frc.robot.constants.LoggingConstants;
 import frc.robot.constants.RobotConstants;
-import frc.robot.constants.LoggingConstants.LoggingLevel;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.Vision;
@@ -105,7 +103,6 @@ public class RobotContainer {
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
-    //readPaths();
     setupPathChooser();
 
     SmartDashboard.putNumber("manual_hood_angle", 0.3);
@@ -256,15 +253,11 @@ public class RobotContainer {
   }
 
   private void configureDriveControllerBindings() {
-
     // 'X' button to aim, bind to cmd TurnToTarget
+    Command turnToTarget = new TurnToTarget(vision, swerveDrivetrain);
     new JoystickButton(driveController, Button.kX.value)
-        .whenPressed(
-          new ParallelRaceGroup(
-            new WaitCommand(2),  
-            new TurnToTarget(vision, swerveDrivetrain)
-          )
-        );
+        .whenPressed(turnToTarget)
+        .whenReleased(new CancelCommand(turnToTarget));
 
     // right bumper => intake in
     new JoystickButton(driveController, Button.kRightBumper.value)
@@ -281,7 +274,7 @@ public class RobotContainer {
         .whenReleased(new IntakeStop(intakeSubsystem));
 
 
-    //One button shoot including ramp up and feeder (plus intake)
+    // 'A' button => One button shoot including ramp up and feeder (plus intake)
     new JoystickButton(driveController, Button.kA.value)
         .whenPressed(new SequentialCommandGroup(
           // new ParallelDeadlineGroup(
@@ -311,26 +304,14 @@ public class RobotContainer {
           )
         );
 
-
-      new JoystickButton(driveController, Button.kB.value).whenPressed(
+    // 'B' button +> stop drivetrain
+    new JoystickButton(driveController, Button.kB.value).whenPressed(
         new StopDrivetrainCommand(swerveDrivetrain)
-        );
-  }
-
-  public void configureAutoButton() {
-    if (driveController.getStartButtonPressed()){
-      isPlotting = true;
-      fileCreator();
-    }
-
-    if (driveController.getBackButtonPressed()) {
-      isPlotting = false;
-      fileCreator();
-    }
+    );
   }
 
   private void configureSubsystemControllerBindings() {
-    // right bumper => vision shoot
+    // right bumper => shoot base on vision values
     new JoystickButton(subsystemController, Button.kRightBumper.value)
       .whenPressed(new ParallelCommandGroup(
         new HoodSetAngle(hoodSubsystem, () -> (SmartDashboard.getNumber("vision_hood_angle", 0.1))),
@@ -341,6 +322,7 @@ public class RobotContainer {
         new ShooterWheelsStop(shooterWheelsSubsystem)
       ));
 
+    // left bumper => shoot based on maunal values
     new JoystickButton(subsystemController, Button.kLeftBumper.value)
       .whenPressed(new ParallelCommandGroup(
         new HoodSetAngle(hoodSubsystem, () -> (SmartDashboard.getNumber("manual_hood_angle", 0.3
@@ -383,8 +365,19 @@ public class RobotContainer {
         .whenReleased(new InstantCommand(shooterWheelsSubsystem::stopShooter, shooterWheelsSubsystem));
   }
 
-  private void fileCreator() { 
+  public void configureAutoButton() {
+    if (driveController.getStartButtonPressed()){
+      isPlotting = true;
+      fileCreator();
+    }
 
+    if (driveController.getBackButtonPressed()) {
+      isPlotting = false;
+      fileCreator();
+    }
+  }
+
+  private void fileCreator() { 
     filenameFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy-HH-mm-ss");
 
     //Starts and Stops plotting
@@ -409,9 +402,9 @@ public class RobotContainer {
         //System.out.println("Stops plotting");
         SmartDashboard.putBoolean("Is Plotting", false);
       }
-    }
+  }
 
-    public void drivingPlotter() {
+  public void drivingPlotter() {
       if (isPlotting) {
         Long time = System.currentTimeMillis() - startTime;
         double robotX = swerveDrivetrain.poseEstimator().getEstimatedPosition().getX();
@@ -439,7 +432,6 @@ public class RobotContainer {
         swerveDrivetrain.updateOdometry();
       }
       // SmartDashboard.putNumber("pos", swerveDrivetrain.m_frontLeft.getState().angle.getDegrees());
-
-    }
+  }
 
 }
