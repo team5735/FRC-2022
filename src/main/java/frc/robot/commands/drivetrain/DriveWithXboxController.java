@@ -91,9 +91,6 @@ public class DriveWithXboxController extends CommandBase {
 
         swerveDrive.setModuleStates(moduleState);
 
-        SmartDashboard.putNumber("X-Distance", swerveDrive.getPose().getX());
-        SmartDashboard.putNumber("Y-Distance", swerveDrive.getPose().getY());
-
         System.out.println(swerveDrive.getPose().getX() + ",    " + swerveDrive.getPose().getY() );
 
         swerveDrive.updateOdometry();
