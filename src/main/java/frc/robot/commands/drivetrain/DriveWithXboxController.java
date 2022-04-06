@@ -91,7 +91,7 @@ public class DriveWithXboxController extends CommandBase {
 
         swerveDrive.setModuleStates(moduleState);
 
-        System.out.println(swerveDrive.getPose().getX() + ",    " + swerveDrive.getPose().getY() );
+        //System.out.println(swerveDrive.getPose().getX() + ",    " + swerveDrive.getPose().getY() );
 
         swerveDrive.updateOdometry();
 

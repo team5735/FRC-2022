@@ -24,6 +24,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 //import edu.wpi.first.math.kinematics.SwerveModuleState;
 //import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -72,6 +73,7 @@ public class Drivetrain extends SubsystemBase {
 
   // private final AnalogGyro m_gyro = new AnalogGyro(0);
   private final AHRS ahrs = new AHRS(SPI.Port.kMXP);
+  private final SwerveDriveOdometry odometer = new SwerveDriveOdometry(m_kinematics, new Rotation2d(0));
 
   /* Here we use SwerveDrivePoseEstimator so that we can fuse odometry readings. The numbers used
   below are robot specific, and should be tuned. */
@@ -201,14 +203,23 @@ public class Drivetrain extends SubsystemBase {
 
   public double getHeading() {
     return Math.IEEEremainder(ahrs.getAngle(), 360);
-}
+  }
+
+  public void zeroHeading() {
+    ahrs.reset();
+  }
+
 
   public Rotation2d getRotation2d() {
       return Rotation2d.fromDegrees(getHeading());
   }
 
   public Pose2d getPose() {
-    return m_poseEstimator.getEstimatedPosition();
+    return odometer.getPoseMeters();
+  }
+
+  public void resetOdometryNew(Pose2d pose) {
+    odometer.resetPosition(pose, getRotation2d());
   }
 
   public void stopAllModules() {
@@ -216,6 +227,15 @@ public class Drivetrain extends SubsystemBase {
     m_frontRight.stop();
     m_backLeft.stop();  
     m_backRight.stop();
+  }
+
+  @Override
+  public void periodic() {
+    odometer.update(getRotation2d(), m_frontLeft.getState(), m_frontRight.getState(), m_backLeft.getState(), m_backRight.getState());
+    SmartDashboard.putNumber("Robot Heading", getHeading());
+    SmartDashboard.putNumber("X Pose", getPose().getX());
+    SmartDashboard.putNumber("Y Pose", getPose().getY());
+    SmartDashboard.putNumber("Degress", getRotation2d().getDegrees());
   }
 
 }

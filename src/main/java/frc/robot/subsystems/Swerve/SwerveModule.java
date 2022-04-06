@@ -58,7 +58,7 @@ public class SwerveModule {
 
   // Unit conversion methods
   public double driveEncoderPulseToDistance(double encoderPulse) {
-    return encoderPulse * (2 * kWheelRadius * Math.PI) / kEncoderResolution / kDriveGearRatio;
+    return (encoderPulse * (2 * kWheelRadius * Math.PI) / kEncoderResolution / kDriveGearRatio) * 10;
   }
 
   public double distanceToDriveEncoderPulse(double distance) {

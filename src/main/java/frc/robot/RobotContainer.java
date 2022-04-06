@@ -460,13 +460,12 @@ public class RobotContainer {
       Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
       new Pose2d(0, 0, new Rotation2d(0)),
       List.of(
-        new Translation2d(0.5, 0),
         new Translation2d(1, 0)),
       new Pose2d(2, 0, Rotation2d.fromDegrees(0)),
       trajectoryConfig);
 
-      PIDController xController = new PIDController(1.5, 0, 0);
-      PIDController yController = new PIDController(1.5, 0, 0);
+      PIDController xController = new PIDController(0.02, 0, 0);
+      PIDController yController = new PIDController(0.02, 0, 0);
       TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(Drivetrain.kMaxAngularSpeed, Math.PI / 4);
       ProfiledPIDController thetaController = new ProfiledPIDController(3, 0, 0, kThetaControllerConstraints);
       thetaController.enableContinuousInput(-Math.PI, Math.PI);
@@ -474,7 +473,7 @@ public class RobotContainer {
       SwerveControllerCommand swerveControllerCommand = new SwerveControllerCommand(trajectory, swerveDrivetrain::getPose, swerveDrivetrain.m_kinematics, xController, yController, thetaController, swerveDrivetrain::setModuleStates, swerveDrivetrain);
 
       return new SequentialCommandGroup(
-        new InstantCommand(() -> swerveDrivetrain.resetOdometry(trajectory.getInitialPose())),
+        new InstantCommand(() -> swerveDrivetrain.resetOdometryNew(trajectory.getInitialPose())),
         swerveControllerCommand,
         new InstantCommand(() -> swerveDrivetrain.stopAllModules())
         );
