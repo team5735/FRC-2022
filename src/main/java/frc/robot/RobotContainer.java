@@ -38,6 +38,7 @@ import frc.robot.commands.shooter.FeederForward;
 import frc.robot.commands.shooter.FeederForwardForShoot;
 import frc.robot.commands.shooter.FeederPlusIntakeIn;
 import frc.robot.commands.shooter.FeederReverse;
+import frc.robot.commands.shooter.FeederReverseForShoot;
 import frc.robot.commands.shooter.FeederStop;
 import frc.robot.commands.shooter.HoodSetAngle;
 import frc.robot.commands.shooter.HoodStop;
@@ -273,10 +274,10 @@ public class RobotContainer {
         .whenPressed(new IntakeOut(intakeSubsystem))
         .whenReleased(new IntakeStop(intakeSubsystem));
 
-
     // 'A' button => One button shoot including ramp up and feeder (plus intake)
     new JoystickButton(driveController, Button.kA.value)
         .whenPressed(new SequentialCommandGroup(
+          new FeederReverseForShoot(feederSubsystem),
           // new ParallelDeadlineGroup(
           //   new TurnToTarget(vision, swerveDrivetrain),
           //   new HoodSetAngle(hoodSubsystem, () -> (0.45)),
@@ -287,7 +288,7 @@ public class RobotContainer {
             new ShooterWheelsSetSpeed(shooterWheelsSubsystem, () -> (SmartDashboard.getNumber("vision_shooter_speed", 0)))
           ),
           new SequentialCommandGroup(
-            new WaitCommand(1), 
+            new WaitCommand(1.5),
             new ParallelCommandGroup(
               new FeederForwardForShoot(feederSubsystem),
               new IntakeInForShoot(intakeSubsystem)
@@ -396,11 +397,11 @@ public class RobotContainer {
           //System.out.println("An error occurred.");
           e.printStackTrace();
         }
-        SmartDashboard.putBoolean("Is Plotting", true);
+        //SmartDashboard.putBoolean("Is Plotting", true);
       }
       else{
         //System.out.println("Stops plotting");
-        SmartDashboard.putBoolean("Is Plotting", false);
+        //SmartDashboard.putBoolean("Is Plotting", false);
       }
   }
 

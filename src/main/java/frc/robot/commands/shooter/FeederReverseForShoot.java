@@ -7,10 +7,11 @@ package frc.robot.commands.shooter;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.shooter.FeederSubsystem;
 
-public class FeederForward extends CommandBase {
+public class FeederReverseForShoot extends CommandBase {
   private final FeederSubsystem subsystem;
+  private int times = 0;
 
-  public FeederForward(FeederSubsystem subsystem) {
+  public FeederReverseForShoot(FeederSubsystem subsystem) {
     this.subsystem = subsystem;
     addRequirements(subsystem);
   }
@@ -18,12 +19,18 @@ public class FeederForward extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void initialize() {
-    subsystem.feederForward();
+    subsystem.feederREverseForShoot();
+    times = 0;
+  }
+
+  @Override
+  public void execute() {
+    times++;
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return true;
+    return times == 5;
   }
 }
