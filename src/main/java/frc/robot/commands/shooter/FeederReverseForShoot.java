@@ -28,6 +28,11 @@ public class FeederReverseForShoot extends CommandBase {
     times++;
   }
 
+  @Override
+  public void end(boolean interupted) {
+    subsystem.feederStop();
+  }
+
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
