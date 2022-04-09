@@ -42,10 +42,11 @@ public class HoodSubsystem extends PIDSubsystem {
   public void periodic() {
     super.periodic();
     if (LoggingConstants.SHOOTER_LEVEL.ordinal() >= LoggingLevel.DEBUG.ordinal()) {
-      SmartDashboard.putNumber("hood_angle", getMeasurement());
     }
 
-    if (LoggingConstants.SHOOTER_LEVEL.ordinal() >= LoggingLevel.COMPETITION.ordinal()) {}
+    if (LoggingConstants.SHOOTER_LEVEL.ordinal() >= LoggingLevel.COMPETITION.ordinal()) {
+      SmartDashboard.putNumber("hood_angle", getMeasurement());
+    }
   }
 
   @Override
