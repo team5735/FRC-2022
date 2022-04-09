@@ -59,7 +59,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledInit() {
-    m_robotContainer.readPaths();
+    //m_robotContainer.readPaths();
   }
 
   @Override
