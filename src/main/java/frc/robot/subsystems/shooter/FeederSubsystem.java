@@ -7,6 +7,7 @@ package frc.robot.subsystems.shooter;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.LoggingConstants;
@@ -16,11 +17,14 @@ import frc.robot.constants.LoggingConstants.LoggingLevel;
 
 public class FeederSubsystem extends SubsystemBase {
   private CANSparkMax feederMotor;
+  private final DigitalInput beambreak;
 
   public FeederSubsystem() {
     feederMotor = new CANSparkMax(RobotConstants.FEEDER_MOTOR_ID, MotorType.kBrushless);
     feederMotor.setInverted(true);
     // feederMotor.setSmartCurrentLimit(limit)
+
+    beambreak = new DigitalInput(9);
   }
 
   @Override
@@ -33,6 +37,7 @@ public class FeederSubsystem extends SubsystemBase {
     if (LoggingConstants.FEEDER_LEVEL.ordinal() >= LoggingLevel.COMPETITION.ordinal()) {
       SmartDashboard.putNumber("feeder_dir", feederMotor.getAppliedOutput() == 0 ? (0) : (feederMotor.getAppliedOutput() < 0 ? -1 : 1));
     }
+
   }
 
   public void feederForward() {
@@ -47,7 +52,7 @@ public class FeederSubsystem extends SubsystemBase {
     feederMotor.set(ShooterConstants.FEEDER_REVERSE_SPEED);
   }
 
-  public void feederREverseForShoot() {
+  public void feederReverseForShoot() {
     feederMotor.set(ShooterConstants.FEEDER_REVERSE_FOR_SHOOTTING_SPEED);
   }
 
@@ -58,4 +63,9 @@ public class FeederSubsystem extends SubsystemBase {
   public void feederStop() {
     feederMotor.set(0);
   }
+
+  public boolean hasBall() {
+    return !beambreak.get();
+  }
+
 }

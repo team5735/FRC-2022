@@ -9,7 +9,6 @@ import frc.robot.subsystems.shooter.FeederSubsystem;
 
 public class FeederReverseForShoot extends CommandBase {
   private final FeederSubsystem subsystem;
-  private int times = 0;
 
   public FeederReverseForShoot(FeederSubsystem subsystem) {
     this.subsystem = subsystem;
@@ -19,18 +18,21 @@ public class FeederReverseForShoot extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void initialize() {
-    subsystem.feederREverseForShoot();
-    times = 0;
+    //System.out.println("feedber_hasBall=" + subsystem.hasBall());
+    if (subsystem.hasBall()) {
+      subsystem.feederReverseForShoot();
+    }
   }
 
   @Override
-  public void execute() {
-    times++;
+  public void end(boolean interrupted) {
+    subsystem.feederStop();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return times == 5;
+    return (!subsystem.hasBall());
   }
+
 }
