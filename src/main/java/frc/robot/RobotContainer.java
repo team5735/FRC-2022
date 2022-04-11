@@ -136,7 +136,7 @@ public class RobotContainer {
   }
 
   public void readPaths() {
-    runItBack = AutoPath.readAutoFile("runItBack.txt");
+    runItBack = AutoPath.readAutoFile("runItBackNew.txt");
     twoBallInitial = AutoPath.readAutoFile("twoBallInitial.txt");
     slowTest = AutoPath.readAutoFile("5ftTest.txt");
   }
@@ -464,8 +464,8 @@ public class RobotContainer {
       new Pose2d(2, 0, Rotation2d.fromDegrees(0)),
       trajectoryConfig);
 
-      PIDController xController = new PIDController(0.02, 0, 0);
-      PIDController yController = new PIDController(0.02, 0, 0);
+      PIDController xController = new PIDController(0.000001, 0, 0);
+      PIDController yController = new PIDController(0.000001, 0, 0);
       TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(Drivetrain.kMaxAngularSpeed, Math.PI / 4);
       ProfiledPIDController thetaController = new ProfiledPIDController(3, 0, 0, kThetaControllerConstraints);
       thetaController.enableContinuousInput(-Math.PI, Math.PI);
