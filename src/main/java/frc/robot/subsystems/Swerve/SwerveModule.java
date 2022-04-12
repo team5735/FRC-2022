@@ -58,7 +58,7 @@ public class SwerveModule {
 
   // Unit conversion methods
   public double driveEncoderPulseToDistance(double encoderPulse) {
-    return encoderPulse * (2 * kWheelRadius * Math.PI) / kEncoderResolution / kDriveGearRatio;
+    return (encoderPulse * (2 * kWheelRadius * Math.PI) / kEncoderResolution / kDriveGearRatio) * 10;
   }
 
   public double distanceToDriveEncoderPulse(double distance) {
@@ -100,6 +100,7 @@ public class SwerveModule {
    */
 boolean flag = true;
   public void setDesiredState(SwerveModuleState desiredState) {
+
     Double currentAngle = absoluteEncoder.get();
     // Optimize the reference state to avoid spinning further than 90 degrees
     SwerveModuleState targetState =
@@ -109,7 +110,6 @@ boolean flag = true;
 
     // Set turning motor to target angle
     double angleDifference = getDiff(targetState.angle.getRadians(),  absoluteEncoderToRadians(currentAngle));
-
 
     if (( angleDifference >= Math.PI/2 || angleDifference <= -(Math.PI/2))){
       if (LoggingConstants.DRIVING_LEVEL.ordinal() >= LoggingLevel.DEBUG.ordinal()) {
@@ -143,6 +143,11 @@ boolean flag = true;
       SmartDashboard.putNumber(module + "diff",diff);
     }
     return diff;
+  }
+
+  public void stop() {
+    driveMotor.set(ControlMode.Velocity, 0);
+    turningMotor.set(ControlMode.MotionMagic, 0);
   }
 }
 

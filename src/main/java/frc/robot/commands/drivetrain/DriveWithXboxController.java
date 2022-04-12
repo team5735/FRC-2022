@@ -2,6 +2,10 @@ package frc.robot.commands.drivetrain;
 
 import edu.wpi.first.cscore.CameraServerJNI.LoggerFunction;
 import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Subsystem;
@@ -63,17 +67,35 @@ public class DriveWithXboxController extends CommandBase {
         // m_swerve.drive(0, 0, rot, false);
 
         // Y butoon => toggle field centric
-        // if (RobotContainer.driveController.getYButtonPressed()) {
-        //     swerveDrive.resetAHRS();
-        //     fieldRelative = !fieldRelative;
-        //     RobotContainer.fieldRelative = fieldRelative;
-        // }
+        if (RobotContainer.driveController.getYButtonPressed()) {
+            swerveDrive.resetAHRS();
+            swerveDrive.resetOdometry(new Pose2d(0, 0, new Rotation2d(0)));
+        }
 
         xSpeedValue = xSpeed;
         ySpeedValue = ySpeed;
         rotValue = rot;
 
-        swerveDrive.drive(xSpeed, ySpeed, rot, false);
+
+        ChassisSpeeds chassisSpeeds;
+        if(fieldRelative) {
+            //Relative to field
+            chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, swerveDrive.getRotation2d());
+        }
+        else {
+            chassisSpeeds = new ChassisSpeeds(xSpeed, ySpeed, rot);
+        }
+
+        // COnvert Chassis speeds to individual module states
+        SwerveModuleState[] moduleState = swerveDrive.m_kinematics.toSwerveModuleStates(chassisSpeeds);
+
+        swerveDrive.setModuleStates(moduleState);
+
+        //System.out.println(swerveDrive.getPose().getX() + ",    " + swerveDrive.getPose().getY() );
+
+        swerveDrive.updateOdometry();
+
+        //swerveDrive.drive(xSpeed, ySpeed, rot, false);
     }
 
     // Called once the command ends or is interrupted.

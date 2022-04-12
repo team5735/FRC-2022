@@ -25,12 +25,12 @@ public class ClimberRightCommand extends CommandBase{
         
         double yInput = RobotContainer.subsystemController.getRightTriggerAxis() * ClimberConstants.WINCH_UP_SPEED;
 
-        if(RobotContainer.subsystemController.getBButton()) {
+        if(!RobotContainer.subsystemController.getBButton()) {
             yInput=-yInput;
         }
 
         // double xInput = Math.pow(deadband(RobotContainer.subsystemController.getLeftX(), ClimberConstants.DEADBAND * 2), 3);
-        double xInput = -deadband(RobotContainer.subsystemController.getRightY(), ClimberConstants.DEADBAND) * ClimberConstants.ARM_ROTATE_UP_SPEED;
+        double xInput = deadband(RobotContainer.subsystemController.getRightY(), ClimberConstants.DEADBAND) * ClimberConstants.ARM_ROTATE_UP_SPEED;
 
         if(yInput > 0) {
             climberSubsystem.set(yInput * ClimberConstants.WINCH_UP_SPEED);
