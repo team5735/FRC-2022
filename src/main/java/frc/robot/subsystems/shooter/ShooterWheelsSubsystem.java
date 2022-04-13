@@ -42,11 +42,11 @@ public class ShooterWheelsSubsystem extends SubsystemBase {
     if (LoggingConstants.SHOOTER_LEVEL.ordinal() >= LoggingLevel.DEBUG.ordinal()) {
       SmartDashboard.putNumber("big_shooter_cmd", bigShooterMasterMotor.getMotorOutputPercent());
       SmartDashboard.putNumber("small_shooter_cmd", smallShooterMotor.getMotorOutputPercent());
-      SmartDashboard.putNumber("small_shooter_vel", smallShooterMotor.getSelectedSensorVelocity());
     }
 
     if (LoggingConstants.SHOOTER_LEVEL.ordinal() >= LoggingLevel.COMPETITION.ordinal()) {
       SmartDashboard.putNumber("big_shooter_vel", bigShooterMasterMotor.getSelectedSensorVelocity());
+      SmartDashboard.putNumber("small_shooter_vel", smallShooterMotor.getSelectedSensorVelocity());
     }
   }
 

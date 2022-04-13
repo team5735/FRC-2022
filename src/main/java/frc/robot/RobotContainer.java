@@ -103,6 +103,7 @@ public class RobotContainer {
   public ArrayList<DataPoint> twoBallInitial;
   public ArrayList<DataPoint> turning;
   public ArrayList<DataPoint> slowTest;
+  public ArrayList<DataPoint> twoBallAuto;
 
   public static boolean isPlotting = false;
 
@@ -116,8 +117,8 @@ public class RobotContainer {
   public RobotContainer() {
     setupPathChooser();
 
-    SmartDashboard.putNumber("manual_hood_angle", 0.3);
-    SmartDashboard.putNumber("manual_shooter_speed", 12750);
+    SmartDashboard.putNumber("manual_hood_angle", 0.6);
+    SmartDashboard.putNumber("manual_shooter_speed", 11500);
     // SmartDashboard.putNumber("kP", 0);
     // SmartDashboard.putNumber("kI", 0);
     // SmartDashboard.putNumber("kD", 0);
@@ -135,12 +136,13 @@ public class RobotContainer {
 
   public void readPaths() {
     runItBack = AutoPath.readAutoFile("runItBackNew.txt");
-    twoBallInitial = AutoPath.readAutoFile("twoBallInitial.txt");
+    twoBallInitial = AutoPath.readAutoFile("2BallDrive.txt");
     slowTest = AutoPath.readAutoFile("5ftTest.txt");
+    twoBallAuto = AutoPath.readAutoFile("newTwoBallAuto.txt");
   }
 
   public void setupPathChooser() {
-    String[] autoNames = {"Turns and Shoots", "Run It Back", "Two Ball", "Slow Test"};
+    String[] autoNames = {"Turns and Shoots", "Run It Back", "Two Ball", "Slow Test", "Two Ball Auto"};
 
     for (String pathName : autoNames) {
       autoPathChooser.addOption(pathName, pathName);
@@ -152,30 +154,30 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
 
     String autoPath = autoPathChooser.getSelected();
-    
+    Command turnToTarget = new TurnToTarget(vision, swerveDrivetrain);
     if (autoPath.equals("Run It Back")) {
       return new SequentialCommandGroup(
         // new HoodSetAngle(subsystem, angleGetter)
-        new ParallelDeadlineGroup(new WaitCommand(1), new HoodSetAngle(hoodSubsystem, () -> (0.6))),
+        new ParallelDeadlineGroup(new WaitCommand(0.5), new HoodSetAngle(hoodSubsystem, () -> (0.6))),
         new ParallelDeadlineGroup(
             new WaitCommand(2),
             new HoodSetAngle(hoodSubsystem, () -> (SmartDashboard.getNumber("vision_hood_angle", 0.1))),
             new ShooterWheelsSetSpeed(shooterWheelsSubsystem, () -> (SmartDashboard.getNumber("vision_shooter_speed", 0))), 
-            new SequentialCommandGroup(new WaitCommand(0.5), new FeederForward(feederSubsystem))),
+            new SequentialCommandGroup(new WaitCommand(1.6), new FeederForward(feederSubsystem))),
         new ParallelDeadlineGroup(new AutoDriveCommand(runItBack, swerveDrivetrain, fieldRelative), new IntakeIn(intakeSubsystem), 
         new FeederStop(feederSubsystem),
         new HoodStop(hoodSubsystem),
         new ShooterWheelsStop(shooterWheelsSubsystem)), 
         new TurnToTarget(vision, swerveDrivetrain), 
         new ParallelDeadlineGroup(new WaitCommand(0.5), new StopDrivetrainCommand(swerveDrivetrain)),
-        new SequentialCommandGroup(new ParallelDeadlineGroup(new WaitCommand(0.3), new ParallelCommandGroup(
+        new SequentialCommandGroup(new ParallelDeadlineGroup(new WaitCommand(0.25), new ParallelCommandGroup(
           new FeederReverse(feederSubsystem),
           new ShooterWheelsReverse(shooterWheelsSubsystem)
         ))), 
           new ParallelCommandGroup(
             new HoodSetAngle(hoodSubsystem, () -> (SmartDashboard.getNumber("vision_hood_angle", 0.1))),
             new ShooterWheelsSetSpeed(shooterWheelsSubsystem, () -> (SmartDashboard.getNumber("vision_shooter_speed", 0))), 
-            new SequentialCommandGroup(new WaitCommand(1), new FeederForward(feederSubsystem))),
+            new SequentialCommandGroup(new WaitCommand(2), new FeederForward(feederSubsystem))),
         new WaitCommand(1),
         new FeederStop(feederSubsystem),
         new HoodStop(hoodSubsystem),
@@ -183,50 +185,87 @@ public class RobotContainer {
       );
     }
 
+    else if(autoPath.equals("Two Ball Auto")) {
+      return new SequentialCommandGroup(
+
+        new ParallelDeadlineGroup(new AutoDriveCommand(twoBallAuto, swerveDrivetrain, fieldRelative), new ParallelCommandGroup(
+          new IntakeIn(intakeSubsystem), 
+          new FeederPlusIntakeIn(feederSubsystem))),
+        new ParallelCommandGroup( 
+          new IntakeStop(intakeSubsystem), 
+          new FeederStop(feederSubsystem)),
+        new TurnToTarget(vision, swerveDrivetrain), 
+        new ParallelDeadlineGroup(new WaitCommand(0.25), new StopDrivetrainCommand(swerveDrivetrain)),
+        new ParallelDeadlineGroup(new WaitCommand(0.25), new ParallelCommandGroup(
+          new FeederReverse(feederSubsystem),
+          new ShooterWheelsReverse(shooterWheelsSubsystem))),
+        new FeederStop(feederSubsystem),
+        new ShooterWheelsStop(shooterWheelsSubsystem),
+        new SequentialCommandGroup(
+          new FeederReverseForShoot(feederSubsystem),
+          new ParallelDeadlineGroup(
+            new ShooterWheelsAtSpeed(shooterWheelsSubsystem),
+            new HoodSetAngle(hoodSubsystem, () -> (SmartDashboard.getNumber("vision_hood_angle", 0.1))),
+            new ShooterWheelsSetSpeed(shooterWheelsSubsystem, () -> (SmartDashboard.getNumber("vision_shooter_speed", 0)))
+          ),
+          new SequentialCommandGroup(
+            new WaitCommand(0.5),
+            new ParallelCommandGroup(
+              new FeederForwardForShoot(feederSubsystem),
+              new IntakeInForShoot(intakeSubsystem)
+            )
+          )
+          
+        )
+
+      );
+    }
+
     else if(autoPath.equals("Two Ball")) {
       return new SequentialCommandGroup(
         new ParallelDeadlineGroup(
           new WaitCommand(1),
-          new IntakeIn(intakeSubsystem),
+          new ParallelCommandGroup(
+          new IntakeIn(intakeSubsystem) 
+          //new FeederPlusIntakeIn(feederSubsystem)
+          ),
           new HoodSetAngle(hoodSubsystem, () -> (0.6))
         ),
         new ParallelDeadlineGroup(
           new AutoDriveCommand(twoBallInitial, swerveDrivetrain, fieldRelative),
+          new ParallelCommandGroup(
           new IntakeIn(intakeSubsystem)
+          // FeederPlusIntakeIn(feederSubsystem)
+          )
         ),
         new TurnToTarget(vision, swerveDrivetrain),
         new ParallelDeadlineGroup(
-          new WaitCommand(0.5),
+          new WaitCommand(0.75),
           new StopDrivetrainCommand(swerveDrivetrain)
         ),
+        new WaitCommand(1),
+        new IntakeStop(intakeSubsystem),
+        new FeederStop(feederSubsystem),
         new SequentialCommandGroup(
+          new WaitCommand(5),
+          new FeederReverseForShoot(feederSubsystem),
+          // new ParallelDeadlineGroup(
+          //   new TurnToTarget(vision, swerveDrivetrain),
+          //   new HoodSetAngle(hoodSubsystem, () -> (0.45)),
+          //   new ShooterWheelsSetSpeed(shooterWheelsSubsystem, () -> ((double)10000))),
           new ParallelDeadlineGroup(
-            new WaitCommand(1),
+            new ShooterWheelsAtSpeed(shooterWheelsSubsystem),
+            new HoodSetAngle(hoodSubsystem, () -> (SmartDashboard.getNumber("vision_hood_angle", 0.1))),
+            new ShooterWheelsSetSpeed(shooterWheelsSubsystem, () -> (SmartDashboard.getNumber("vision_shooter_speed", 0)))
+          ),
+          new SequentialCommandGroup(
+            new WaitCommand(1.5),
             new ParallelCommandGroup(
-              new FeederReverse(feederSubsystem),
-              new ShooterWheelsReverse(shooterWheelsSubsystem)
+              new FeederForwardForShoot(feederSubsystem),
+              new IntakeInForShoot(intakeSubsystem)
             )
           )
-        ),
-        new ParallelCommandGroup(
-            new HoodSetAngle(hoodSubsystem, () -> (SmartDashboard.getNumber("vision_hood_angle", 0.1))),
-            new ShooterWheelsSetSpeed(shooterWheelsSubsystem, () -> (SmartDashboard.getNumber("vision_shooter_speed", 0))*1.1), 
-            new SequentialCommandGroup(
-              new WaitCommand(1.5), 
-              new ParallelDeadlineGroup(
-                new WaitCommand(0.2), 
-                new FeederForward(feederSubsystem)
-              ),
-              new FeederStop(feederSubsystem),
-              new WaitCommand(1.5),
-              new ParallelDeadlineGroup(
-                new WaitCommand(1), 
-                new ParallelCommandGroup(
-                  new IntakeIn(intakeSubsystem), 
-                  new FeederForward(feederSubsystem)
-                )
-              )  
-            )
+          
         ),
         new WaitCommand(0.5),
         new IntakeStop(intakeSubsystem),
@@ -336,9 +375,9 @@ public class RobotContainer {
     // left bumper => shoot based on maunal values
     new JoystickButton(subsystemController, Button.kLeftBumper.value)
       .whenPressed(new ParallelCommandGroup(
-        new HoodSetAngle(hoodSubsystem, () -> (SmartDashboard.getNumber("manual_hood_angle", 0.3
+        new HoodSetAngle(hoodSubsystem, () -> (SmartDashboard.getNumber("manual_hood_angle", 0.6
         ))),
-        new ShooterWheelsSetSpeed(shooterWheelsSubsystem, () -> (SmartDashboard.getNumber("manual_shooter_speed", 12750)))
+        new ShooterWheelsSetSpeed(shooterWheelsSubsystem, () -> (SmartDashboard.getNumber("manual_shooter_speed", 11500)))
       ))
       .whenReleased(new ParallelCommandGroup(
         new HoodStop(hoodSubsystem),
