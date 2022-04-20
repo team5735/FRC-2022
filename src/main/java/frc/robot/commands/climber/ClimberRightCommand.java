@@ -23,20 +23,29 @@ public class ClimberRightCommand extends CommandBase{
     @Override
     public void execute() {
         
-        double yInput = RobotContainer.subsystemController.getRightTriggerAxis() * ClimberConstants.WINCH_UP_SPEED;
+        double yInput = -RobotContainer.subsystemController.getRightTriggerAxis() * ClimberConstants.WINCH_UP_SPEED;
 
-        if(!RobotContainer.subsystemController.getBButton()) {
+        if(RobotContainer.subsystemController.getBButton()) {
             yInput=-yInput;
         }
 
         // double xInput = Math.pow(deadband(RobotContainer.subsystemController.getLeftX(), ClimberConstants.DEADBAND * 2), 3);
         double xInput = deadband(RobotContainer.subsystemController.getRightY(), ClimberConstants.DEADBAND) * ClimberConstants.ARM_ROTATE_UP_SPEED;
 
-        if(yInput > 0) {
-            climberSubsystem.set(yInput * ClimberConstants.WINCH_UP_SPEED);
+        if(yInput > 0) { //ARMS DOWN / WINCH IN
+            if(true || climberSubsystem.getEncoderValue() < ClimberConstants.RIGHT_ENCODER_MIN || RobotContainer.subsystemController.getYButton()) {
+                climberSubsystem.set(yInput * ClimberConstants.WINCH_UP_SPEED);
+            } else {
+                climberSubsystem.set(0);
+            }
         }
-        else if(yInput < 0) {
-            climberSubsystem.set(yInput * ClimberConstants.WINCH_DOWN_SPEED);
+        else if(yInput < 0) { //ARMS UP / WINCH OUT
+            // climberSubsystem.set(yInput * ClimberConstants.WINCH_DOWN_SPEED);
+            if(true || climberSubsystem.getEncoderValue() > ClimberConstants.RIGHT_ENCODER_MAX || RobotContainer.subsystemController.getYButton()) {
+                climberSubsystem.set(yInput * ClimberConstants.WINCH_DOWN_SPEED);
+            } else {
+                climberSubsystem.set(0);
+            }
         } else {
             climberSubsystem.set(0);
         }

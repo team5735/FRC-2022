@@ -4,11 +4,11 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Vision;
 
-public class TurnOffLimelightCommand extends CommandBase {
+public class TurnOnLimelight extends CommandBase {
 	@SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
     private final Vision vision;
 	
-	public TurnOffLimelightCommand(Vision vision) {
+	public TurnOnLimelight(Vision vision) {
         this.vision = vision;
 		// Use addRequirements() here to declare subsystem dependencies.
         // addRequirements(vision);
@@ -17,7 +17,7 @@ public class TurnOffLimelightCommand extends CommandBase {
 	// Called when the command is initially scheduled.
 	@Override
 	public void initialize() {
-		NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(1);
+		NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(3);
 
 	}
 	

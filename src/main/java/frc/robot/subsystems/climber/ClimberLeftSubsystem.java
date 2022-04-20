@@ -45,6 +45,7 @@ public class ClimberLeftSubsystem extends SubsystemBase {
 
     if (LoggingConstants.CLIMBER_LEVEL.ordinal() >= LoggingLevel.DEBUG.ordinal()) {
       SmartDashboard.putNumber("LEFT WINCH ENCODER", winchMotor.getEncoder().getPosition());
+      SmartDashboard.putNumber("LEFT ROTATE ENCODER", rotateMotor.getEncoder().getPosition());
       // //System.out.println(leftWinchMotor.getEncoder().getCountsPerRevolution());
       // //System.out.println(leftWinchMotor.getEncoder().getPosition());
     }
@@ -69,6 +70,11 @@ public class ClimberLeftSubsystem extends SubsystemBase {
   public void right() {}
 
   public void left() {}
+
+  public double getEncoderValue() {
+    return winchMotor.getEncoder().getPosition();
+  }
+
   public void setBreakMode(boolean isBreakMode) {
     
   }

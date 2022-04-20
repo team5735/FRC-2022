@@ -11,10 +11,10 @@ public class ClimberConstants {
     public static final int RIGHT_WINCH_MOTOR_ID = 13;
     public static final int LEFT_ROTATE_MOTOR_ID = 14;
     public static final int RIGHT_ROTATE_MOTOR_ID = 15;
-    public static final double RIGHT_ENCODER_MAX = 900;
-    public static final double LEFT_ENCODER_MAX = 1160;
-    public static final double RIGHT_ENCODER_MIN = 500;
-    public static final double LEFT_ENCODER_MIN = 210;
+    public static final double RIGHT_ENCODER_MAX = -455 ;
+    public static final double LEFT_ENCODER_MAX = -455;
+    public static final double RIGHT_ENCODER_MIN = -2;
+    public static final double LEFT_ENCODER_MIN = -2;
     
     // BOTTOM
 //     RIGHT WINCH ENCODER: 898.1943969726562

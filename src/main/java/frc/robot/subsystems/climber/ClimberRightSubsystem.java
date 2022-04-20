@@ -68,5 +68,8 @@ public class ClimberRightSubsystem extends SubsystemBase {
   public void right() {}
 
   public void left() {}
-
+  
+  public double getEncoderValue() {
+    return winchMotor.getEncoder().getPosition();
+  }
 }

@@ -22,9 +22,9 @@ public class ClimberLeftCommand extends CommandBase{
 
     @Override
     public void execute() {
-        double yInput = RobotContainer.subsystemController.getLeftTriggerAxis() * ClimberConstants.WINCH_UP_SPEED;
+        double yInput = -RobotContainer.subsystemController.getLeftTriggerAxis() * ClimberConstants.WINCH_UP_SPEED;
 
-        if(!RobotContainer.subsystemController.getBButton()) {
+        if(RobotContainer.subsystemController.getBButton()) {
             yInput=-yInput;
         }
 
@@ -54,11 +54,21 @@ public class ClimberLeftCommand extends CommandBase{
         }
         */
 
-        if(yInput > 0) {
-            climberSubsystem.set(yInput * ClimberConstants.WINCH_UP_SPEED);
+        if(yInput > 0) { //ARMS DOWN / WINCH IN
+            if(true || climberSubsystem.getEncoderValue() < ClimberConstants.LEFT_ENCODER_MIN || RobotContainer.subsystemController.getYButton()) {
+                climberSubsystem.set(yInput * ClimberConstants.WINCH_UP_SPEED);
+            } else {
+                climberSubsystem.set(0);
+            }
         }
-        else if(yInput < 0) {
-            climberSubsystem.set(yInput * ClimberConstants.WINCH_DOWN_SPEED);
+        else if(yInput < 0) { //ARMS UP / WINCH OUT
+            if(true || climberSubsystem.getEncoderValue() > ClimberConstants.LEFT_ENCODER_MAX || RobotContainer.subsystemController.getYButton()) {
+                climberSubsystem.set(yInput * ClimberConstants.WINCH_DOWN_SPEED);
+            } else {
+                climberSubsystem.set(0);
+            }
+            // climberSubsystem.set(yInput * ClimberConstants.WINCH_DOWN_SPEED);
+            
         } else {
             climberSubsystem.set(0);
         }
@@ -66,7 +76,7 @@ public class ClimberLeftCommand extends CommandBase{
 
         if(xInput > 0) { 
             climberSubsystem.rotate(xInput * ClimberConstants.ARM_ROTATE_UP_SPEED);
-        } else if(xInput < 0) {
+        } else if(xInput < 0 /*&& climberSubsystem.getEncoderValue() > ClimberConstants.LEFT_ENCODER_MIN*/) {
             climberSubsystem.rotate(xInput * ClimberConstants.ARM_ROTATE_DOWN_SPEED);
         } else {
             climberSubsystem.rotate(0);
