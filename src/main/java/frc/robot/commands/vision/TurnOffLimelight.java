@@ -4,11 +4,11 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Vision;
 
-public class TurnOffLimelightCommand extends CommandBase {
+public class TurnOffLimelight extends CommandBase {
 	@SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
     private final Vision vision;
 	
-	public TurnOffLimelightCommand(Vision vision) {
+	public TurnOffLimelight(Vision vision) {
         this.vision = vision;
 		// Use addRequirements() here to declare subsystem dependencies.
         // addRequirements(vision);

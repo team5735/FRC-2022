@@ -59,7 +59,7 @@ import frc.robot.commands.shooter.ShooterWheelsSetSpeed;
 import frc.robot.commands.shooter.ShooterWheelsStop;
 import frc.robot.commands.vision.TurnToTarget;
 
-import frc.robot.commands.vision.TurnOffLimelightCommand;
+import frc.robot.commands.vision.TurnOffLimelight;
 import frc.robot.commands.vision.TurnOnLimelight;
 
 import frc.robot.constants.RobotConstants;
@@ -232,7 +232,6 @@ public class RobotContainer {
               new IntakeInForShoot(intakeSubsystem)
             )
           )
-          
         )
       );
     }
@@ -250,8 +249,8 @@ public class RobotContainer {
         new ParallelDeadlineGroup(
           new AutoDriveCommand(twoBallInitial, swerveDrivetrain, fieldRelative),
           new ParallelCommandGroup(
-          new IntakeIn(intakeSubsystem)
-          // FeederPlusIntakeIn(feederSubsystem)
+          new IntakeIn(intakeSubsystem),
+           new FeederPlusIntakeIn(feederSubsystem)
           )
         ),
         new TurnToTarget(vision, swerveDrivetrain),
@@ -280,6 +279,7 @@ public class RobotContainer {
               new FeederForwardForShoot(feederSubsystem),
               new IntakeInForShoot(intakeSubsystem)
             )
+            //new WaitCommand(2)
           )
           
         ),
@@ -353,20 +353,20 @@ public class RobotContainer {
           //   new HoodSetAngle(hoodSubsystem, () -> (0.45)),
           //   new ShooterWheelsSetSpeed(shooterWheelsSubsystem, () -> ((double)10000))),
           
-          new FeederReverseForShoot(feederSubsystem),
+          //snew FeederReverseForShoot(feederSubsystem),
           new ParallelDeadlineGroup(
             new ShooterWheelsAtSpeed(shooterWheelsSubsystem),
             new HoodSetAngle(hoodSubsystem, () -> (SmartDashboard.getNumber("vision_hood_angle", 0.1))),
             new ShooterWheelsSetSpeed(shooterWheelsSubsystem, () -> (SmartDashboard.getNumber("vision_shooter_speed", 0)))
           ),
           new SequentialCommandGroup(
-            new WaitCommand(1),
+            new WaitCommand(0.6),
             new ParallelCommandGroup(
               new FeederForwardForShoot(feederSubsystem),
               new IntakeInForShoot(intakeSubsystem)
             )
-          )
-          
+          ),
+          new WaitCommand(2)
         ))
         .whenReleased(
           new ParallelCommandGroup(
@@ -437,9 +437,17 @@ public class RobotContainer {
             ()->shooterWheelsSubsystem.set(subsystemController.getLeftTriggerAxis()), shooterWheelsSubsystem))
         .whenReleased(new InstantCommand(shooterWheelsSubsystem::stopShooter, shooterWheelsSubsystem));
 
+        /*
     new JoystickButton(subsystemController, Button.kY.value)
         .whenPressed(new TurnOffLimelightCommand(vision))
         .whenReleased(new TurnOnLimelight(vision));
+    */
+        
+    new JoystickButton(subsystemController, Button.kStart.value)
+    .whenPressed(new TurnOnLimelight(vision));
+    
+    new JoystickButton(subsystemController, Button.kBack.value)
+    .whenPressed(new TurnOffLimelight(vision));
   }
 
   public void configureAutoButton() {

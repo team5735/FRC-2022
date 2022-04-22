@@ -15,6 +15,6 @@ public class LoggingConstants {
     public static final LoggingLevel INTAKE_LEVEL = LoggingLevel.COMPETITION;
     public static final LoggingLevel FEEDER_LEVEL = LoggingLevel.COMPETITION;
     public static final LoggingLevel SHOOTER_LEVEL = LoggingLevel.COMPETITION;
-    public static final LoggingLevel CLIMBER_LEVEL = LoggingLevel.DEBUG;
+    public static final LoggingLevel CLIMBER_LEVEL = LoggingLevel.COMPETITION;
     public static final LoggingLevel DRIVING_LEVEL = LoggingLevel.COMPETITION;
 }

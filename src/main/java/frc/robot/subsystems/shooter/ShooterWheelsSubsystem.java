@@ -10,6 +10,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.commands.shooter.ShooterIdle;
 import frc.robot.constants.LoggingConstants;
 import frc.robot.constants.RobotConstants;
 import frc.robot.constants.ShooterConstants;
@@ -35,6 +36,8 @@ public class ShooterWheelsSubsystem extends SubsystemBase {
     smallShooterMotor.config_kI(0, ShooterConstants.SMALL_WHEEL_KI);
     smallShooterMotor.config_kD(0, ShooterConstants.SMALL_WHEEL_KD);
     smallShooterMotor.config_kF(0, ShooterConstants.BIG_WHEEL_KF);
+
+    // setDefaultCommand(new ShooterIdle(this));
   }
 
   @Override
