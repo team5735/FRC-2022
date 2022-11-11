@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+// Java Utility Imports
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -13,6 +14,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+// Calculation Imports
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -23,12 +25,16 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+
+// Controller & Dashboard Imports
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Axis;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
+// Commands
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
@@ -38,13 +44,19 @@ import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.CancelCommand;
+
+// Auto + Drivetrain Commands
 import frc.robot.commands.auto.AutoDriveCommand;
 import frc.robot.commands.auto.AutoDrivePointCommand;
 import frc.robot.commands.drivetrain.StopDrivetrainCommand;
+
+// Intake Commands
 import frc.robot.commands.intake.IntakeIn;
 import frc.robot.commands.intake.IntakeInForShoot;
 import frc.robot.commands.intake.IntakeOut;
 import frc.robot.commands.intake.IntakeStop;
+
+// Shooter Commands
 import frc.robot.commands.shooter.FeederForward;
 import frc.robot.commands.shooter.FeederForwardForShoot;
 import frc.robot.commands.shooter.FeederPlusIntakeIn;
@@ -57,11 +69,13 @@ import frc.robot.commands.shooter.ShooterWheelsAtSpeed;
 import frc.robot.commands.shooter.ShooterWheelsReverse;
 import frc.robot.commands.shooter.ShooterWheelsSetSpeed;
 import frc.robot.commands.shooter.ShooterWheelsStop;
-import frc.robot.commands.vision.TurnToTarget;
 
+// Limelight Commands
+import frc.robot.commands.vision.TurnToTarget;
 import frc.robot.commands.vision.TurnOffLimelight;
 import frc.robot.commands.vision.TurnOnLimelight;
 
+// Subsystem Imports
 import frc.robot.constants.RobotConstants;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.IntakeSubsystem;
