@@ -111,17 +111,19 @@ boolean flag = true;
     // Set turning motor to target angle
     double angleDifference = getDiff(targetState.angle.getRadians(),  absoluteEncoderToRadians(currentAngle));
 
-    if (( angleDifference >= Math.PI/2 || angleDifference <= -(Math.PI/2))){
+    // if (( angleDifference >= Math.PI/2 || angleDifference <= -(Math.PI/2))){
       if (LoggingConstants.DRIVING_LEVEL.ordinal() >= LoggingLevel.DEBUG.ordinal()) {
         SmartDashboard.putNumber(module + "desiredState",radiansToDegree( desiredState.angle.getRadians()));
         SmartDashboard.putNumber(module + "targetState", radiansToDegree(targetState.angle.getRadians()));
         SmartDashboard.putNumber(module + "currentAngle", radiansToDegree(absoluteEncoderToRadians(currentAngle)));
         SmartDashboard.putNumber(module + "angleDifference", radiansToDegree(angleDifference));
       }
-      flag = false;
-    }
-
-    turningMotor.set(ControlMode.MotionMagic, turningMotor.getSelectedSensorPosition() + radiansToTurningEncoderPulse(angleDifference));
+      // flag = false;
+    // }
+    // turningMotor.set(ControlMode.PercentOutput, 0);
+    // System.out.println(turningMotor.getSelectedSensorPosition() + radiansToTurningEncoderPulse(angleDifference));
+    turningMotor.set(ControlMode.Position, turningMotor.getSelectedSensorPosition() + radiansToTurningEncoderPulse(angleDifference));
+    // turningMotor.set(ControlMode.MotionMagic, turningMotor.getSelectedSensorPosition() + radiansToTurningEncoderPulse(angleDifference));
   }
   private double getDiff (double target, double current){
     double diff = target - current;
