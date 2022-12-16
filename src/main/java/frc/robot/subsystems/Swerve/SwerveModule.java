@@ -17,8 +17,8 @@ import frc.robot.constants.LoggingConstants.LoggingLevel;
 public class SwerveModule {
   private static final double kWheelRadius = 0.0508;
   private static final int kEncoderResolution = 2048;
-  private static final double kDriveGearRatio = (48./16.)*(16./28.)*(60./15.);
-  private static final double kTurningGearRatio = (32./15.)*(60./15.);
+  private static final double kDriveGearRatio = (48./16.)*(16./28.)*(60./15.); // (48*16*60)/(16*28*15) = 46080 / 6720 = 48:7 = 6.85714286
+  private static final double kTurningGearRatio = (32./15.)*(60./15.); // 128:15 = 8.5333
 
   // private static final double kModuleMaxAngularVelocity = Drivetrain.kMaxAngularSpeed;
   // private static final double kModuleMaxAngularAcceleration = 2 * Math.PI; // radians per second squared

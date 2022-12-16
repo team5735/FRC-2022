@@ -52,10 +52,10 @@ public class Drivetrain extends SubsystemBase {
   private final TalonFX turningMotorM3 = new TalonFX(6);
   private final TalonFX driveMotorM4 = new TalonFX(7);
   private final TalonFX turningMotorM4 = new TalonFX(8); 
-  private final SwervePIDConfig swervePIDConfigM1 = new SwervePIDConfig(0.04, 0, 0.3, 0.0472, 0.48, 0.00, 0.08, 0);
-  private final SwervePIDConfig swervePIDConfigM2 = new SwervePIDConfig(0.04, 0, 0.3, 0.0472, 0.1, 0.00, 0.0, 0);
-  private final SwervePIDConfig swervePIDConfigM3 = new SwervePIDConfig(0.04, 0, 0.3, 0.0472, 0.1, 0.00, 0.0, 0);
-  private final SwervePIDConfig swervePIDConfigM4 = new SwervePIDConfig(0.04, 0, 0.3, 0.0472, 0.1, 0.00, 0.0, 0);
+  private final SwervePIDConfig swervePIDConfigM1 = new SwervePIDConfig(0.04, 0, 0.3, 0.0472, 0.2, 0.00, 0.0, 0);
+  private final SwervePIDConfig swervePIDConfigM2 = new SwervePIDConfig(0.04, 0, 0.3, 0.0472, 0.2, 0.00, 0.0, 0);
+  private final SwervePIDConfig swervePIDConfigM3 = new SwervePIDConfig(0.04, 0, 0.3, 0.0472, 0.2, 0.00, 0.0, 0);
+  private final SwervePIDConfig swervePIDConfigM4 = new SwervePIDConfig(0.04, 0, 0.3, 0.0472, 0.2, 0.00, 0.0, 0);
   private final DutyCycleEncoder absoluteEncoderM1 = new DutyCycleEncoder(1);
   private final DutyCycleEncoder absoluteEncoderM2 = new DutyCycleEncoder(2);
   private final DutyCycleEncoder absoluteEncoderM3 = new DutyCycleEncoder(3);
