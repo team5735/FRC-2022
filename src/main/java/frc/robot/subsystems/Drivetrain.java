@@ -205,10 +205,9 @@ public class Drivetrain extends SubsystemBase {
     return Math.IEEEremainder(ahrs.getAngle(), 360);
   }
 
-  public void zeroHeading() {
+  public void resetHeading() {
     ahrs.reset();
   }
-
 
   public Rotation2d getRotation2d() {
       return Rotation2d.fromDegrees(getHeading());

@@ -34,24 +34,29 @@ public class SwerveModule {
    * Constructs a SwerveModule.
    * @param absoluteEncoderOffset in radians
    */
-  public SwerveModule(TalonFX driveMotor, TalonFX turningMotor, SwervePIDConfig pidConfig, DutyCycleEncoder absoluteEncoder, double absoluteEncoderOffset, int module) {
+  public SwerveModule(TalonFX driveMotor, TalonFX turningMotor, SwervePIDConfig pidConfig, 
+  DutyCycleEncoder absoluteEncoder, double absoluteEncoderOffset, int module) {
+
     this.driveMotor = driveMotor;
     this.turningMotor = turningMotor;
     this.absoluteEncoder = absoluteEncoder;
     this.absoluteEncoderOffset = absoluteEncoderOffset;
     this.module = module;
     this.absoluteEncoder.reset();
+    
     // Set motor PID
     this.driveMotor.config_kP(0, pidConfig.getDriveMotorPID().getKp());
     this.driveMotor.config_kI(0, pidConfig.getDriveMotorPID().getKi());
     this.driveMotor.config_kD(0, pidConfig.getDriveMotorPID().getKd());
     this.driveMotor.config_kF(0, pidConfig.getDriveMotorPID().getKf());
     this.driveMotor.selectProfileSlot(0, 0);
+
     this.turningMotor.config_kP(0, pidConfig.getTurningMotorPID().getKp());
     this.turningMotor.config_kI(0, pidConfig.getTurningMotorPID().getKi());
     this.turningMotor.config_kD(0, pidConfig.getTurningMotorPID().getKd());
     this.turningMotor.config_kF(0, pidConfig.getTurningMotorPID().getKf());
     this.turningMotor.selectProfileSlot(0, 0);
+
     this.turningMotor.configMotionAcceleration(60000); // 25000
     this.turningMotor.configMotionCruiseVelocity(45000); // 12500
   }

@@ -23,6 +23,7 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Axis;
 import edu.wpi.first.wpilibj.XboxController.Button;
@@ -37,6 +38,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+
 import frc.robot.commands.auto.AutoDriveCommand;
 import frc.robot.commands.auto.AutoDrivePointCommand;
 import frc.robot.commands.drivetrain.StopDrivetrainCommand;
@@ -56,9 +58,11 @@ import frc.robot.commands.shooter.ShooterWheelsReverse;
 import frc.robot.commands.shooter.ShooterWheelsSetSpeed;
 import frc.robot.commands.shooter.ShooterWheelsStop;
 import frc.robot.commands.vision.TurnToTarget;
+
 import frc.robot.constants.LoggingConstants;
 import frc.robot.constants.RobotConstants;
 import frc.robot.constants.LoggingConstants.LoggingLevel;
+
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.Vision;
@@ -452,7 +456,10 @@ public class RobotContainer {
 
     }
 
-    //IN TESTING
+    // IN TESTING
+    // Position Based Auto
+    // Using Odometry & Trajectory Configuration
+
     public Command getAutoCommandImproved() {
 
       TrajectoryConfig trajectoryConfig = new TrajectoryConfig(Drivetrain.kMaxSpeed/4, 5);
@@ -460,17 +467,28 @@ public class RobotContainer {
       Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
       new Pose2d(0, 0, new Rotation2d(0)),
       List.of(
-        new Translation2d(1, 0)),
-      new Pose2d(2, 0, Rotation2d.fromDegrees(0)),
+          new Translation2d(1, 0),
+          new Translation2d(1, 1)
+      ),
+      new Pose2d(0, 1, Rotation2d.fromDegrees(0)),
       trajectoryConfig);
 
       PIDController xController = new PIDController(0.000001, 0, 0);
       PIDController yController = new PIDController(0.000001, 0, 0);
-      TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(Drivetrain.kMaxAngularSpeed, Math.PI / 4);
+      
+      TrapezoidProfile.Constraints kThetaControllerConstraints = 
+        new TrapezoidProfile.Constraints(Drivetrain.kMaxAngularSpeed, Math.PI / 4 /* max angular acceleration*/);
+
       ProfiledPIDController thetaController = new ProfiledPIDController(3, 0, 0, kThetaControllerConstraints);
       thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
-      SwerveControllerCommand swerveControllerCommand = new SwerveControllerCommand(trajectory, swerveDrivetrain::getPose, swerveDrivetrain.m_kinematics, xController, yController, thetaController, swerveDrivetrain::setModuleStates, swerveDrivetrain);
+      SwerveControllerCommand swerveControllerCommand = new SwerveControllerCommand(
+        trajectory, 
+        swerveDrivetrain::getPose, 
+        swerveDrivetrain.m_kinematics, 
+        xController, yController, thetaController, 
+        swerveDrivetrain::setModuleStates, 
+        swerveDrivetrain);
 
       return new SequentialCommandGroup(
         new InstantCommand(() -> swerveDrivetrain.resetOdometryNew(trajectory.getInitialPose())),
